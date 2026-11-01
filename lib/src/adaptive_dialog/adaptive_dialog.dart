@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:prism/src/adaptive_scaffold/adaptive_scaffold.dart';
+import 'package:prism_kit/src/adaptive_scaffold/adaptive_scaffold.dart';
 
 /// How a dialog should be presented on a given window class.
 enum PresentationStyle {

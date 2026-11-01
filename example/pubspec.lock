@@ -163,7 +163,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-  prism:
+  prism_kit:
     dependency: "direct main"
     description:
       path: ".."

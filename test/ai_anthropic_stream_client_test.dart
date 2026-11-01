@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prism/prism.dart';
+import 'package:prism_kit/prism.dart';
 
 /// Local Anthropic Messages API server streaming the real wire format.
 Future<HttpServer> startAnthropicServer({int statusCode = 200}) async {

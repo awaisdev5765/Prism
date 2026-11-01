@@ -8,7 +8,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:prism/prism.dart';
+import 'package:prism_kit/prism.dart';
 
 // flutter_test installs a fake HttpClient that answers 400 to everything;
 // clear it so the local test server can be reached.

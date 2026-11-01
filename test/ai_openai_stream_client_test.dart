@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prism/prism.dart';
+import 'package:prism_kit/prism.dart';
 
 /// Local HTTP server that streams an SSE frame per line, each terminated
 /// with a blank line (the real wire format), with realistic delays.

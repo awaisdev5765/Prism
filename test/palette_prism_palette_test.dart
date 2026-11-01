@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart' show Paint;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prism/prism.dart';
+import 'package:prism_kit/prism.dart';
 
 void main() {
   group('ColorPalette.fromColors', () {

@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prism/prism.dart';
-import 'package:prism/prism.dart';
+import 'package:prism_kit/prism.dart';
 
 void main() {
   group('UpdatePolicy rollout', () {

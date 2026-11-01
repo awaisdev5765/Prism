@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:markdown/markdown.dart' as md;
-import 'package:prism/prism.dart';
+import 'package:prism_kit/prism.dart';
 
 void main() {
   group('PrismMarkdown rendering', () {

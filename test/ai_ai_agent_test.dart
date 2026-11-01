@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prism/prism.dart';
+import 'package:prism_kit/prism.dart';
 
 void _disableFakeHttpOverrides() {
   HttpOverrides.global = null;

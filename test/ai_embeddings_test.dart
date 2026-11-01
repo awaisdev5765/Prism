@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prism/prism.dart';
+import 'package:prism_kit/prism.dart';
 // ContentType comes from dart:io
 
 /// Local OpenAI-compatible /embeddings server.

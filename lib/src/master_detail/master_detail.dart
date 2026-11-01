@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:prism/src/adaptive_scaffold/adaptive_scaffold.dart';
+import 'package:prism_kit/src/adaptive_scaffold/adaptive_scaffold.dart';
 
 /// How the detail pane is presented on compact (phone-width) windows.
 enum PrismCompactBehavior {

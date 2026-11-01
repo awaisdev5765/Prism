@@ -82,7 +82,6 @@ export 'src/search/highlight.dart';
 export 'src/settings/controller.dart';
 export 'src/settings/settings_page.dart';
 export 'src/settings/tiles.dart';
-export 'src/settings/tiles.dart';
 export 'src/state_views/state.dart';
 export 'src/state_views/state_view.dart';
 export 'src/state_views/style.dart';

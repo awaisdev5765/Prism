@@ -3,11 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:prism/prism.dart';
-import 'package:prism/prism.dart';
-import 'package:prism/prism.dart';
-import 'package:prism/prism.dart';
-import 'package:prism/prism.dart';
+import 'package:prism_kit/prism.dart';
 
 PrismUpdatePlatformInfo fakePlatform({bool web = false}) =>
     PrismUpdatePlatformInfo(
