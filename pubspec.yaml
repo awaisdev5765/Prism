@@ -1,0 +1,37 @@
+name: prism
+description: >-
+  A unified Flutter component library — adaptive toasts, banners, forms,
+  search, settings, pagination, markdown, code viewer, AI chat client and
+  more, with responsive layouts for phone, desktop and web.
+version: 1.0.0
+homepage: https://github.com/awaisdev5765/prism
+repository: https://github.com/awaisdev5765/prism
+issue_tracker: https://github.com/awaisdev5765/prism/issues
+topics:
+  - widgets
+  - components
+  - ui
+  - adaptive
+  - responsive
+
+environment:
+  sdk: ^3.9.0
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.6.0
+  markdown: ^7.3.0
+  meta: ^1.16.0
+  shared_preferences: ^2.3.0
+  url_launcher: ^6.3.0
+  material_color_utilities: ^0.13.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

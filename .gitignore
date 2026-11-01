@@ -1,0 +1,8 @@
+.DS_Store
+.dart_tool/
+build/
+example/build/
+example/.dart_tool/
+example/.flutter-plugins*
+*.iml
+.idea/
