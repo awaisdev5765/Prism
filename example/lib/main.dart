@@ -48,6 +48,17 @@ class GalleryHome extends StatelessWidget {
     ('Palette', Icons.palette_outlined, _build(PaletteDemo())),
     ('Changelog', Icons.history, _build(ChangelogDemo())),
     ('AI chat', Icons.smart_toy_outlined, _build(AiDemo())),
+    ('Skeleton', Icons.blur_on, _build(SkeletonDemo())),
+    ('Avatar', Icons.account_circle_outlined, _build(AvatarDemo())),
+    ('Chip input', Icons.label_outline, _build(ChipInputDemo())),
+    ('OTP field', Icons.password, _build(OtpDemo())),
+    ('Timeline', Icons.timeline, _build(TimelineDemo())),
+    ('Stepper', Icons.linear_scale, _build(StepperDemo())),
+    ('Data table', Icons.table_chart_outlined, _build(DataTableDemo())),
+    ('Command palette', Icons.keyboard_command_key, _build(CommandPaletteDemo())),
+    ('Adaptive sheet', Icons.vertical_align_bottom, _build(AdaptiveSheetDemo())),
+    ('Connection banner', Icons.cloud_off_outlined, _build(ConnectionDemo())),
+    ('Design tokens', Icons.palette, _build(TokensDemo())),
   ];
 
   static WidgetBuilder _build(Widget widget) => (_) => widget;
@@ -743,6 +754,688 @@ class AiDemo extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ─── Skeleton ───────────────────────────────────────────────────────────────
+
+class SkeletonDemo extends StatelessWidget {
+  const SkeletonDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('PrismSkeleton')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: const [
+          Text('Card skeleton — keeps the page shape while loading'),
+          SizedBox(height: 12),
+          PrismSkeletonCard(mediaHeight: 140, lines: 3),
+          SizedBox(height: 24),
+          Text('Tile list skeleton'),
+          SizedBox(height: 12),
+          PrismSkeletonList.tiles(count: 3),
+          SizedBox(height: 24),
+          Text('Text + circle primitives'),
+          SizedBox(height: 12),
+          Row(
+            children: [
+              PrismSkeleton.circle(diameter: 44),
+              SizedBox(width: 12),
+              Expanded(child: PrismSkeletonText(lines: 2, lastLineFraction: 0.4)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Avatar ─────────────────────────────────────────────────────────────────
+
+class AvatarDemo extends StatelessWidget {
+  const AvatarDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('PrismAvatar')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          const Text('Initials are derived automatically and the colour is '
+              'stable for a given name.'),
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: const [
+              PrismAvatar(name: 'Ayesha Khan'),
+              PrismAvatar(name: 'Bilal Ahmed', size: 48),
+              PrismAvatar(name: 'Chen Wei', size: 56),
+              PrismAvatar(name: 'Dana Malik', size: 64),
+            ],
+          ),
+          const SizedBox(height: 24),
+          const Text('Presence indicators'),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 12,
+            children: const [
+              PrismAvatar(name: 'Online User', presence: PrismPresence.online),
+              PrismAvatar(name: 'Away User', presence: PrismPresence.away),
+              PrismAvatar(name: 'Busy User', presence: PrismPresence.busy),
+              PrismAvatar(name: 'Offline User', presence: PrismPresence.offline),
+            ],
+          ),
+          const SizedBox(height: 24),
+          const Text('Rounded shape for teams and badges'),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              const PrismAvatar(
+                name: 'Acme Inc',
+                size: 48,
+                shape: PrismAvatarShape.rounded,
+              ),
+              const SizedBox(width: 12),
+              const PrismAvatar(
+                name: 'Ayesha Khan',
+                size: 48,
+                borderWidth: 2,
+                badge: Icon(Icons.verified, size: 16),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Chip input ─────────────────────────────────────────────────────────────
+
+class ChipInputDemo extends StatefulWidget {
+  const ChipInputDemo({super.key});
+
+  @override
+  State<ChipInputDemo> createState() => _ChipInputDemoState();
+}
+
+class _ChipInputDemoState extends State<ChipInputDemo> {
+  List<String> _tags = ['flutter', 'open-source'];
+  List<String> _limited = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('PrismChipInput')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          PrismChipInput(
+            label: 'Tags',
+            hint: 'Type and press Enter…',
+            value: _tags,
+            suggestions: const ['dart', 'flutter', 'ui', 'mobile', 'web', 'api'],
+            helperText: 'Paste a comma-separated list to add several at once.',
+            onChanged: (next) => setState(() => _tags = next),
+          ),
+          const SizedBox(height: 32),
+          PrismChipInput(
+            label: 'Up to 3 (no duplicates)',
+            value: _limited,
+            maxChips: 3,
+            onChanged: (next) => setState(() => _limited = next),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── OTP field ──────────────────────────────────────────────────────────────
+
+class OtpDemo extends StatefulWidget {
+  const OtpDemo({super.key});
+
+  @override
+  State<OtpDemo> createState() => _OtpDemoState();
+}
+
+class _OtpDemoState extends State<OtpDemo> {
+  String? _error;
+  String _code = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('PrismOtpField')),
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          const Text('Six-digit code — paste works, and it auto-submits.'),
+          const SizedBox(height: 20),
+          PrismOtpField(
+            length: 6,
+            groupSeparatorAfter: 3,
+            errorText: _error,
+            helperText: 'Hint: 123456 is accepted',
+            onChanged: (v) => setState(() {
+              _code = v;
+              _error = null;
+            }),
+            onCompleted: (code) {
+              setState(() {
+                _error = code == '123456' ? null : 'That code is not valid';
+              });
+              if (code == '123456') {
+                PrismToast.success(context, 'Code accepted');
+              }
+            },
+          ),
+          const SizedBox(height: 32),
+          const Text('Obscured PIN variant'),
+          const SizedBox(height: 12),
+          const PrismOtpField(length: 4, obscure: true, autofocus: false),
+          const SizedBox(height: 20),
+          Text('Current value: ${_code.isEmpty ? '—' : _code}'),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Timeline ───────────────────────────────────────────────────────────────
+
+class TimelineDemo extends StatelessWidget {
+  const TimelineDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('PrismTimeline')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          PrismTimeline(
+            entries: [
+              const PrismTimelineEntry(
+                title: 'Order placed',
+                subtitle: 'Payment confirmed',
+                timestamp: 'Today, 09:12',
+                semantic: PrismSemantic.success,
+              ),
+              const PrismTimelineEntry(
+                title: 'Packed',
+                timestamp: 'Today, 10:04',
+                icon: Icons.inventory_2_outlined,
+              ),
+              PrismTimelineEntry(
+                title: 'Out for delivery',
+                subtitle: 'Driver Sam · 2 stops away',
+                timestamp: 'Today, 11:30',
+                isActive: true,
+                child: Card(
+                  margin: EdgeInsets.zero,
+                  child: ListTile(
+                    leading: const Icon(Icons.local_shipping_outlined),
+                    title: const Text('Track live'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {},
+                  ),
+                ),
+              ),
+              const PrismTimelineEntry(
+                title: 'Delivery attempt failed',
+                subtitle: 'No one home — will retry tomorrow',
+                timestamp: 'Today, 14:15',
+                semantic: PrismSemantic.error,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Stepper ────────────────────────────────────────────────────────────────
+
+class StepperDemo extends StatefulWidget {
+  const StepperDemo({super.key});
+
+  @override
+  State<StepperDemo> createState() => _StepperDemoState();
+}
+
+class _StepperDemoState extends State<StepperDemo> {
+  int _index = 1;
+  final _errored = <int>{};
+
+  static const _steps = [
+    PrismStep(title: 'Account', subtitle: 'Email & password'),
+    PrismStep(title: 'Profile', subtitle: 'Name & photo'),
+    PrismStep(title: 'Preferences', subtitle: 'Notifications', isOptional: true),
+    PrismStep(title: 'Done'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('PrismStepper')),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            PrismStepper(
+              steps: _steps,
+              currentIndex: _index,
+              erroredIndices: _errored,
+              onStepTapped: (i) => setState(() => _index = i),
+            ),
+            const SizedBox(height: 40),
+            const Text('Resize the window: the stepper collapses to a compact '
+                '"Step X of Y" header with a progress bar.'),
+            const Spacer(),
+            Row(
+              children: [
+                OutlinedButton(
+                  onPressed: _index == 0
+                      ? null
+                      : () => setState(() => _index--),
+                  child: const Text('Back'),
+                ),
+                const SizedBox(width: 12),
+                FilledButton(
+                  onPressed: () {
+                    setState(() {
+                      if (_index == 1) {
+                        _errored.add(1);
+                      } else {
+                        _errored.clear();
+                        if (_index < _steps.length - 1) _index++;
+                      }
+                    });
+                  },
+                  child: const Text('Next'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Data table ─────────────────────────────────────────────────────────────
+
+class DataTableDemo extends StatelessWidget {
+  const DataTableDemo({super.key});
+
+  static final _invoices = [
+    _Invoice('INV-1042', 'Zenith Ltd', 1240, 'Paid'),
+    _Invoice('INV-1043', 'Aurora Media', 380, 'Overdue'),
+    _Invoice('INV-1044', 'Meridian Co', 915, 'Paid'),
+    _Invoice('INV-1045', 'Northwind', 2100, 'Draft'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('PrismDataTable')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          PrismDataTable<_Invoice>(
+            rows: _invoices,
+            onRowTap: (row, i) => PrismToast.info(context, 'Opened ${row.id}'),
+            columns: [
+              PrismColumn<_Invoice>(
+                label: 'Invoice',
+                alwaysVisible: true,
+                cell: (c, r, i) => Text(r.id),
+                sortComparator: (a, b) => a.id.compareTo(b.id),
+              ),
+              PrismColumn<_Invoice>(
+                label: 'Client',
+                cell: (c, r, i) => Text(r.client),
+                sortComparator: (a, b) => a.client.compareTo(b.client),
+              ),
+              PrismColumn<_Invoice>(
+                label: 'Status',
+                cell: (c, r, i) => Chip(
+                  label: Text(r.status),
+                  visualDensity: VisualDensity.compact,
+                ),
+              ),
+              PrismColumn<_Invoice>(
+                label: 'Total',
+                numeric: true,
+                cell: (c, r, i) => Text('\$${r.total}'),
+                sortComparator: (a, b) => a.total.compareTo(b.total),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Text('Tap a header to sort. On a narrow window the same data '
+              'becomes labelled cards.'),
+        ],
+      ),
+    );
+  }
+}
+
+class _Invoice {
+  const _Invoice(this.id, this.client, this.total, this.status);
+  final String id;
+  final String client;
+  final int total;
+  final String status;
+}
+
+// ─── Command palette ────────────────────────────────────────────────────────
+
+class CommandPaletteDemo extends StatelessWidget {
+  const CommandPaletteDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('PrismCommandPalette')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.keyboard_command_key, size: 48),
+            const SizedBox(height: 16),
+            const Text('A ⌘K-style launcher with fuzzy search,\ngrouping and '
+                'full keyboard navigation.', textAlign: TextAlign.center),
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: () => _open(context),
+              icon: const Icon(Icons.search),
+              label: const Text('Open palette'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _open(BuildContext context) {
+    PrismCommandPalette.show(
+      context: context,
+      commands: [
+        PrismCommand(
+          label: 'New note',
+          subtitle: 'Create a blank note',
+          icon: Icons.note_add_outlined,
+          group: 'File',
+          shortcut: '⌘N',
+          keywords: const ['create', 'add'],
+          onSelect: () => PrismToast.success(context, 'New note'),
+        ),
+        PrismCommand(
+          label: 'Search notes',
+          icon: Icons.search,
+          group: 'File',
+          shortcut: '⌘F',
+          onSelect: () => PrismToast.info(context, 'Search'),
+        ),
+        PrismCommand(
+          label: 'Toggle dark mode',
+          icon: Icons.dark_mode_outlined,
+          group: 'View',
+          keywords: const ['theme', 'appearance'],
+          onSelect: () => PrismToast.info(context, 'Theme toggled'),
+        ),
+        PrismCommand(
+          label: 'Export as markdown',
+          icon: Icons.download_outlined,
+          group: 'Share',
+          keywords: const ['save', 'download'],
+          onSelect: () => PrismToast.info(context, 'Exported'),
+        ),
+        PrismCommand(
+          label: 'Sign out',
+          icon: Icons.logout,
+          group: 'Account',
+          onSelect: () => PrismToast.warning(context, 'Signed out'),
+        ),
+      ],
+    );
+  }
+}
+
+// ─── Adaptive sheet ─────────────────────────────────────────────────────────
+
+class AdaptiveSheetDemo extends StatelessWidget {
+  const AdaptiveSheetDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('PrismAdaptiveSheet')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'On a phone this slides up from the bottom.\n'
+                'On a wide window it becomes a centred dialog.\n\n'
+                'Resize the window and try again.',
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              FilledButton(
+                onPressed: () => _open(context),
+                child: const Text('Show sheet'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _open(BuildContext context) async {
+    final confirmed = await PrismAdaptiveSheet.show<bool>(
+      context: context,
+      title: 'Delete this note?',
+      subtitle: 'The note will move to Trash for 30 days.',
+      child: const Padding(
+        padding: EdgeInsets.only(top: 8),
+        child: Text(
+          'You can restore it any time from the Trash, or delete it '
+          'permanently right away.',
+        ),
+      ),
+      actions: [
+        const PrismSheetAction(label: 'Cancel', value: false),
+        PrismSheetAction(
+          label: 'Delete',
+          value: true,
+          isDestructive: true,
+          icon: Icons.delete_outline,
+        ),
+      ],
+    );
+    if (!context.mounted) return;
+    if (confirmed ?? false) {
+      PrismToast.success(context, 'Note deleted');
+    }
+  }
+}
+
+// ─── Connection banner ──────────────────────────────────────────────────────
+
+class ConnectionDemo extends StatefulWidget {
+  const ConnectionDemo({super.key});
+
+  @override
+  State<ConnectionDemo> createState() => _ConnectionDemoState();
+}
+
+class _ConnectionDemoState extends State<ConnectionDemo> {
+  final _controller = StreamController<bool>.broadcast();
+  bool _online = true;
+
+  @override
+  void dispose() {
+    _controller.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('PrismConnectionBanner')),
+      body: Column(
+        children: [
+          PrismConnectionBanner(
+            source: () => _controller.stream,
+            onlineMessage: 'Back online — syncing…',
+            retryLabel: 'Retry now',
+            onRetry: () => PrismToast.info(context, 'Retrying…'),
+          ),
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(_online ? 'Simulated: online' : 'Simulated: offline'),
+                  const SizedBox(height: 16),
+                  FilledButton(
+                    onPressed: () {
+                      _online = !_online;
+                      _controller.add(_online);
+                      setState(() {});
+                    },
+                    child: Text(_online ? 'Go offline' : 'Go online'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Design tokens ──────────────────────────────────────────────────────────
+
+class TokensDemo extends StatelessWidget {
+  const TokensDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = context.prismTokens;
+    final colors = context.prismColors;
+
+    Widget swatch(String label, Color color, Color onColor) => Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(tokens.radiusMd),
+          ),
+          child: Text(label, style: TextStyle(color: onColor, fontSize: 12)),
+        );
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Prism design tokens')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Text('Semantic colors', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final role in PrismSemantic.values)
+                swatch(
+                  role.name,
+                  colors.forRole(role).background,
+                  colors.forRole(role).foreground,
+                ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Text('Spacing scale', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 12),
+          for (final (name, value) in [
+            ('spaceXs', tokens.spaceXs),
+            ('spaceSm', tokens.spaceSm),
+            ('spaceMd', tokens.spaceMd),
+            ('spaceLg', tokens.spaceLg),
+            ('spaceXl', tokens.spaceXl),
+            ('spaceXxl', tokens.spaceXxl),
+          ])
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(
+                children: [
+                  SizedBox(width: 90, child: Text(name)),
+                  Container(
+                    height: 14,
+                    width: value * 4,
+                    color: colors.info,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(value.toStringAsFixed(0)),
+                ],
+              ),
+            ),
+          const SizedBox(height: 24),
+          Text('Corner radii', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 12,
+            children: [
+              for (final (name, value) in [
+                ('sm', tokens.radiusSm),
+                ('md', tokens.radiusMd),
+                ('lg', tokens.radiusLg),
+                ('xl', tokens.radiusXl),
+              ])
+                Container(
+                  width: 72,
+                  height: 72,
+                  decoration: BoxDecoration(
+                    color: colors.surfaceSunken,
+                    borderRadius: BorderRadius.circular(value),
+                    border: Border.all(color: colors.outline),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text('$name\n${value.toStringAsFixed(0)}',
+                      textAlign: TextAlign.center),
+                ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Text('Motion', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
+          Text(
+            'fast ${tokens.durationFast.inMilliseconds} ms · '
+            'medium ${tokens.durationMedium.inMilliseconds} ms · '
+            'slow ${tokens.durationSlow.inMilliseconds} ms',
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Override any of these in ThemeData.extensions: const '
+            '[PrismTokens(spaceMd: 20, radiusMd: 16)].',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ],
       ),
     );
   }

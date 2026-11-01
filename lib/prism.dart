@@ -69,3 +69,18 @@ export 'src/state_views/state.dart';
 export 'src/updater/update_controller.dart';
 export 'src/updater/update_screens.dart';
 export 'src/updater/download_manager.dart';
+
+// ── Design system ──────────────────────────────────────────────────────────
+export 'src/theme/theme.dart';
+
+// ── Added in 1.1.0 ─────────────────────────────────────────────────────────
+export 'src/adaptive_sheet/adaptive_sheet.dart';
+export 'src/avatar/avatar.dart';
+export 'src/chip_input/chip_input.dart';
+export 'src/command_palette/command_palette.dart';
+export 'src/connection_banner/connection_banner.dart';
+export 'src/data_table/data_table.dart';
+export 'src/otp_field/otp_field.dart';
+export 'src/skeleton/skeleton.dart';
+export 'src/stepper/stepper.dart';
+export 'src/timeline/timeline.dart';

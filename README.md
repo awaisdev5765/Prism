@@ -1,25 +1,26 @@
 <p align="center">
-  <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-17%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
+  <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-27%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
 </p>
 
 <h1 align="center">🔷 Prism</h1>
-<h3 align="center">One dependency. 17 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
+<h3 align="center">One dependency. 27 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
 
 <p align="center">
   <img src="https://img.shields.io/badge/pub.dev-prism__kit-0175C2?logo=dart&logoColor=white" alt="pub.dev">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT">
   <img src="https://img.shields.io/badge/Flutter-3.27%2B-02569B?logo=flutter&logoColor=white" alt="Flutter">
-  <img src="https://img.shields.io/badge/tests-252%20passing-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-385%20passing-brightgreen" alt="tests">
 </p>
 
 ---
 
-**Prism** is a component library for Flutter that removes the most repetitive parts of app building. Instead of assembling a dozen fragmented pub.dev packages — each with its own style, API and quirks — you install one package and get a coherent, cross-platform toolkit:
+**Prism** is a component library for Flutter that removes the most repetitive parts of app building. Instead of assembling a dozen fragmented pub.dev packages — each with its own style, API and quirks — you install one package and get a coherent, cross-platform toolkit with a shared design system:
 
 - **Adaptive by default** — every component responds to window size and target platform. A toast is bottom-centered on a phone and stacked top-right on a desktop window. A settings page becomes a two-pane layout on tablets. A dialog renders Material on Android and Cupertino-style behavior on macOS — from a single call.
 - **Local-first & privacy-friendly** — persistence uses `shared_preferences` on-device; no accounts, no telemetry, no network calls unless you explicitly opt in (the AI client and updater are the only networked parts, and you own the endpoints).
+- **A real design system** — `PrismTokens` (spacing, radii, motion) and `PrismColors` (semantic roles) so every component shares one visual language and follows light/dark and Material You automatically.
 - **Zero heavy dependencies** — only `http`, `markdown`, `shared_preferences`, `url_launcher`, `meta` and `material_color_utilities`.
-- **Battle-tested** — 252 unit & widget tests, analyzed clean.
+- **Battle-tested** — 385 unit & widget tests, analyzed clean.
 
 ## 📦 Install
 
@@ -59,6 +60,23 @@ import 'package:prism_kit/prism.dart';
 | 15 | **StateViews** | Loading / empty / error / success state widgets driven by one notifier |
 | 16 | **Toast** | Adaptive toasts: bottom-centered on mobile, stacked top-right on desktop |
 | 17 | **Updater** | In-app update flow: version gates, rollouts, skip-version, download progress |
+| 18 | **Skeleton** | Shimmering placeholders: text, card, tile list, circle — reduced-motion aware |
+| 19 | **Avatar** | Image with deterministic initials fallback, presence dots and badges |
+| 20 | **ChipInput** | Tag/token entry with paste splitting, duplicates, limits and suggestions |
+| 21 | **OtpField** | OTP/PIN entry with paste, auto-submit, SMS autofill and grouping |
+| 22 | **Timeline** | Vertical event timeline with connectors, semantic roles and rich nodes |
+| 23 | **Stepper** | Wizard progress: horizontal on wide, compact "Step X of Y" on phones |
+| 24 | **DataTable** | Sortable table that becomes labelled cards on narrow windows |
+| 25 | **CommandPalette** | ⌘K launcher with fuzzy search, grouping and keyboard navigation |
+| 26 | **AdaptiveSheet** | Bottom sheet on phones, centred dialog on desktop — one call |
+| 27 | **ConnectionBanner** | Offline/online banner with debounce, retry and live-region announcements |
+
+### Design system
+
+| | |
+|---|---|
+| **PrismTokens** | Spacing scale, corner radii, motion durations and breakpoints, installable via `ThemeData.extensions` |
+| **PrismColors** | Semantic roles (success / warning / error / info) plus raised and sunken surfaces, derived from any `ColorScheme` |
 
 ---
 
@@ -307,6 +325,187 @@ ChangelogView(
 
 Parses Keep-a-Changelog format into collapsible version cards; `WhatsNewSheet` shows it as a modal.
 
+
+### Skeleton — loading that keeps the page shape
+
+```dart
+if (loading)
+  const PrismSkeletonList.cards(count: 3)
+else
+  NoteList(notes)
+
+// Or compose primitives
+PrismSkeletonCard(mediaHeight: 140, lines: 3)
+PrismSkeletonText(lines: 2, lastLineFraction: 0.4)
+PrismSkeleton.circle(diameter: 44)
+```
+
+The shimmer stops automatically when the platform requests reduced motion, so you never ship a strobe to a user who asked for calm.
+
+### Avatar — never a broken image
+
+```dart
+PrismAvatar(name: 'Ayesha Khan')
+PrismAvatar(name: 'Ayesha Khan', imageUrl: user.photoUrl, size: 56)
+PrismAvatar(name: 'Ayesha Khan', presence: PrismPresence.online)
+PrismAvatar(name: 'Acme Inc', shape: PrismAvatarShape.rounded, size: 48)
+```
+
+Initials come from `PrismAvatar.initialsFor(name)`; the fallback colour is picked deterministically from the name, so a person looks the same on every device. Failed image loads silently fall back to initials.
+
+### ChipInput — tags without the pain
+
+```dart
+PrismChipInput(
+  label: 'Tags',
+  value: tags,
+  suggestions: const ['dart', 'flutter', 'ui'],
+  maxChips: 5,
+  helperText: 'Paste a comma-separated list to add several at once.',
+  onChanged: (next) => setState(() => tags = next),
+)
+```
+
+Handles comma/newline/semicolon paste, duplicate rejection (case-insensitive), backspace-to-delete, custom validators and an optional suggestion overlay.
+
+### OtpField — paste, autofill, auto-submit
+
+```dart
+PrismOtpField(
+  length: 6,
+  groupSeparatorAfter: 3,     // renders 123 456
+  errorText: error,
+  onCompleted: (code) => verify(code),
+)
+
+PrismOtpField(length: 4, obscure: true)   // PIN entry
+```
+
+A single transparent field sits behind the digit boxes, so IME, paste, selection, autofill (`oneTimeCode`) and screen readers all behave natively.
+
+### Timeline — order tracking and activity feeds
+
+```dart
+PrismTimeline(
+  entries: [
+    PrismTimelineEntry(
+      title: 'Order placed',
+      timestamp: '09:12',
+      semantic: PrismSemantic.success,
+    ),
+    PrismTimelineEntry(
+      title: 'Out for delivery',
+      subtitle: 'Driver Sam · 2 stops away',
+      isActive: true,
+      child: TrackLiveCard(),
+    ),
+    PrismTimelineEntry(
+      title: 'Delivery failed',
+      semantic: PrismSemantic.error,
+    ),
+  ],
+  onEntryTap: (index, entry) => open(index),
+)
+```
+
+### Stepper — wizards that stay readable
+
+```dart
+PrismStepper(
+  steps: const [
+    PrismStep(title: 'Account'),
+    PrismStep(title: 'Profile'),
+    PrismStep(title: 'Preferences', isOptional: true),
+  ],
+  currentIndex: step,
+  erroredIndices: {1},
+  onStepTapped: (i) => setState(() => step = i),
+)
+```
+
+Horizontal with connectors on wide windows; a compact `Step 2 of 3` header with a progress bar on phones.
+
+### DataTable — one widget, two layouts
+
+```dart
+PrismDataTable<Invoice>(
+  rows: invoices,
+  onRowTap: (row, i) => open(row),
+  columns: [
+    PrismColumn(label: 'Invoice', alwaysVisible: true,
+      cell: (c, r, i) => Text(r.id),
+      sortComparator: (a, b) => a.id.compareTo(b.id)),
+    PrismColumn(label: 'Client', cell: (c, r, i) => Text(r.client)),
+    PrismColumn(label: 'Total', numeric: true, cell: (c, r, i) => Text('\$${r.total}')),
+  ],
+)
+```
+
+Desktop gets a sortable table with a header row; phones get the same data as cards with field labels. No horizontal scrolling, no hidden columns.
+
+### CommandPalette — a ⌘K launcher
+
+```dart
+final chosen = await PrismCommandPalette.show(
+  context: context,
+  commands: [
+    PrismCommand(label: 'New note', icon: Icons.add, group: 'File',
+      shortcut: '⌘N', onSelect: createNote),
+    PrismCommand(label: 'Toggle theme', group: 'View',
+      keywords: const ['dark', 'appearance'], onSelect: toggleTheme),
+  ],
+);
+```
+
+Fuzzy subsequence search (so `tt` finds *Toggle theme*), grouping, arrow/Enter/Escape navigation, and a full-screen route on phones.
+
+### AdaptiveSheet — bottom sheet or dialog, automatically
+
+```dart
+final confirmed = await PrismAdaptiveSheet.show<bool>(
+  context: context,
+  title: 'Delete this note?',
+  subtitle: 'It will move to Trash for 30 days.',
+  child: const Text('You can restore it any time.'),
+  actions: [
+    const PrismSheetAction(label: 'Cancel', value: false),
+    PrismSheetAction(label: 'Delete', value: true, isDestructive: true),
+  ],
+);
+```
+
+### ConnectionBanner — offline UX in one line
+
+```dart
+PrismConnectionBanner(
+  source: () => Connectivity().onConnectivityChanged.map((r) => r != ConnectivityResult.none),
+  onlineMessage: 'Back online — syncing…',
+  onRetry: refetch,
+)
+```
+
+Dampens short blips with a settle delay, flashes a reconnected message, and announces changes through a polite live region.
+
+### Design tokens — one visual language
+
+```dart
+MaterialApp(
+  theme: ThemeData(
+    colorSchemeSeed: Colors.teal,
+    extensions: const [
+      PrismTokens(spaceMd: 20, radiusMd: 16, durationMedium: Duration(milliseconds: 200)),
+    ],
+  ),
+)
+
+// Anywhere:
+Padding(padding: EdgeInsets.all(context.prismTokens.spaceMd), child: …)
+Container(color: context.prismColors.surfaceRaised)
+Container(color: context.prismColors.forRole(PrismSemantic.success).background)
+```
+
+Every component reads these tokens, so one override restyles the whole app consistently.
+
 ---
 
 ## 🖥 Platform support
@@ -320,10 +519,14 @@ Parses Keep-a-Changelog format into collapsible version cards; `WhatsNewSheet` s
 | Image (NetworkImageWithRetry) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | AI client | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Updater | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Skeleton / Avatar / ChipInput / OtpField | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Timeline / Stepper / DataTable | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| CommandPalette / AdaptiveSheet / ConnectionBanner | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| PrismTokens / PrismColors | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 ## 🧪 Quality
 
-- **252 tests** (unit + widget) across all components
+- **385 tests** (unit + widget) across all components
 - Zero analyzer issues; `flutter_lints` enforced
 - Every public API documented
 
