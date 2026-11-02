@@ -10,6 +10,9 @@
 # example remains readable and runnable after a `flutter create .`.
 
 .github/
+# Website source for the GitHub Pages landing page. It documents the package but
+# is not part of it, so it stays out of the archive.
+site/
 build/
 .dart_tool/
 .dart_tool/**

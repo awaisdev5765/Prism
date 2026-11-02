@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.4.1
+
+No library changes. This release updates the package metadata so the pub.dev
+listing describes what the package actually contains.
+
+### Changed
+- **The description** now leads with the component count and the premise instead
+  of a long enumeration: "One dependency, 34 adaptive Flutter components on a
+  shared design system". The previous text listed 17 components and had drifted
+  as the library grew.
+- **A `documentation` link** is now set in `pubspec.yaml`, so pub.dev shows a
+  Documentation link pointing at the live gallery and the API reference.
+- The README links the live gallery.
+
+### Infrastructure
+- The Pages workflow now provisions GitHub Pages on its first run rather than
+  failing with a 404 when the repository setting has not been enabled yet.
+
 ## 1.4.0
 
 ### Added
