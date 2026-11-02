@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../theme/theme.dart';
+
 import 'scroll_trigger.dart';
 
 /// Infinite-scroll list with built-in pagination states.
@@ -175,7 +177,7 @@ class _PrismPaginatedListState<T> extends State<PrismPaginatedList<T>> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text('Failed to load'),
-            const SizedBox(height: 8),
+            SizedBox(height: context.prismTokens.spaceSm),
             FilledButton.tonal(
               onPressed: _loadFirst,
               child: const Text('Retry'),
@@ -196,7 +198,8 @@ class _PrismPaginatedListState<T> extends State<PrismPaginatedList<T>> {
         physics: widget.physics ?? const AlwaysScrollableScrollPhysics(),
         padding: widget.padding,
         itemCount: _items.length + 1, // +1 footer
-        separatorBuilder: (_, _) => const SizedBox(height: 4),
+        separatorBuilder: (_, _) =>
+            SizedBox(height: context.prismTokens.spaceXs),
         itemBuilder: (context, index) {
           if (index == _items.length) {
             return _buildFooter(context);
@@ -210,7 +213,7 @@ class _PrismPaginatedListState<T> extends State<PrismPaginatedList<T>> {
   Widget _buildFooter(BuildContext context) {
     if (_footerError) {
       return Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(context.prismTokens.spaceMd),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -218,7 +221,7 @@ class _PrismPaginatedListState<T> extends State<PrismPaginatedList<T>> {
               widget.footerErrorLabel,
               style: Theme.of(context).textTheme.bodySmall,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: context.prismTokens.spaceSm),
             TextButton(
               onPressed: () {
                 setState(() => _footerError = false);
@@ -231,20 +234,21 @@ class _PrismPaginatedListState<T> extends State<PrismPaginatedList<T>> {
       );
     }
     if (_loadingMore) {
-      return const Padding(
-        padding: EdgeInsets.all(16),
+      final spinnerSize = context.prismTokens.controlHeight / 2;
+      return Padding(
+        padding: EdgeInsets.all(context.prismTokens.spaceMd),
         child: Center(
           child: SizedBox(
-            width: 22,
-            height: 22,
-            child: CircularProgressIndicator(strokeWidth: 2),
+            width: spinnerSize,
+            height: spinnerSize,
+            child: const CircularProgressIndicator(strokeWidth: 2),
           ),
         ),
       );
     }
     if (_reachedEnd) {
       return Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(context.prismTokens.spaceMd),
         child: Center(
           child: Text(
             widget.noMoreLabel,

@@ -5,6 +5,8 @@ import 'package:prism_kit/src/adaptive_scaffold/adaptive_scaffold.dart';
 
 import 'highlight.dart';
 
+import '../theme/theme.dart';
+
 List<T> _searchLocal<T>(PrismSearch<T> w, String query) {
   final lower = query.toLowerCase();
   return [
@@ -38,7 +40,7 @@ class PrismSearch<T> extends StatefulWidget {
     required this.itemLabel,
     this.onSelected,
     this.hintText = 'Search…',
-    this.debounce = const Duration(milliseconds: 250),
+    this.debounce,
     this.maxSuggestions = 8,
     this.highlightStyle,
     this.fieldDecoration,
@@ -65,7 +67,9 @@ class PrismSearch<T> extends StatefulWidget {
   final String hintText;
 
   /// Delay before [onSearch] fires while the user types.
-  final Duration debounce;
+  /// Delay before [onSearch] fires while the user types. Defaults to
+  /// [PrismTokens.durationMedium].
+  final Duration? debounce;
 
   /// Maximum number of suggestions shown at once.
   final int maxSuggestions;
@@ -177,8 +181,12 @@ class _InlineSearchState<T> extends State<_InlineSearch<T>> {
       return;
     }
     _debounce?.cancel();
-    _debounce = Timer(widget.widget.debounce, () => _refresh(_controller.text));
+    _debounce = Timer(_debounceDelay, () => _refresh(_controller.text));
   }
+
+  /// Resolved debounce delay, falling back to the token default.
+  Duration get _debounceDelay =>
+      widget.widget.debounce ?? context.prismTokens.durationMedium;
 
   Future<void> _refresh(String query) async {
     final trimmed = query.trim();
@@ -260,12 +268,13 @@ class _SuggestionsOverlay<T> extends StatelessWidget {
 
     Widget body;
     if (loading) {
-      body = const Padding(
-        padding: EdgeInsets.all(16),
+      final spinnerSize = context.prismTokens.controlHeight / 2.2;
+      body = Padding(
+        padding: EdgeInsets.all(context.prismTokens.spaceMd),
         child: SizedBox(
-          width: 20,
-          height: 20,
-          child: CircularProgressIndicator(strokeWidth: 2),
+          width: spinnerSize,
+          height: spinnerSize,
+          child: const CircularProgressIndicator(strokeWidth: 2),
         ),
       );
     } else if (results.isEmpty) {
@@ -311,7 +320,7 @@ class _SuggestionsOverlay<T> extends StatelessWidget {
           showWhenUnlinked: false,
           child: Material(
             elevation: 4,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(context.prismTokens.radiusSm),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxHeight: 320),
               child: SingleChildScrollView(child: IntrinsicWidth(child: body)),
@@ -361,8 +370,12 @@ class _FullScreenSearchState<T> extends State<_FullScreenSearch<T>> {
       return;
     }
     _debounce?.cancel();
-    _debounce = Timer(widget.widget.debounce, () => _refresh(_controller.text));
+    _debounce = Timer(_debounceDelay, () => _refresh(_controller.text));
   }
+
+  /// Resolved debounce delay, falling back to the token default.
+  Duration get _debounceDelay =>
+      widget.widget.debounce ?? context.prismTokens.durationMedium;
 
   Future<void> _refresh(String query) async {
     final trimmed = query.trim();

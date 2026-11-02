@@ -4,6 +4,8 @@ import 'package:prism_kit/src/adaptive_scaffold/adaptive_scaffold.dart';
 import 'controller.dart';
 import 'tiles.dart';
 
+import '../theme/theme.dart';
+
 /// A ready-made settings page.
 ///
 /// Owns a [PrismSettingsController] (or adopts yours), centers content at a
@@ -108,17 +110,25 @@ class _PrismSettingsPageState extends State<PrismSettingsPage> {
       notifier: _effective,
       child: Scaffold(
         body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding:
+              EdgeInsets.symmetric(vertical: context.prismTokens.spaceSm),
           child: Center(
             child: Container(
               constraints: BoxConstraints(maxWidth: widget.maxWidth),
-              padding: EdgeInsets.symmetric(horizontal: isWide ? 24 : 0),
+              padding: EdgeInsets.symmetric(
+                horizontal: isWide ? context.prismTokens.spaceLg : 0,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   if (widget.searchable)
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                      padding: EdgeInsets.fromLTRB(
+                        context.prismTokens.spaceMd,
+                        context.prismTokens.spaceSm,
+                        context.prismTokens.spaceMd,
+                        context.prismTokens.spaceXs,
+                      ),
                       child: TextField(
                         controller: _searchController,
                         decoration: InputDecoration(

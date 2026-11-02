@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:prism_kit/src/adaptive_scaffold/adaptive_scaffold.dart';
 
+import '../theme/theme.dart';
+
 /// How a dialog should be presented on a given window class.
 enum PresentationStyle {
   /// Always present as a centered modal dialog.
@@ -77,19 +79,21 @@ class PrismAdaptiveDialog {
       children: [
         if (title != null)
           Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: EdgeInsets.only(
+              bottom: context.prismTokens.spaceSm + context.prismTokens.spaceXs,
+            ),
             child: Text(title, style: theme.textTheme.titleLarge),
           ),
         Flexible(child: builder(innerContext)),
         if (actions.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(top: 16),
+            padding: EdgeInsets.only(top: context.prismTokens.spaceMd),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 for (final action in actions)
                   Padding(
-                    padding: const EdgeInsets.only(left: 8),
+                    padding: EdgeInsets.only(left: context.prismTokens.spaceSm),
                     child: action,
                   ),
               ],
@@ -113,7 +117,12 @@ class PrismAdaptiveDialog {
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
             ),
         builder: (innerContext) => Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+          padding: EdgeInsets.fromLTRB(
+            context.prismTokens.spaceLg - context.prismTokens.spaceXs,
+            context.prismTokens.spaceLg - context.prismTokens.spaceXs,
+            context.prismTokens.spaceLg - context.prismTokens.spaceXs,
+            context.prismTokens.spaceLg,
+          ),
           child: content(innerContext),
         ),
       );
@@ -129,7 +138,10 @@ class PrismAdaptiveDialog {
       builder: (innerContext) => Dialog(
         shape:
             shape ??
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(context.prismTokens.radiusLg),
+            ),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: maxWidth ?? 420),
           child: Padding(

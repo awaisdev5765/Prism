@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/theme.dart';
+
 import 'controller.dart';
 
 /// Scope exposing the active [PrismSettingsController] to tiles.
@@ -79,7 +81,12 @@ class PrismSettingsSection extends StatelessWidget {
           children: [
             if (title != null)
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 6),
+                padding: EdgeInsets.fromLTRB(
+                  context.prismTokens.spaceLg - context.prismTokens.spaceXs,
+                  context.prismTokens.spaceMd,
+                  context.prismTokens.spaceLg - context.prismTokens.spaceXs,
+                  context.prismTokens.spaceXs + 2,
+                ),
                 child: Text(
                   title!,
                   style: theme.textTheme.labelLarge?.copyWith(
@@ -89,11 +96,15 @@ class PrismSettingsSection extends StatelessWidget {
                 ),
               ),
             Card(
-              margin: const EdgeInsets.symmetric(horizontal: 12),
+              margin: EdgeInsets.symmetric(
+                horizontal:
+                    context.prismTokens.spaceSm + context.prismTokens.spaceXs,
+              ),
               elevation: 0,
               color: theme.colorScheme.surfaceContainerLow,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius:
+                    BorderRadius.circular(context.prismTokens.radiusLg),
               ),
               child: Column(
                 children: [
@@ -339,8 +350,8 @@ class PrismDropdownTile<T> extends StatelessWidget {
                 if (controller.get<T?>(common.key, null) == item)
                   Icon(Icons.check, size: 18, color: theme.colorScheme.primary)
                 else
-                  const SizedBox(width: 18),
-                const SizedBox(width: 8),
+                  SizedBox(width: context.prismTokens.spaceMd + 2),
+                SizedBox(width: context.prismTokens.spaceSm),
                 Text(itemLabel(item)),
               ],
             ),
