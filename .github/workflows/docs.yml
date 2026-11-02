@@ -39,6 +39,31 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      # Run the suite here rather than trusting a number someone typed into a
+      # template. Several suites generate their cases in loops, so counting
+      # declarations understates the real total, and the landing page should not
+      # claim a figure it cannot reproduce. A failing suite also stops the docs
+      # from shipping a page that says "tests passing".
+      - name: Run tests and capture the count
+        run: |
+          set -o pipefail
+          output=$(flutter test 2>&1)
+          echo "$output" | tail -3
+          count=$(echo "$output" | grep -oE '\+[0-9]+' | tail -1 | tr -d '+')
+          if [ -z "$count" ]; then
+            echo "Could not read a test count; the page will report a lower bound."
+            count=""
+          fi
+          echo "TESTS=$count" >> "$GITHUB_ENV"
+
+      - name: Generate the landing page
+        run: |
+          if [ -n "${TESTS}" ]; then
+            python3 site/build.py --tests "${TESTS}"
+          else
+            python3 site/build.py
+          fi
+
       - name: Generate API documentation
         run: dart doc --output build/docs/api
 

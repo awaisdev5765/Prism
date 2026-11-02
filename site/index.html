@@ -4,11 +4,35 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Prism — 34 adaptive Flutter components on one design system</title>
-<meta name="description" content="One dependency, 34 adaptive Flutter components on a shared design system. Accessible, responsive, and built so a single token override restyles your whole app.">
+<meta name="description" content="One dependency, 34 adaptive Flutter components on a shared design system. Accessible, responsive, and built so one token override restyles your whole app.">
+<link rel="canonical" href="https://awaisdev5765.github.io/Prism/">
+<meta name="theme-color" content="#1f6f96" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1417" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
-<meta property="og:title" content="Prism — an adaptive Flutter component library">
-<meta property="og:description" content="34 components on one design system. One token override restyles the whole app.">
+
 <meta property="og:type" content="website">
+<meta property="og:title" content="Prism — 34 adaptive Flutter components">
+<meta property="og:description" content="One dependency, one design system. Accessible, responsive, restyleable from a single place.">
+<meta property="og:url" content="https://awaisdev5765.github.io/Prism/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Prism — 34 adaptive Flutter components">
+<meta name="twitter:description" content="One dependency, one design system. Accessible and responsive.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Prism",
+  "alternateName": "prism_kit",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Android, iOS, macOS, Windows, Linux, Web",
+  "programmingLanguage": "Dart",
+  "license": "https://opensource.org/licenses/MIT",
+  "codeRepository": "https://github.com/awaisdev5765/Prism",
+  "installUrl": "https://pub.dev/packages/prism_kit",
+  "description": "An adaptive Flutter component library on a shared design system."
+}
+</script>
 
 <style>
   :root {
@@ -17,143 +41,259 @@
     --raised: #ffffff;
     --border: #dbe3e8;
     --text: #0f1719;
-    --muted: #5a6a72;
-    --accent: #2b7fa8;
-    --accent-soft: #e6f2f8;
+    --muted: #586a72;
+    --accent: #1f6f96;
+    --accent-ink: #ffffff;
+    --accent-soft: #e8f3f9;
     --radius: 14px;
-    --max: 1080px;
+    --max: 1100px;
+    --step--1: 0.875rem;
+    --step-0: 1rem;
+    --step-1: 1.15rem;
+    --step-2: 1.45rem;
+    --step-3: clamp(1.6rem, 3.4vw, 2.1rem);
+    --step-4: clamp(2rem, 6vw, 3.4rem);
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #0d1417;
       --surface: #121b1f;
-      --raised: #162226;
-      --border: #26363d;
-      --text: #e8f0f3;
-      --muted: #9db0b8;
-      --accent: #6cc4ea;
-      --accent-soft: #16262e;
+      --raised: #17242a;
+      --border: #27373f;
+      --text: #e9f1f4;
+      --muted: #a2b4bc;
+      --accent: #7ccbf0;
+      --accent-ink: #08171d;
+      --accent-soft: #15262e;
     }
   }
+
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
   body {
     margin: 0;
     background: var(--bg);
     color: var(--text);
-    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font: var(--step-0)/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
-  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  h1, h2, h3 { line-height: 1.15; letter-spacing: -0.022em; text-wrap: balance; }
+  p { text-wrap: pretty; }
   a { color: var(--accent); }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.9em;
+  }
 
-  header { padding: 64px 0 40px; }
+  .skip {
+    position: absolute; left: -9999px; top: 0;
+    background: var(--accent); color: var(--accent-ink);
+    padding: 12px 18px; border-radius: 0 0 var(--radius) 0; z-index: 10;
+  }
+  .skip:focus { left: 0; }
+
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+  .site-head {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .site-head .wrap {
+    display: flex; align-items: center; gap: 18px;
+    min-height: 60px; flex-wrap: wrap;
+  }
   .mark {
-    display: inline-flex; align-items: center; gap: 12px;
-    font-weight: 700; letter-spacing: -0.01em; font-size: 15px;
+    display: inline-flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: var(--step--1);
+    text-decoration: none; color: var(--text);
   }
   .mark .dot {
-    width: 26px; height: 26px; border-radius: 8px;
+    width: 22px; height: 22px; border-radius: 7px;
     background: linear-gradient(135deg, var(--accent), #7dd3a0);
   }
-  h1 {
-    margin: 28px 0 0;
-    font-size: clamp(30px, 5.2vw, 52px);
-    line-height: 1.1; letter-spacing: -0.025em;
+  .site-nav { margin-left: auto; display: flex; gap: 18px; flex-wrap: wrap; }
+  .site-nav a {
+    color: var(--muted); text-decoration: none;
+    font-size: var(--step--1); font-weight: 600;
   }
+  .site-nav a:hover { color: var(--text); }
+
+  header.hero { padding: 66px 0 40px; }
+  h1 { margin: 0; font-size: var(--step-4); }
   .lede {
-    margin: 18px 0 0; max-width: 62ch;
-    font-size: clamp(16px, 2vw, 19px); color: var(--muted);
+    margin: 20px 0 0; max-width: 60ch;
+    font-size: var(--step-1); color: var(--muted);
   }
 
   .cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0 0; }
   .btn {
     display: inline-block; padding: 13px 22px; border-radius: 999px;
-    font-weight: 600; text-decoration: none; font-size: 15px;
+    font-weight: 650; text-decoration: none; font-size: var(--step--1);
     border: 1px solid transparent;
   }
-  .btn.primary { background: var(--accent); color: var(--bg); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); }
   .btn.ghost { border-color: var(--border); color: var(--text); }
-  .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-
-  .stats {
-    display: flex; flex-wrap: wrap; gap: 28px;
-    margin: 44px 0 0; padding: 22px 26px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius);
+  @media (prefers-reduced-motion: no-preference) {
+    .btn, .comp { transition: transform .15s ease, border-color .15s ease; }
+    .btn.primary:hover { transform: translateY(-1px); }
+    .comp:hover { border-color: var(--accent); }
   }
-  .stat b { display: block; font-size: 24px; letter-spacing: -0.02em; }
-  .stat span { font-size: 13px; color: var(--muted); }
 
-  section { padding: 56px 0; border-top: 1px solid var(--border); }
-  h2 { margin: 0 0 8px; font-size: clamp(21px, 3vw, 28px); letter-spacing: -0.02em; }
-  .sub { margin: 0 0 32px; color: var(--muted); max-width: 70ch; }
+  dl.stats {
+    display: grid; gap: 22px; margin: 42px 0 0; padding: 22px 26px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  }
+  dl.stats div { display: flex; flex-direction: column; }
+  dl.stats dt { font-size: var(--step--1); color: var(--muted); order: 2; }
+  dl.stats dd { margin: 0 0 4px; order: 1; }
+  .stat b { font-size: var(--step-2); letter-spacing: -0.02em; }
 
-  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  main > section { padding: 58px 0; border-top: 1px solid var(--border); }
+  h2 { margin: 0 0 10px; font-size: var(--step-3); }
+  h3 { margin: 0 0 8px; font-size: var(--step-1); }
+  .sub { margin: 0 0 32px; color: var(--muted); max-width: 68ch; }
+
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); }
   .card {
     padding: 22px; background: var(--raised);
     border: 1px solid var(--border); border-radius: var(--radius);
   }
-  .card h3 { margin: 0 0 6px; font-size: 16px; }
-  .card p { margin: 0; font-size: 14px; color: var(--muted); }
+  .card p { margin: 0; font-size: var(--step--1); color: var(--muted); }
 
+  .code-block { position: relative; }
   pre {
     margin: 0; padding: 20px 22px; overflow-x: auto;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font: 13.5px/1.7 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    font-size: 0.85rem; line-height: 1.75;
   }
-  code { font-family: inherit; }
   .cmt { color: var(--muted); }
+  .copy {
+    position: absolute; top: 10px; right: 10px;
+    font: inherit; font-size: 0.78rem; font-weight: 600;
+    padding: 6px 12px; border-radius: 999px;
+    background: var(--raised); color: var(--muted);
+    border: 1px solid var(--border); cursor: pointer;
+  }
+  .copy:hover { color: var(--text); }
 
-  ul.plain { margin: 0; padding-left: 20px; color: var(--muted); }
-  ul.plain li { margin: 6px 0; }
+  .filter-row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 26px; }
+  .filter-row label { font-size: var(--step--1); font-weight: 600; }
+  .filter-row input {
+    flex: 1 1 260px; min-width: 0;
+    padding: 11px 15px; font: inherit; font-size: var(--step--1);
+    color: var(--text); background: var(--surface);
+    border: 1px solid var(--border); border-radius: 999px;
+  }
+  .count { font-size: var(--step--1); color: var(--muted); }
+
+  .group { margin-bottom: 38px; }
+  .group h3 { font-size: var(--step-2); }
+  .group-blurb { margin: 0 0 16px; color: var(--muted); font-size: var(--step--1); }
+  .comp-list {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(288px, 1fr));
+  }
+  .comp {
+    display: block; padding: 14px 16px;
+    background: var(--raised); border: 1px solid var(--border); border-radius: var(--radius);
+  }
+  .comp-name { display: block; font-weight: 650; }
+  .comp-desc { display: block; margin-top: 4px; font-size: var(--step--1); color: var(--muted); }
+  .comp[hidden], .group[hidden] { display: none; }
+
+  .scales { display: grid; gap: 34px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .scale-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .scale-row code { width: 88px; color: var(--muted); font-size: 0.8rem; }
+  .scale-bar {
+    height: 12px; width: calc(var(--w) * 2.2px); min-width: 4px;
+    background: var(--accent); border-radius: 3px;
+  }
+  .scale-value { font-size: 0.8rem; color: var(--muted); }
+  .radii { display: flex; gap: 18px; flex-wrap: wrap; }
+  .radius-cell { display: grid; justify-items: center; gap: 6px; }
+  .radius-box {
+    width: 54px; height: 54px; background: var(--accent-soft);
+    border: 2px solid var(--accent);
+  }
+  .radius-cell code { font-size: 0.75rem; color: var(--muted); }
+
+  .swatches { display: flex; gap: 12px; flex-wrap: wrap; }
+  .swatch {
+    padding: 12px 16px; border-radius: var(--radius);
+    font-size: var(--step--1); font-weight: 600;
+  }
+  .s-ok { background: #c9f2dc; color: #06301a; }
+  .s-warn { background: #ffe7b8; color: #2e1f00; }
+  @media (prefers-color-scheme: dark) {
+    .s-ok { background: #1e4c33; color: #c9f2dc; }
+    .s-warn { background: #54401a; color: #ffe7b8; }
+  }
+
+  ul.plain { margin: 0; padding-left: 22px; color: var(--muted); }
+  ul.plain li { margin: 8px 0; }
   ul.plain strong { color: var(--text); }
 
-  footer {
-    padding: 44px 0 72px; border-top: 1px solid var(--border);
-    color: var(--muted); font-size: 14px;
-  }
+  footer { padding: 46px 0 76px; border-top: 1px solid var(--border); color: var(--muted); font-size: var(--step--1); }
   .bmc { display: inline-block; margin: 18px 0 22px; }
   .bmc img { height: 48px; width: auto; }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .card, .btn { transition: border-color .15s ease, transform .15s ease; }
-    .card:hover { border-color: var(--accent); }
-    .btn.primary:hover { transform: translateY(-1px); }
-  }
 </style>
 </head>
 <body>
 
-<header class="wrap">
-  <div class="mark"><span class="dot" aria-hidden="true"></span> Prism</div>
-  <h1>34 adaptive Flutter components.<br>One design system.</h1>
-  <p class="lede">
-    Install one package instead of a dozen fragmented ones, and get components that
-    already agree on spacing, corners, motion and colour — because they read the
-    same tokens. Change <code>spaceMd</code> once and the whole app changes rhythm
-    together.
-  </p>
+<a class="skip" href="#main">Skip to content</a>
 
-  <div class="cta">
-    <a class="btn primary" href="gallery/">Browse the live gallery</a>
-    <a class="btn ghost" href="api/">API reference</a>
-    <a class="btn ghost" href="https://pub.dev/packages/prism_kit">pub.dev</a>
-    <a class="btn ghost" href="https://github.com/awaisdev5765/Prism">GitHub</a>
-  </div>
-
-  <div class="stats">
-    <div class="stat"><b>34</b><span>components</span></div>
-    <div class="stat"><b>769</b><span>tests passing</span></div>
-    <div class="stat"><b>0</b><span>analyzer issues</span></div>
-    <div class="stat"><b>184</b><span>responsive cases checked</span></div>
-    <div class="stat"><b>AA</b><span>WCAG contrast, verified</span></div>
+<header class="site-head">
+  <div class="wrap">
+    <a class="mark" href="./"><span class="dot" aria-hidden="true"></span> Prism</a>
+    <nav class="site-nav" aria-label="Sections">
+      <a href="#components">Components</a>
+      <a href="#tokens">Design system</a>
+      <a href="#quality">Quality</a>
+      <a href="gallery/">Gallery</a>
+      <a href="api/">API</a>
+    </nav>
   </div>
 </header>
 
-<section class="wrap">
-  <h2>Install</h2>
-  <p class="sub">One dependency. Every component reads the same tokens, so theming is a single place.</p>
+<main id="main">
+
+  <div class="hero wrap">
+    <h1>34 adaptive Flutter components.<br>One design system.</h1>
+    <p class="lede">
+      Install one package instead of a dozen fragmented ones, and get components
+      that already agree on spacing, corners, motion and colour — because they read
+      the same tokens. Change <code>spaceMd</code> once and the whole app changes
+      rhythm together.
+    </p>
+
+    <div class="cta">
+      <a class="btn primary" href="gallery/">Browse the live gallery</a>
+      <a class="btn ghost" href="api/">API reference</a>
+      <a class="btn ghost" href="https://pub.dev/packages/prism_kit">pub.dev</a>
+      <a class="btn ghost" href="https://github.com/awaisdev5765/Prism">GitHub</a>
+    </div>
+
+    <dl class="stats">
+      <div><dd><b class="stat">34</b></dd><dt>components</dt></div>
+      <div><dd><b class="stat">769</b></dd><dt>tests passing</dt></div>
+      <div><dd><b class="stat">0</b></dd><dt>analyzer issues</dt></div>
+      <div><dd><b class="stat">184</b></dd><dt>responsive cases</dt></div>
+      <div><dd><b class="stat">AA</b></dd><dt>WCAG contrast, verified</dt></div>
+    </dl>
+  </div>
+
+  <section class="wrap" aria-labelledby="install">
+    <h2 id="install">Install</h2>
+    <p class="sub">One dependency. Every component reads the same tokens, so theming lives in one place.</p>
+
+    <div class="code-block">
+      <button class="copy" type="button" data-copy>Copy</button>
 <pre><code>flutter pub add prism_kit
 
 <span class="cmt">// One import gives you everything.</span>
@@ -165,105 +305,189 @@ MaterialApp(
   darkTheme: prismTheme(seed: brandPurple, brightness: Brightness.dark),
   home: const HomePage(),
 );</code></pre>
-</section>
+    </div>
+  </section>
 
-<section class="wrap">
-  <h2>What makes it different</h2>
-  <p class="sub">Three things that are easy to claim and harder to actually deliver. All three are tested.</p>
-  <div class="grid">
-    <div class="card">
-      <h3>A design system, not a bundle</h3>
-      <p>
-        Every one of the 34 components reads <code>PrismTokens</code> and
-        <code>PrismColors</code>. Tests install deliberately unusual tokens and
-        assert the components adopt them, so a hard-coded radius or duration fails CI.
-      </p>
+  <section class="wrap" aria-labelledby="why">
+    <h2 id="why">What makes it different</h2>
+    <p class="sub">Three things that are easy to claim and harder to deliver. All three are covered by tests you can read.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>A design system, not a bundle</h3>
+        <p>Every one of the 34 components reads <code>PrismTokens</code> and
+        <code>PrismColors</code>. Tests install deliberately unusual tokens and assert
+        the components adopt them, so a hard-coded radius or duration fails CI.</p>
+      </div>
+      <div class="card">
+        <h3>Accessible by default</h3>
+        <p>Live regions for state you did not trigger, decorative content hidden from
+        screen readers, minimum touch targets, sortable headers that announce their
+        direction, and reduced motion honoured everywhere.</p>
+      </div>
+      <div class="card">
+        <h3>Adaptive, not just responsive</h3>
+        <p>Tables become labelled cards on a phone. Tabs scroll instead of clipping.
+        The stepper collapses to a step counter. Compact below 600 px,
+        expanded above 840 px, one widget throughout.</p>
+      </div>
+      <div class="card">
+        <h3>Zero lock-in</h3>
+        <p>No database, backend or cloud dependency. The AI client and the updater
+        are the only networked pieces, and you own the endpoints.</p>
+      </div>
+      <div class="card">
+        <h3>Verified, not vibes</h3>
+        <p>The semantic palette is checked against WCAG AA across ten brand seeds in
+        both brightnesses, and a 184-case matrix pumps every component at 320 px and
+        1600 px in LTR and RTL.</p>
+      </div>
+      <div class="card">
+        <h3>Testing helpers included</h3>
+        <p><code>prismTestApp</code> configures the tokens, a real viewport,
+        brightness, direction and reduced motion — because a zero-size viewport makes
+        adaptive tests silently assert nothing.</p>
+      </div>
     </div>
-    <div class="card">
-      <h3>Accessible by default</h3>
-      <p>
-        Live regions for state you did not trigger, decorative content hidden from
-        screen readers, minimum touch targets, sortable headers that announce
-        direction, and reduced motion honoured everywhere.
-      </p>
-    </div>
-    <div class="card">
-      <h3>Adaptive, not just responsive</h3>
-      <p>
-        Tables become labelled cards on a phone. Tabs scroll instead of clipping. The
-        stepper collapses to a step counter. One widget, the right layout for the window.
-      </p>
-    </div>
-    <div class="card">
-      <h3>Zero lock-in</h3>
-      <p>
-        No database, backend or cloud dependency. The AI client and the updater are the
-        only networked pieces, and you own the endpoints.
-      </p>
-    </div>
-    <div class="card">
-      <h3>Verified, not vibes</h3>
-      <p>
-        The semantic palette is checked against WCAG AA across ten brand seeds in both
-        brightnesses, and a 184-case matrix pumps every component at 320&nbsp;px and
-        1600&nbsp;px in LTR and RTL.
-      </p>
-    </div>
-    <div class="card">
-      <h3>Testing helpers included</h3>
-      <p>
-        <code>prismTestApp</code> configures the tokens, a real viewport, brightness,
-        direction and reduced motion — because a zero-size viewport makes adaptive
-        tests silently assert nothing.
-      </p>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="wrap">
-  <h2>What is in it</h2>
-  <p class="sub">Roughly grouped. Every component has an interactive demo in the gallery.</p>
-  <div class="grid">
-    <div class="card">
-      <h3>Layout &amp; navigation</h3>
-      <p>AdaptiveScaffold · Tabs · MasterDetail · Stepper · Accordion · AdaptiveDialog · AdaptiveSheet</p>
-    </div>
-    <div class="card">
-      <h3>Data &amp; input</h3>
-      <p>DataTable · Calendar · Form · Search · Settings · ChipInput · OtpField · Rating · SegmentedControl</p>
-    </div>
-    <div class="card">
-      <h3>Feedback &amp; status</h3>
-      <p>Toast · Banner · StateViews · Skeleton · Pagination · ConnectionBanner · SyncStatus · Badge · Timeline</p>
-    </div>
-    <div class="card">
-      <h3>Content &amp; platform</h3>
-      <p>Markdown · CodeView · Changelog · Palette · Avatar · CommandPalette · Updater · Image · AI chat</p>
-    </div>
-  </div>
-</section>
+  <section class="wrap" id="components" aria-labelledby="components-h">
+    <h2 id="components-h">All 34 components</h2>
+    <p class="sub">Every one has an interactive demo in the gallery. Filter to find what you need.</p>
 
-<section class="wrap">
-  <h2>Built to be read</h2>
-  <p class="sub">
-    The source is short, documented, and has no clever indirection. If you want to know
-    how something works, read it.
-  </p>
-  <ul class="plain">
-    <li><strong>Strict analysis.</strong> <code>strict-casts</code>, <code>strict-inference</code> and <code>strict-raw-types</code>, with zero issues.</li>
-    <li><strong>Every animated component</strong> takes its duration from the platform's reduce-motion setting.</li>
-    <li><strong>Style classes resolve against the theme.</strong> Unset fields are nullable and filled in one <code>resolve(context)</code> call.</li>
-    <li><strong>Documented trade-offs.</strong> Where something is a heuristic — token estimation, deletion detection — the docs say so.</li>
+    <div class="filter-row">
+      <label for="filter">Filter</label>
+      <input id="filter" type="search" placeholder="Try “table”, “calendar”, “offline”…" autocomplete="off">
+      <span class="count" id="count" role="status" aria-live="polite"></span>
+    </div>
+
+<section class="group" aria-labelledby="g-layout-and-navigation">
+  <h3 id="g-layout-and-navigation">Layout and navigation</h3>
+  <p class="group-blurb">Structure, movement, and the shapes a screen takes.</p>
+  <ul class="comp-list">
+    <li class="comp" data-name="AdaptiveScaffold" data-desc="Bottom nav bar → navigation rail → expanded rail, by window width"><code class="comp-name">AdaptiveScaffold</code><span class="comp-desc">Bottom nav bar → navigation rail → expanded rail, by window width</span></li>
+    <li class="comp" data-name="AdaptiveDialog" data-desc="Platform-adaptive dialogs from a single call"><code class="comp-name">AdaptiveDialog</code><span class="comp-desc">Platform-adaptive dialogs from a single call</span></li>
+    <li class="comp" data-name="AdaptiveSheet" data-desc="Bottom sheet on phones, centred dialog on desktop — one call"><code class="comp-name">AdaptiveSheet</code><span class="comp-desc">Bottom sheet on phones, centred dialog on desktop — one call</span></li>
+    <li class="comp" data-name="Tabs" data-desc="Adaptive tab strip: scrolls on phones, shares the width on desktop"><code class="comp-name">Tabs</code><span class="comp-desc">Adaptive tab strip: scrolls on phones, shares the width on desktop</span></li>
+    <li class="comp" data-name="MasterDetail" data-desc="Responsive two-pane layouts (list → detail) that push on compact windows"><code class="comp-name">MasterDetail</code><span class="comp-desc">Responsive two-pane layouts (list → detail) that push on compact windows</span></li>
+    <li class="comp" data-name="Stepper" data-desc="Wizard progress: horizontal on wide, compact &quot;Step X of Y&quot; on phones"><code class="comp-name">Stepper</code><span class="comp-desc">Wizard progress: horizontal on wide, compact &quot;Step X of Y&quot; on phones</span></li>
+    <li class="comp" data-name="Accordion" data-desc="Collapsible sections with single-expansion mode"><code class="comp-name">Accordion</code><span class="comp-desc">Collapsible sections with single-expansion mode</span></li>
+    <li class="comp" data-name="CommandPalette" data-desc="⌘K launcher with fuzzy search, grouping and keyboard navigation"><code class="comp-name">CommandPalette</code><span class="comp-desc">⌘K launcher with fuzzy search, grouping and keyboard navigation</span></li>
   </ul>
 </section>
+<section class="group" aria-labelledby="g-data-and-input">
+  <h3 id="g-data-and-input">Data and input</h3>
+  <p class="group-blurb">Collecting and presenting information, forms included.</p>
+  <ul class="comp-list">
+    <li class="comp" data-name="DataTable" data-desc="Sortable table that becomes labelled cards on narrow windows"><code class="comp-name">DataTable</code><span class="comp-desc">Sortable table that becomes labelled cards on narrow windows</span></li>
+    <li class="comp" data-name="Calendar" data-desc="Month grid with single/range/multiple selection, markers and localisable names"><code class="comp-name">Calendar</code><span class="comp-desc">Month grid with single/range/multiple selection, markers and localisable names</span></li>
+    <li class="comp" data-name="Form" data-desc="Declarative forms: fields, validators, submit lifecycle states"><code class="comp-name">Form</code><span class="comp-desc">Declarative forms: fields, validators, submit lifecycle states</span></li>
+    <li class="comp" data-name="Search" data-desc="Adaptive search: local datasets or debounced async backends"><code class="comp-name">Search</code><span class="comp-desc">Adaptive search: local datasets or debounced async backends</span></li>
+    <li class="comp" data-name="Settings" data-desc="iOS-style grouped settings pages with searchable tiles"><code class="comp-name">Settings</code><span class="comp-desc">iOS-style grouped settings pages with searchable tiles</span></li>
+    <li class="comp" data-name="ChipInput" data-desc="Tag/token entry with paste splitting, duplicates, limits and suggestions"><code class="comp-name">ChipInput</code><span class="comp-desc">Tag/token entry with paste splitting, duplicates, limits and suggestions</span></li>
+    <li class="comp" data-name="OtpField" data-desc="OTP/PIN entry with paste, auto-submit, SMS autofill and grouping"><code class="comp-name">OtpField</code><span class="comp-desc">OTP/PIN entry with paste, auto-submit, SMS autofill and grouping</span></li>
+    <li class="comp" data-name="Rating" data-desc="Star rating with half values and full slider semantics"><code class="comp-name">Rating</code><span class="comp-desc">Star rating with half values and full slider semantics</span></li>
+    <li class="comp" data-name="SegmentedControl" data-desc="Single-choice control that scrolls instead of overflowing"><code class="comp-name">SegmentedControl</code><span class="comp-desc">Single-choice control that scrolls instead of overflowing</span></li>
+  </ul>
+</section>
+<section class="group" aria-labelledby="g-feedback-and-status">
+  <h3 id="g-feedback-and-status">Feedback and status</h3>
+  <p class="group-blurb">Telling the user what is happening without interrupting them.</p>
+  <ul class="comp-list">
+    <li class="comp" data-name="Toast" data-desc="Adaptive toasts: bottom-centered on mobile, stacked top-right on desktop"><code class="comp-name">Toast</code><span class="comp-desc">Adaptive toasts: bottom-centered on mobile, stacked top-right on desktop</span></li>
+    <li class="comp" data-name="Banner" data-desc="Dismissible announcement banners; dismissals persist across restarts"><code class="comp-name">Banner</code><span class="comp-desc">Dismissible announcement banners; dismissals persist across restarts</span></li>
+    <li class="comp" data-name="StateViews" data-desc="Loading / empty / error / success state widgets driven by one notifier"><code class="comp-name">StateViews</code><span class="comp-desc">Loading / empty / error / success state widgets driven by one notifier</span></li>
+    <li class="comp" data-name="Skeleton" data-desc="Shimmering placeholders: text, card, tile list, circle — reduced-motion aware"><code class="comp-name">Skeleton</code><span class="comp-desc">Shimmering placeholders: text, card, tile list, circle — reduced-motion aware</span></li>
+    <li class="comp" data-name="Pagination" data-desc="Infinite-scroll list with page loader, empty/error/retry states"><code class="comp-name">Pagination</code><span class="comp-desc">Infinite-scroll list with page loader, empty/error/retry states</span></li>
+    <li class="comp" data-name="ConnectionBanner" data-desc="Offline/online banner with debounce, retry and live-region announcements"><code class="comp-name">ConnectionBanner</code><span class="comp-desc">Offline/online banner with debounce, retry and live-region announcements</span></li>
+    <li class="comp" data-name="SyncStatus" data-desc="Compact, live-region sync indicator with progress, retry and six phases"><code class="comp-name">SyncStatus</code><span class="comp-desc">Compact, live-region sync indicator with progress, retry and six phases</span></li>
+    <li class="comp" data-name="Badge" data-desc="Count or status dot, collapsing to 99+ and hiding at zero"><code class="comp-name">Badge</code><span class="comp-desc">Count or status dot, collapsing to 99+ and hiding at zero</span></li>
+    <li class="comp" data-name="Timeline" data-desc="Vertical event timeline with connectors, semantic roles and rich nodes"><code class="comp-name">Timeline</code><span class="comp-desc">Vertical event timeline with connectors, semantic roles and rich nodes</span></li>
+  </ul>
+</section>
+<section class="group" aria-labelledby="g-content-media-and-platform">
+  <h3 id="g-content-media-and-platform">Content, media and platform</h3>
+  <p class="group-blurb">Rendering, appearance, and the pieces that talk to the outside.</p>
+  <ul class="comp-list">
+    <li class="comp" data-name="Markdown" data-desc="Fast, plugin-free CommonMark + GFM renderer with syntax highlighting"><code class="comp-name">Markdown</code><span class="comp-desc">Fast, plugin-free CommonMark + GFM renderer with syntax highlighting</span></li>
+    <li class="comp" data-name="CodeView" data-desc="Syntax-highlighted, copyable code viewer with pluggable tokenizers"><code class="comp-name">CodeView</code><span class="comp-desc">Syntax-highlighted, copyable code viewer with pluggable tokenizers</span></li>
+    <li class="comp" data-name="Changelog" data-desc="Parse a Keep-a-Changelog markdown file into collapsible &quot;What&#x27;s new&quot; cards"><code class="comp-name">Changelog</code><span class="comp-desc">Parse a Keep-a-Changelog markdown file into collapsible &quot;What&#x27;s new&quot; cards</span></li>
+    <li class="comp" data-name="Palette" data-desc="Extract dominant/vibrant/muted color palettes from images"><code class="comp-name">Palette</code><span class="comp-desc">Extract dominant/vibrant/muted color palettes from images</span></li>
+    <li class="comp" data-name="Avatar" data-desc="Image with deterministic initials fallback, presence dots and badges"><code class="comp-name">Avatar</code><span class="comp-desc">Image with deterministic initials fallback, presence dots and badges</span></li>
+    <li class="comp" data-name="Image" data-desc="Retrying network image provider with configurable backoff strategy"><code class="comp-name">Image</code><span class="comp-desc">Retrying network image provider with configurable backoff strategy</span></li>
+    <li class="comp" data-name="Updater" data-desc="In-app update flow: version gates, rollouts, skip-version, download progress"><code class="comp-name">Updater</code><span class="comp-desc">In-app update flow: version gates, rollouts, skip-version, download progress</span></li>
+    <li class="comp" data-name="PrismAi" data-desc="Provider-agnostic streaming AI chat: OpenAI, Ollama, Groq, DeepSeek, Gemini, Anthropic — with typed events, tool-calling loop and a ready chat view"><code class="comp-name">PrismAi</code><span class="comp-desc">Provider-agnostic streaming AI chat: OpenAI, Ollama, Groq, DeepSeek, Gemini, Anthropic — with typed events, tool-calling loop and a ready chat view</span></li>
+  </ul>
+</section>
+  </section>
+
+  <section class="wrap" id="tokens" aria-labelledby="tokens-h">
+    <h2 id="tokens-h">The design system, at a glance</h2>
+    <p class="sub">
+      The real default values, read from the source when this page was built.
+      Override any of them in <code>ThemeData.extensions</code> and every component
+      follows.
+    </p>
+
+    <div class="scales">
+      <div>
+        <h3>Spacing scale</h3>
+        <div aria-hidden="true">
+<div class="scale-row"><code>spaceXs</code><span class="scale-bar" style="--w: 4.0px"></span><span class="scale-value">4</span></div>
+<div class="scale-row"><code>spaceSm</code><span class="scale-bar" style="--w: 8.0px"></span><span class="scale-value">8</span></div>
+<div class="scale-row"><code>spaceMd</code><span class="scale-bar" style="--w: 16.0px"></span><span class="scale-value">16</span></div>
+<div class="scale-row"><code>spaceLg</code><span class="scale-bar" style="--w: 24.0px"></span><span class="scale-value">24</span></div>
+<div class="scale-row"><code>spaceXl</code><span class="scale-bar" style="--w: 32.0px"></span><span class="scale-value">32</span></div>
+<div class="scale-row"><code>spaceXxl</code><span class="scale-bar" style="--w: 48.0px"></span><span class="scale-value">48</span></div>
+        </div>
+      </div>
+      <div>
+        <h3>Corner radii</h3>
+        <div class="radii" aria-hidden="true">
+<div class="radius-cell"><span class="radius-box" style="border-radius: 8px"></span><code>radiusSm</code><span class="scale-value">8px</span></div>
+<div class="radius-cell"><span class="radius-box" style="border-radius: 12px"></span><code>radiusMd</code><span class="scale-value">12px</span></div>
+<div class="radius-cell"><span class="radius-box" style="border-radius: 16px"></span><code>radiusLg</code><span class="scale-value">16px</span></div>
+<div class="radius-cell"><span class="radius-box" style="border-radius: 24px"></span><code>radiusXl</code><span class="scale-value">24px</span></div>
+        </div>
+        <h3 style="margin-top:26px">Motion</h3>
+        <p class="sub" style="margin:0"><code>durationFast</code> 120 ms · <code>durationMedium</code> 240 ms · <code>durationSlow</code> 420 ms</p>
+        <p class="sub" style="margin:12px 0 0">
+          Durations collapse to zero when the platform asks for reduced motion.
+          Controls default to 44 px tall.
+        </p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:34px">Semantic roles</h3>
+    <p class="sub" style="margin-bottom:14px">
+      <code>success</code> and <code>warning</code> use fixed, tested colours so they
+      never collapse into a green or amber brand colour. <code>error</code> and
+      <code>info</code> come from your own <code>ColorScheme</code>.
+    </p>
+    <div class="swatches">
+      <span class="swatch s-ok">success · #1B7A4B on #C9F2DC</span>
+      <span class="swatch s-warn">warning · #8A5A00 on #FFE7B8</span>
+    </div>
+  </section>
+
+  <section class="wrap" id="quality" aria-labelledby="quality-h">
+    <h2 id="quality-h">Built to be read</h2>
+    <p class="sub">The source is short and documented, with no clever indirection. If you want to know how something works, read it.</p>
+    <ul class="plain">
+      <li><strong>Strict analysis.</strong> <code>strict-casts</code>, <code>strict-inference</code> and <code>strict-raw-types</code>, reporting zero issues.</li>
+      <li><strong>Every animated component</strong> takes its duration from the platform's reduce-motion setting.</li>
+      <li><strong>Style classes resolve against the theme.</strong> Unset fields stay nullable and are filled in one <code>resolve(context)</code> call.</li>
+      <li><strong>Documented trade-offs.</strong> Where something is a heuristic — token estimation, deletion detection — the docs say so.</li>
+      <li><strong>769 tests passing</strong> across unit, widget and matrix suites. <a href="https://github.com/awaisdev5765/Prism/tree/main/test">Read them</a>.</li>
+    </ul>
+  </section>
+
+</main>
 
 <footer>
   <div class="wrap">
     <div class="mark"><span class="dot" aria-hidden="true"></span> Prism</div>
     <a class="bmc" href="https://buymeacoffee.com/awaisdev572">
-      <img
-        src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&amp;emoji=%E2%98%95&amp;slug=awaisdev572&amp;button_colour=FFDD00&amp;font_colour=000000&amp;font_family=Lato&amp;outline_colour=000000&amp;coffee_colour=ffffff"
-        alt="Buy Me A Coffee">
+      <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&amp;emoji=%E2%98%95&amp;slug=awaisdev572&amp;button_colour=FFDD00&amp;font_colour=000000&amp;font_family=Lato&amp;outline_colour=000000&amp;coffee_colour=ffffff" alt="Buy Me A Coffee" loading="lazy">
     </a>
     <p>
       <a href="https://pub.dev/packages/prism_kit">pub.dev</a> ·
@@ -274,6 +498,52 @@ MaterialApp(
     </p>
   </div>
 </footer>
+
+<script>
+// Progressive enhancement only. Without JavaScript the page is fully usable and
+// the code block is still selectable by hand.
+(function () {
+  var filter = document.getElementById('filter');
+  var count = document.getElementById('count');
+  var comps = Array.prototype.slice.call(document.querySelectorAll('.comp'));
+  var groups = Array.prototype.slice.call(document.querySelectorAll('.group'));
+
+  function apply() {
+    var q = (filter.value || '').trim().toLowerCase();
+    var shown = 0;
+    comps.forEach(function (el) {
+      var hay = (el.dataset.name + ' ' + el.dataset.desc).toLowerCase();
+      var hit = !q || hay.indexOf(q) !== -1;
+      el.hidden = !hit;
+      if (hit) shown++;
+    });
+    // Hide a group whose every card is filtered out, so filtering does not leave
+    // a run of empty headings behind.
+    groups.forEach(function (g) {
+      g.hidden = g.querySelectorAll('.comp:not([hidden])').length === 0;
+    });
+    count.textContent = q
+      ? shown + ' of ' + comps.length + ' shown'
+      : comps.length + ' components';
+  }
+
+  if (filter && count) {
+    filter.addEventListener('input', apply);
+    apply();
+  }
+
+  var copyBtn = document.querySelector('[data-copy]');
+  if (copyBtn && navigator.clipboard) {
+    copyBtn.addEventListener('click', function () {
+      var code = copyBtn.parentNode.querySelector('code');
+      navigator.clipboard.writeText(code.innerText).then(function () {
+        copyBtn.textContent = 'Copied';
+        setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1600);
+      });
+    });
+  }
+})();
+</script>
 
 </body>
 </html>

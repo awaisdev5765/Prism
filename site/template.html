@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prism — {{COUNT}} adaptive Flutter components on one design system</title>
+<meta name="description" content="One dependency, {{COUNT}} adaptive Flutter components on a shared design system. Accessible, responsive, and built so one token override restyles your whole app.">
+<link rel="canonical" href="https://awaisdev5765.github.io/Prism/">
+<meta name="theme-color" content="#1f6f96" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1417" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Prism — {{COUNT}} adaptive Flutter components">
+<meta property="og:description" content="One dependency, one design system. Accessible, responsive, restyleable from a single place.">
+<meta property="og:url" content="https://awaisdev5765.github.io/Prism/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Prism — {{COUNT}} adaptive Flutter components">
+<meta name="twitter:description" content="One dependency, one design system. Accessible and responsive.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Prism",
+  "alternateName": "prism_kit",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Android, iOS, macOS, Windows, Linux, Web",
+  "programmingLanguage": "Dart",
+  "license": "https://opensource.org/licenses/MIT",
+  "codeRepository": "https://github.com/awaisdev5765/Prism",
+  "installUrl": "https://pub.dev/packages/prism_kit",
+  "description": "An adaptive Flutter component library on a shared design system."
+}
+</script>
+
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f4f7f9;
+    --raised: #ffffff;
+    --border: #dbe3e8;
+    --text: #0f1719;
+    --muted: #586a72;
+    --accent: #1f6f96;
+    --accent-ink: #ffffff;
+    --accent-soft: #e8f3f9;
+    --radius: 14px;
+    --max: 1100px;
+    --step--1: 0.875rem;
+    --step-0: 1rem;
+    --step-1: 1.15rem;
+    --step-2: 1.45rem;
+    --step-3: clamp(1.6rem, 3.4vw, 2.1rem);
+    --step-4: clamp(2rem, 6vw, 3.4rem);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1417;
+      --surface: #121b1f;
+      --raised: #17242a;
+      --border: #27373f;
+      --text: #e9f1f4;
+      --muted: #a2b4bc;
+      --accent: #7ccbf0;
+      --accent-ink: #08171d;
+      --accent-soft: #15262e;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: var(--step-0)/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  h1, h2, h3 { line-height: 1.15; letter-spacing: -0.022em; text-wrap: balance; }
+  p { text-wrap: pretty; }
+  a { color: var(--accent); }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.9em;
+  }
+
+  .skip {
+    position: absolute; left: -9999px; top: 0;
+    background: var(--accent); color: var(--accent-ink);
+    padding: 12px 18px; border-radius: 0 0 var(--radius) 0; z-index: 10;
+  }
+  .skip:focus { left: 0; }
+
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+  .site-head {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .site-head .wrap {
+    display: flex; align-items: center; gap: 18px;
+    min-height: 60px; flex-wrap: wrap;
+  }
+  .mark {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: var(--step--1);
+    text-decoration: none; color: var(--text);
+  }
+  .mark .dot {
+    width: 22px; height: 22px; border-radius: 7px;
+    background: linear-gradient(135deg, var(--accent), #7dd3a0);
+  }
+  .site-nav { margin-left: auto; display: flex; gap: 18px; flex-wrap: wrap; }
+  .site-nav a {
+    color: var(--muted); text-decoration: none;
+    font-size: var(--step--1); font-weight: 600;
+  }
+  .site-nav a:hover { color: var(--text); }
+
+  header.hero { padding: 66px 0 40px; }
+  h1 { margin: 0; font-size: var(--step-4); }
+  .lede {
+    margin: 20px 0 0; max-width: 60ch;
+    font-size: var(--step-1); color: var(--muted);
+  }
+
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0 0; }
+  .btn {
+    display: inline-block; padding: 13px 22px; border-radius: 999px;
+    font-weight: 650; text-decoration: none; font-size: var(--step--1);
+    border: 1px solid transparent;
+  }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); }
+  .btn.ghost { border-color: var(--border); color: var(--text); }
+  @media (prefers-reduced-motion: no-preference) {
+    .btn, .comp { transition: transform .15s ease, border-color .15s ease; }
+    .btn.primary:hover { transform: translateY(-1px); }
+    .comp:hover { border-color: var(--accent); }
+  }
+
+  dl.stats {
+    display: grid; gap: 22px; margin: 42px 0 0; padding: 22px 26px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  }
+  dl.stats div { display: flex; flex-direction: column; }
+  dl.stats dt { font-size: var(--step--1); color: var(--muted); order: 2; }
+  dl.stats dd { margin: 0 0 4px; order: 1; }
+  .stat b { font-size: var(--step-2); letter-spacing: -0.02em; }
+
+  main > section { padding: 58px 0; border-top: 1px solid var(--border); }
+  h2 { margin: 0 0 10px; font-size: var(--step-3); }
+  h3 { margin: 0 0 8px; font-size: var(--step-1); }
+  .sub { margin: 0 0 32px; color: var(--muted); max-width: 68ch; }
+
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); }
+  .card {
+    padding: 22px; background: var(--raised);
+    border: 1px solid var(--border); border-radius: var(--radius);
+  }
+  .card p { margin: 0; font-size: var(--step--1); color: var(--muted); }
+
+  .code-block { position: relative; }
+  pre {
+    margin: 0; padding: 20px 22px; overflow-x: auto;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    font-size: 0.85rem; line-height: 1.75;
+  }
+  .cmt { color: var(--muted); }
+  .copy {
+    position: absolute; top: 10px; right: 10px;
+    font: inherit; font-size: 0.78rem; font-weight: 600;
+    padding: 6px 12px; border-radius: 999px;
+    background: var(--raised); color: var(--muted);
+    border: 1px solid var(--border); cursor: pointer;
+  }
+  .copy:hover { color: var(--text); }
+
+  .filter-row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 26px; }
+  .filter-row label { font-size: var(--step--1); font-weight: 600; }
+  .filter-row input {
+    flex: 1 1 260px; min-width: 0;
+    padding: 11px 15px; font: inherit; font-size: var(--step--1);
+    color: var(--text); background: var(--surface);
+    border: 1px solid var(--border); border-radius: 999px;
+  }
+  .count { font-size: var(--step--1); color: var(--muted); }
+
+  .group { margin-bottom: 38px; }
+  .group h3 { font-size: var(--step-2); }
+  .group-blurb { margin: 0 0 16px; color: var(--muted); font-size: var(--step--1); }
+  .comp-list {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(288px, 1fr));
+  }
+  .comp {
+    display: block; padding: 14px 16px;
+    background: var(--raised); border: 1px solid var(--border); border-radius: var(--radius);
+  }
+  .comp-name { display: block; font-weight: 650; }
+  .comp-desc { display: block; margin-top: 4px; font-size: var(--step--1); color: var(--muted); }
+  .comp[hidden], .group[hidden] { display: none; }
+
+  .scales { display: grid; gap: 34px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .scale-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .scale-row code { width: 88px; color: var(--muted); font-size: 0.8rem; }
+  .scale-bar {
+    height: 12px; width: calc(var(--w) * 2.2px); min-width: 4px;
+    background: var(--accent); border-radius: 3px;
+  }
+  .scale-value { font-size: 0.8rem; color: var(--muted); }
+  .radii { display: flex; gap: 18px; flex-wrap: wrap; }
+  .radius-cell { display: grid; justify-items: center; gap: 6px; }
+  .radius-box {
+    width: 54px; height: 54px; background: var(--accent-soft);
+    border: 2px solid var(--accent);
+  }
+  .radius-cell code { font-size: 0.75rem; color: var(--muted); }
+
+  .swatches { display: flex; gap: 12px; flex-wrap: wrap; }
+  .swatch {
+    padding: 12px 16px; border-radius: var(--radius);
+    font-size: var(--step--1); font-weight: 600;
+  }
+  .s-ok { background: #c9f2dc; color: #06301a; }
+  .s-warn { background: #ffe7b8; color: #2e1f00; }
+  @media (prefers-color-scheme: dark) {
+    .s-ok { background: #1e4c33; color: #c9f2dc; }
+    .s-warn { background: #54401a; color: #ffe7b8; }
+  }
+
+  ul.plain { margin: 0; padding-left: 22px; color: var(--muted); }
+  ul.plain li { margin: 8px 0; }
+  ul.plain strong { color: var(--text); }
+
+  footer { padding: 46px 0 76px; border-top: 1px solid var(--border); color: var(--muted); font-size: var(--step--1); }
+  .bmc { display: inline-block; margin: 18px 0 22px; }
+  .bmc img { height: 48px; width: auto; }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="mark" href="./"><span class="dot" aria-hidden="true"></span> Prism</a>
+    <nav class="site-nav" aria-label="Sections">
+      <a href="#components">Components</a>
+      <a href="#tokens">Design system</a>
+      <a href="#quality">Quality</a>
+      <a href="gallery/">Gallery</a>
+      <a href="api/">API</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="hero wrap">
+    <h1>{{COUNT}} adaptive Flutter components.<br>One design system.</h1>
+    <p class="lede">
+      Install one package instead of a dozen fragmented ones, and get components
+      that already agree on spacing, corners, motion and colour — because they read
+      the same tokens. Change <code>spaceMd</code> once and the whole app changes
+      rhythm together.
+    </p>
+
+    <div class="cta">
+      <a class="btn primary" href="gallery/">Browse the live gallery</a>
+      <a class="btn ghost" href="api/">API reference</a>
+      <a class="btn ghost" href="https://pub.dev/packages/prism_kit">pub.dev</a>
+      <a class="btn ghost" href="https://github.com/awaisdev5765/Prism">GitHub</a>
+    </div>
+
+    <dl class="stats">
+      <div><dd><b class="stat">{{COUNT}}</b></dd><dt>components</dt></div>
+      <div><dd><b class="stat">{{TESTS}}</b></dd><dt>{{TESTS_LABEL}}</dt></div>
+      <div><dd><b class="stat">0</b></dd><dt>analyzer issues</dt></div>
+      <div><dd><b class="stat">184</b></dd><dt>responsive cases</dt></div>
+      <div><dd><b class="stat">AA</b></dd><dt>WCAG contrast, verified</dt></div>
+    </dl>
+  </div>
+
+  <section class="wrap" aria-labelledby="install">
+    <h2 id="install">Install</h2>
+    <p class="sub">One dependency. Every component reads the same tokens, so theming lives in one place.</p>
+
+    <div class="code-block">
+      <button class="copy" type="button" data-copy>Copy</button>
+<pre><code>flutter pub add prism_kit
+
+<span class="cmt">// One import gives you everything.</span>
+import 'package:prism_kit/prism.dart';
+
+<span class="cmt">// Register a look once, at the root.</span>
+MaterialApp(
+  theme: prismTheme(seed: brandPurple),
+  darkTheme: prismTheme(seed: brandPurple, brightness: Brightness.dark),
+  home: const HomePage(),
+);</code></pre>
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="why">
+    <h2 id="why">What makes it different</h2>
+    <p class="sub">Three things that are easy to claim and harder to deliver. All three are covered by tests you can read.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>A design system, not a bundle</h3>
+        <p>Every one of the {{COUNT}} components reads <code>PrismTokens</code> and
+        <code>PrismColors</code>. Tests install deliberately unusual tokens and assert
+        the components adopt them, so a hard-coded radius or duration fails CI.</p>
+      </div>
+      <div class="card">
+        <h3>Accessible by default</h3>
+        <p>Live regions for state you did not trigger, decorative content hidden from
+        screen readers, minimum touch targets, sortable headers that announce their
+        direction, and reduced motion honoured everywhere.</p>
+      </div>
+      <div class="card">
+        <h3>Adaptive, not just responsive</h3>
+        <p>Tables become labelled cards on a phone. Tabs scroll instead of clipping.
+        The stepper collapses to a step counter. Compact below {{COMPACT_BP}} px,
+        expanded above {{EXPANDED_BP}} px, one widget throughout.</p>
+      </div>
+      <div class="card">
+        <h3>Zero lock-in</h3>
+        <p>No database, backend or cloud dependency. The AI client and the updater
+        are the only networked pieces, and you own the endpoints.</p>
+      </div>
+      <div class="card">
+        <h3>Verified, not vibes</h3>
+        <p>The semantic palette is checked against WCAG AA across ten brand seeds in
+        both brightnesses, and a 184-case matrix pumps every component at 320 px and
+        1600 px in LTR and RTL.</p>
+      </div>
+      <div class="card">
+        <h3>Testing helpers included</h3>
+        <p><code>prismTestApp</code> configures the tokens, a real viewport,
+        brightness, direction and reduced motion — because a zero-size viewport makes
+        adaptive tests silently assert nothing.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" id="components" aria-labelledby="components-h">
+    <h2 id="components-h">All {{COUNT}} components</h2>
+    <p class="sub">Every one has an interactive demo in the gallery. Filter to find what you need.</p>
+
+    <div class="filter-row">
+      <label for="filter">Filter</label>
+      <input id="filter" type="search" placeholder="Try “table”, “calendar”, “offline”…" autocomplete="off">
+      <span class="count" id="count" role="status" aria-live="polite"></span>
+    </div>
+
+{{COMPONENTS}}
+  </section>
+
+  <section class="wrap" id="tokens" aria-labelledby="tokens-h">
+    <h2 id="tokens-h">The design system, at a glance</h2>
+    <p class="sub">
+      The real default values, read from the source when this page was built.
+      Override any of them in <code>ThemeData.extensions</code> and every component
+      follows.
+    </p>
+
+    <div class="scales">
+      <div>
+        <h3>Spacing scale</h3>
+        <div aria-hidden="true">
+{{SPACING}}
+        </div>
+      </div>
+      <div>
+        <h3>Corner radii</h3>
+        <div class="radii" aria-hidden="true">
+{{RADII}}
+        </div>
+        <h3 style="margin-top:26px">Motion</h3>
+        <p class="sub" style="margin:0">{{MOTION}}</p>
+        <p class="sub" style="margin:12px 0 0">
+          Durations collapse to zero when the platform asks for reduced motion.
+          Controls default to {{CONTROL_H}} px tall.
+        </p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:34px">Semantic roles</h3>
+    <p class="sub" style="margin-bottom:14px">
+      <code>success</code> and <code>warning</code> use fixed, tested colours so they
+      never collapse into a green or amber brand colour. <code>error</code> and
+      <code>info</code> come from your own <code>ColorScheme</code>.
+    </p>
+    <div class="swatches">
+      <span class="swatch s-ok">success · #1B7A4B on #C9F2DC</span>
+      <span class="swatch s-warn">warning · #8A5A00 on #FFE7B8</span>
+    </div>
+  </section>
+
+  <section class="wrap" id="quality" aria-labelledby="quality-h">
+    <h2 id="quality-h">Built to be read</h2>
+    <p class="sub">The source is short and documented, with no clever indirection. If you want to know how something works, read it.</p>
+    <ul class="plain">
+      <li><strong>Strict analysis.</strong> <code>strict-casts</code>, <code>strict-inference</code> and <code>strict-raw-types</code>, reporting zero issues.</li>
+      <li><strong>Every animated component</strong> takes its duration from the platform's reduce-motion setting.</li>
+      <li><strong>Style classes resolve against the theme.</strong> Unset fields stay nullable and are filled in one <code>resolve(context)</code> call.</li>
+      <li><strong>Documented trade-offs.</strong> Where something is a heuristic — token estimation, deletion detection — the docs say so.</li>
+      <li><strong>{{TESTS}} {{TESTS_LABEL}}</strong> across unit, widget and matrix suites. <a href="https://github.com/awaisdev5765/Prism/tree/main/test">Read them</a>.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="mark"><span class="dot" aria-hidden="true"></span> Prism</div>
+    <a class="bmc" href="https://buymeacoffee.com/awaisdev572">
+      <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&amp;emoji=%E2%98%95&amp;slug=awaisdev572&amp;button_colour=FFDD00&amp;font_colour=000000&amp;font_family=Lato&amp;outline_colour=000000&amp;coffee_colour=ffffff" alt="Buy Me A Coffee" loading="lazy">
+    </a>
+    <p>
+      <a href="https://pub.dev/packages/prism_kit">pub.dev</a> ·
+      <a href="https://github.com/awaisdev5765/Prism">GitHub</a> ·
+      <a href="gallery/">Gallery</a> ·
+      <a href="api/">API</a> ·
+      MIT licensed
+    </p>
+  </div>
+</footer>
+
+<script>
+// Progressive enhancement only. Without JavaScript the page is fully usable and
+// the code block is still selectable by hand.
+(function () {
+  var filter = document.getElementById('filter');
+  var count = document.getElementById('count');
+  var comps = Array.prototype.slice.call(document.querySelectorAll('.comp'));
+  var groups = Array.prototype.slice.call(document.querySelectorAll('.group'));
+
+  function apply() {
+    var q = (filter.value || '').trim().toLowerCase();
+    var shown = 0;
+    comps.forEach(function (el) {
+      var hay = (el.dataset.name + ' ' + el.dataset.desc).toLowerCase();
+      var hit = !q || hay.indexOf(q) !== -1;
+      el.hidden = !hit;
+      if (hit) shown++;
+    });
+    // Hide a group whose every card is filtered out, so filtering does not leave
+    // a run of empty headings behind.
+    groups.forEach(function (g) {
+      g.hidden = g.querySelectorAll('.comp:not([hidden])').length === 0;
+    });
+    count.textContent = q
+      ? shown + ' of ' + comps.length + ' shown'
+      : comps.length + ' components';
+  }
+
+  if (filter && count) {
+    filter.addEventListener('input', apply);
+    apply();
+  }
+
+  var copyBtn = document.querySelector('[data-copy]');
+  if (copyBtn && navigator.clipboard) {
+    copyBtn.addEventListener('click', function () {
+      var code = copyBtn.parentNode.querySelector('code');
+      navigator.clipboard.writeText(code.innerText).then(function () {
+        copyBtn.textContent = 'Copied';
+        setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1600);
+      });
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
