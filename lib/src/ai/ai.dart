@@ -28,3 +28,6 @@ export './embeddings.dart';
 export './gemini_stream_client.dart';
 export './openai_stream_client.dart';
 export './sse_parser.dart';
+
+export 'context_budget.dart' show PrismContextBudget;
+export 'structured_output.dart' show PrismStructuredOutput;

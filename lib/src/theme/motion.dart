@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 ///   child: child,
 /// );
 /// ```
-extension PrismMotion on BuildContext {
+extension PrismMotionContext on BuildContext {
   /// Returns [preferred], or [Duration.zero] when the platform asks for reduced
   /// motion.
   ///

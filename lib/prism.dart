@@ -96,3 +96,4 @@ export 'src/rating/rating.dart' show PrismRating;
 export 'src/segmented_control/segmented_control.dart'
     show PrismSegment, PrismSegmentedControl;
 export 'src/tabs/tabs.dart' show PrismTab, PrismTabs;
+export 'src/debug/debug_overlay.dart' show PrismDebugOverlay;

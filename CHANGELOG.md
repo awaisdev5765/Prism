@@ -1,5 +1,38 @@
 # Changelog
 
+## 1.4.0
+
+### Added
+- **Six components:** `PrismCalendar` (month grid with single, range and
+  multiple selection, event markers, and parameterised month and weekday names
+  for localisation), `PrismTabs`, `PrismSegmentedControl`, `PrismAccordion`,
+  `PrismRating` and `PrismBadge`. All six adapt to the window rather than
+  overflowing, and all announce their state to assistive tech.
+- **`prismTheme(...)`** — builds a fully configured `ThemeData` in one call:
+  seeded scheme, brightness, and a token preset, extending any base theme rather
+  than replacing it.
+- **Token presets** — `PrismTokenPresets.preset(density:, shape:, motion:)` plus
+  `technical`, `friendly` and `editorial`. Three orthogonal choices rather than
+  deriving spacing from a colour, because a brand colour says nothing about how
+  much padding a table row wants.
+- **`PrismDebugOverlay`** — a live design-system inspector showing the active
+  tokens, window class, brightness and reduced-motion state. Defaults to
+  disabled, so `enabled: kDebugMode` makes it release-safe.
+- **`PrismStructuredOutput`** — extracts JSON from a model reply that is fenced,
+  prefixed with prose, or trailed by a closing remark, with a balanced-brace
+  scanner that ignores delimiters inside string literals. Never throws.
+- **`PrismContextBudget`** — estimates conversation cost, trims the oldest turns
+  first, always keeps the system message and the newest turns, and reports a
+  usage ratio for a context meter.
+- `context.prismReduceMotion`.
+
+### Fixed
+- `PrismDebugOverlay` used a default `Stack`, which sizes to its largest
+  non-positioned child; wrapping a small widget left the panel outside the
+  stack's bounds and untappable. Now `StackFit.expand`.
+- The `PrismMotion` extension was renamed `PrismMotionContext` to free the name
+  for the motion-preset enum.
+
 ## 1.3.0
 
 ### Added
