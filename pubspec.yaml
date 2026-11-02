@@ -1,10 +1,8 @@
 name: prism_kit
 description: >-
-  A unified Flutter component library with a shared design system: adaptive
-  toasts, banners, sheets, data tables, steppers, skeletons, avatars, OTP and
-  chip inputs, timelines, a command palette, search, settings, forms,
-  pagination, markdown, a code viewer and an AI chat client — responsive on
-  phone, desktop and web.
+  One dependency, 34 adaptive Flutter components on a shared design system:
+  data tables, calendar, tabs, toasts, forms, markdown and an AI chat client.
+  Accessible and responsive.
 version: 1.4.0
 homepage: https://github.com/awaisdev5765/prism
 repository: https://github.com/awaisdev5765/prism
