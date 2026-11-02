@@ -21,6 +21,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Provision GitHub Pages on first run instead of failing the deploy with a
+      # 404 that asks a human to flip a switch in the repository settings.
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
