@@ -18,14 +18,20 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          # Pinned deliberately: a floating `stable` moves the formatter and
+          # analyser under you, and `dart format --set-exit-if-changed` then
+          # fails on code that is already correctly formatted for the version
+          # the project is developed against.
+          flutter-version: '3.41.4'
           cache: true
 
       - name: Install dependencies
         run: flutter pub get
 
       - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed lib test
+        # --output=show prints the diff it objects to, so a failure names the
+        # file and the hunk instead of just exiting non-zero.
+        run: dart format --output=show --set-exit-if-changed lib test
 
       - name: Analyze (strict)
         run: flutter analyze
@@ -41,7 +47,11 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          # Pinned deliberately: a floating `stable` moves the formatter and
+          # analyser under you, and `dart format --set-exit-if-changed` then
+          # fails on code that is already correctly formatted for the version
+          # the project is developed against.
+          flutter-version: '3.41.4'
           cache: true
 
       - name: Resolve example dependencies

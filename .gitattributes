@@ -1,0 +1,21 @@
+# Normalise line endings so the formatter, CI and every contributor agree.
+# Without this, a checkout on Windows rewrites CRLF into the tree and the
+# `dart format --set-exit-if-changed` gate fails for reasons nobody can see.
+* text=auto eol=lf
+
+# Binary assets must never be line-ending converted.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.jar binary
+*.webp binary
+
+# Keep generated and vendored files out of diffs and language stats.
+gradle/wrapper/gradle-wrapper.jar binary
+example/pubspec.lock linguist-generated
