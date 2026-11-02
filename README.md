@@ -1,15 +1,15 @@
 <p align="center">
-  <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-28%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
+  <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-34%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
 </p>
 
 <h1 align="center">🔷 Prism</h1>
-<h3 align="center">One dependency. 28 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
+<h3 align="center">One dependency. 34 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
 
 <p align="center">
   <img src="https://img.shields.io/badge/pub.dev-prism__kit-0175C2?logo=dart&logoColor=white" alt="pub.dev">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT">
   <img src="https://img.shields.io/badge/Flutter-3.27%2B-02569B?logo=flutter&logoColor=white" alt="Flutter">
-  <img src="https://img.shields.io/badge/tests-672%20passing-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-766%20passing-brightgreen" alt="tests">
 </p>
 
 ---
@@ -71,6 +71,12 @@ import 'package:prism_kit/prism.dart';
 | 26 | **AdaptiveSheet** | Bottom sheet on phones, centred dialog on desktop — one call |
 | 27 | **ConnectionBanner** | Offline/online banner with debounce, retry and live-region announcements |
 | 28 | **SyncStatus** | Compact, live-region sync indicator with progress, retry and six phases |
+| 29 | **Calendar** | Month grid with single/range/multiple selection, markers and localisable names |
+| 30 | **Tabs** | Adaptive tab strip: scrolls on phones, shares the width on desktop |
+| 31 | **SegmentedControl** | Single-choice control that scrolls instead of overflowing |
+| 32 | **Accordion** | Collapsible sections with single-expansion mode |
+| 33 | **Rating** | Star rating with half values and full slider semantics |
+| 34 | **Badge** | Count or status dot, collapsing to `99+` and hiding at zero |
 
 ### Design system
 
@@ -304,6 +310,25 @@ AiChatView(controller: controller)   // full streaming chat UI
 
 Typed events (`AiDelta`, `AiToolCall`, `AiDone`, `AiError`), SSE parsing, and an automatic tool-calling agent loop (`AiAgent`) are included. Swap in `GeminiStreamClient`, `AnthropicStreamClient`, or implement `AiStreamClient` for anything else.
 
+Two helpers cover the parts that always get written badly:
+
+```dart
+// Models rarely return bare JSON — fenced, prefixed with "Here is the JSON:",
+// or trailed by a closing remark. This handles all three and never throws.
+final data = PrismStructuredOutput.extractMap(reply);
+
+// Compliant output is easier to get than to parse. Say what you want up front.
+final prompt = PrismStructuredOutput.instructJson(
+  'Classify this review.',
+  schema: {'sentiment': 'positive|negative', 'confidence': 0.0},
+);
+
+// Long threads are sent whole until the provider rejects them or truncates the
+// middle. This trims the oldest turns, protecting the system message and the
+// newest exchange, and reports a usage ratio for a context meter.
+final messages = PrismContextBudget(maxTokens: 8000).fit(history);
+```
+
 ### Updater — in-app updates
 
 ```dart
@@ -509,7 +534,7 @@ Container(color: context.prismColors.surfaceRaised)
 Container(color: context.prismColors.forRole(PrismSemantic.success).background)
 ```
 
-**Every one of the 28 components reads these tokens** — toasts, banners, forms,
+**Every one of the 34 components reads these tokens** — toasts, banners, forms,
 data tables, the command palette, everything. Change `spaceMd` once and the whole
 app changes rhythm together; switch `brightness` and every semantic colour
 follows.
@@ -546,6 +571,118 @@ Prism has no sync dependency. `PrismSyncSnapshot` is a plain value type, and the
 adapter from [`flutter_local_first`](https://pub.dev/packages/flutter_local_first)'s
 sealed `SyncState` is a compiler-checked switch — see the example on
 `PrismSyncPhase`.
+
+### Calendar — dates without a dependency
+
+```dart
+PrismCalendar(
+  month: focusedMonth,
+  selected: selectedDays,
+  selection: PrismDateSelection.range,
+  firstDate: DateTime(2026),
+  lastDate: DateTime(2027),
+  markers: daysWithEvents,
+  onDaySelected: (day) => setState(() => selectedDays = {day}),
+  onMonthChanged: (month) => setState(() => focusedMonth = month),
+)
+```
+
+A grid of real buttons, so it works by keyboard and screen reader: each day
+announces its full date, selection state and — in range mode — whether it is a
+start, end or middle. No `intl` dependency; pass `monthNames` and
+`weekdayLabels` to localise.
+
+### Tabs, SegmentedControl — adapt instead of overflow
+
+```dart
+PrismTabs(
+  tabs: const [
+    PrismTab(label: 'Today', icon: Icons.today_outlined),
+    PrismTab(label: 'Upcoming', icon: Icons.schedule_outlined),
+  ],
+  index: index,
+  onChanged: (next) => setState(() => index = next),
+  children: const [TodayView(), UpcomingView()],
+)
+
+PrismSegmentedControl<Density>(
+  value: density,
+  onChanged: (next) => setState(() => density = next),
+  segments: const [
+    PrismSegment(value: Density.compact, label: 'Compact'),
+    PrismSegment(value: Density.comfortable, label: 'Comfortable'),
+  ],
+)
+```
+
+Below `PrismTokens.breakpointCompact` both scroll rather than clipping their
+labels — five tabs do not fit on a phone, and silently hiding options is worse
+than letting them scroll.
+
+### Accordion, Rating, Badge
+
+```dart
+PrismAccordion(
+  singleExpansion: true,
+  sections: const [
+    PrismAccordionSection(title: 'Delivery', child: Text('…')),
+    PrismAccordionSection(title: 'Returns', child: Text('…')),
+  ],
+)
+
+PrismRating(value: rating, allowHalf: true, onChanged: (v) => setRating(v))
+PrismBadge(count: unread, child: Icon(Icons.notifications_outlined))
+```
+
+The rating picks the half value when you tap the left half of a star, and is a
+slider with increase/decrease actions to a screen reader. The accordion announces
+whether each section is expanded rather than presenting anonymous buttons.
+
+---
+
+## 🎨 Getting a look in one call
+
+```dart
+MaterialApp(
+  theme: prismTheme(seed: brandPurple),
+  darkTheme: prismTheme(seed: brandPurple, brightness: Brightness.dark),
+)
+```
+
+`prismTheme` seeds the scheme, registers the tokens and extends any base theme
+you already configured. To shape the feel, compose three orthogonal choices:
+
+```dart
+prismTheme(
+  density: PrismDensity.compact,   // spacing and control height
+  shape: PrismShape.sharp,         // corner radii
+  motion: PrismMotion.brisk,       // durations
+)
+```
+
+Or take a ready-made personality: `PrismTokenPresets.technical`,
+`.friendly`, `.editorial`.
+
+Spacing is deliberately **not** derived from your brand colour. A colour says
+nothing about how much padding a table row wants, and pretending otherwise
+produces the incoherent look this library exists to avoid.
+
+## 🔍 Inspecting the design system
+
+```dart
+MaterialApp(
+  builder: (context, child) => PrismDebugOverlay(
+    enabled: kDebugMode,
+    child: child!,
+  ),
+  home: const HomePage(),
+)
+```
+
+A live panel showing the active tokens, the current window class, brightness and
+whether reduced motion is on. It answers the question every theming bug starts
+with — "are the tokens I set the tokens being read?" — without a rebuild-and-print
+cycle. Disabled by default, so `enabled: kDebugMode` makes it release-safe.
 
 ---
 
@@ -594,7 +731,7 @@ on any exception — it is what caught the `PrismChipInput` overflow.
 
 ## 🧪 Quality
 
-- **672 tests** (unit + widget) across all components
+- **766 tests** (unit + widget) across all components
 - **Every component is covered by design-system tests** that install
   deliberately unusual `PrismTokens` and assert the component actually reads
   them — a hard-coded radius, duration or colour fails CI
