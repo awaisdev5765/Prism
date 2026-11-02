@@ -784,6 +784,10 @@ All class names stay identical (`PrismToast`, `PrismBanner`, `PrismSearch`, …)
 
 ## 📖 Full example
 
+**▶ [Browse the live gallery](https://awaisdev5765.github.io/Prism/)** — every
+component, running in your browser, with
+[the API reference](https://awaisdev5765.github.io/Prism/api/) beside it.
+
 The [`example/`](example/) folder is a **gallery app** with an interactive demo
 for every component:
 

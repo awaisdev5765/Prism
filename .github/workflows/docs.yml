@@ -36,13 +36,15 @@ jobs:
         working-directory: example
         run: |
           flutter pub get
-          flutter build web --base-href /Prism/
+          # The gallery lives under /gallery/ so a landing page can own the root.
+          flutter build web --base-href /Prism/gallery/
 
       - name: Assemble the site
         run: |
-          mkdir -p build/site
-          cp -R example/build/web/. build/site/
-          mkdir -p build/site/api
+          mkdir -p build/site/gallery build/site/api
+          # Landing page at the root, gallery and API reference beside it.
+          cp -R site/. build/site/
+          cp -R example/build/web/. build/site/gallery/
           cp -R build/docs/api/. build/site/api/
 
       - uses: actions/upload-pages-artifact@v3

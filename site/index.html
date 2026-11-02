@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prism — 34 adaptive Flutter components on one design system</title>
+<meta name="description" content="One dependency, 34 adaptive Flutter components on a shared design system. Accessible, responsive, and built so a single token override restyles your whole app.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Prism — an adaptive Flutter component library">
+<meta property="og:description" content="34 components on one design system. One token override restyles the whole app.">
+<meta property="og:type" content="website">
+
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f4f7f9;
+    --raised: #ffffff;
+    --border: #dbe3e8;
+    --text: #0f1719;
+    --muted: #5a6a72;
+    --accent: #2b7fa8;
+    --accent-soft: #e6f2f8;
+    --radius: 14px;
+    --max: 1080px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1417;
+      --surface: #121b1f;
+      --raised: #162226;
+      --border: #26363d;
+      --text: #e8f0f3;
+      --muted: #9db0b8;
+      --accent: #6cc4ea;
+      --accent-soft: #16262e;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  a { color: var(--accent); }
+
+  header { padding: 64px 0 40px; }
+  .mark {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-weight: 700; letter-spacing: -0.01em; font-size: 15px;
+  }
+  .mark .dot {
+    width: 26px; height: 26px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), #7dd3a0);
+  }
+  h1 {
+    margin: 28px 0 0;
+    font-size: clamp(30px, 5.2vw, 52px);
+    line-height: 1.1; letter-spacing: -0.025em;
+  }
+  .lede {
+    margin: 18px 0 0; max-width: 62ch;
+    font-size: clamp(16px, 2vw, 19px); color: var(--muted);
+  }
+
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0 0; }
+  .btn {
+    display: inline-block; padding: 13px 22px; border-radius: 999px;
+    font-weight: 600; text-decoration: none; font-size: 15px;
+    border: 1px solid transparent;
+  }
+  .btn.primary { background: var(--accent); color: var(--bg); }
+  .btn.ghost { border-color: var(--border); color: var(--text); }
+  .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+  .stats {
+    display: flex; flex-wrap: wrap; gap: 28px;
+    margin: 44px 0 0; padding: 22px 26px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .stat b { display: block; font-size: 24px; letter-spacing: -0.02em; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  section { padding: 56px 0; border-top: 1px solid var(--border); }
+  h2 { margin: 0 0 8px; font-size: clamp(21px, 3vw, 28px); letter-spacing: -0.02em; }
+  .sub { margin: 0 0 32px; color: var(--muted); max-width: 70ch; }
+
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .card {
+    padding: 22px; background: var(--raised);
+    border: 1px solid var(--border); border-radius: var(--radius);
+  }
+  .card h3 { margin: 0 0 6px; font-size: 16px; }
+  .card p { margin: 0; font-size: 14px; color: var(--muted); }
+
+  pre {
+    margin: 0; padding: 20px 22px; overflow-x: auto;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font: 13.5px/1.7 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  code { font-family: inherit; }
+  .cmt { color: var(--muted); }
+
+  ul.plain { margin: 0; padding-left: 20px; color: var(--muted); }
+  ul.plain li { margin: 6px 0; }
+  ul.plain strong { color: var(--text); }
+
+  footer {
+    padding: 44px 0 72px; border-top: 1px solid var(--border);
+    color: var(--muted); font-size: 14px;
+  }
+  .bmc { display: inline-block; margin: 18px 0 22px; }
+  .bmc img { height: 48px; width: auto; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .card, .btn { transition: border-color .15s ease, transform .15s ease; }
+    .card:hover { border-color: var(--accent); }
+    .btn.primary:hover { transform: translateY(-1px); }
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="mark"><span class="dot" aria-hidden="true"></span> Prism</div>
+  <h1>34 adaptive Flutter components.<br>One design system.</h1>
+  <p class="lede">
+    Install one package instead of a dozen fragmented ones, and get components that
+    already agree on spacing, corners, motion and colour — because they read the
+    same tokens. Change <code>spaceMd</code> once and the whole app changes rhythm
+    together.
+  </p>
+
+  <div class="cta">
+    <a class="btn primary" href="gallery/">Browse the live gallery</a>
+    <a class="btn ghost" href="api/">API reference</a>
+    <a class="btn ghost" href="https://pub.dev/packages/prism_kit">pub.dev</a>
+    <a class="btn ghost" href="https://github.com/awaisdev5765/Prism">GitHub</a>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>34</b><span>components</span></div>
+    <div class="stat"><b>769</b><span>tests passing</span></div>
+    <div class="stat"><b>0</b><span>analyzer issues</span></div>
+    <div class="stat"><b>184</b><span>responsive cases checked</span></div>
+    <div class="stat"><b>AA</b><span>WCAG contrast, verified</span></div>
+  </div>
+</header>
+
+<section class="wrap">
+  <h2>Install</h2>
+  <p class="sub">One dependency. Every component reads the same tokens, so theming is a single place.</p>
+<pre><code>flutter pub add prism_kit
+
+<span class="cmt">// One import gives you everything.</span>
+import 'package:prism_kit/prism.dart';
+
+<span class="cmt">// Register a look once, at the root.</span>
+MaterialApp(
+  theme: prismTheme(seed: brandPurple),
+  darkTheme: prismTheme(seed: brandPurple, brightness: Brightness.dark),
+  home: const HomePage(),
+);</code></pre>
+</section>
+
+<section class="wrap">
+  <h2>What makes it different</h2>
+  <p class="sub">Three things that are easy to claim and harder to actually deliver. All three are tested.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>A design system, not a bundle</h3>
+      <p>
+        Every one of the 34 components reads <code>PrismTokens</code> and
+        <code>PrismColors</code>. Tests install deliberately unusual tokens and
+        assert the components adopt them, so a hard-coded radius or duration fails CI.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Accessible by default</h3>
+      <p>
+        Live regions for state you did not trigger, decorative content hidden from
+        screen readers, minimum touch targets, sortable headers that announce
+        direction, and reduced motion honoured everywhere.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Adaptive, not just responsive</h3>
+      <p>
+        Tables become labelled cards on a phone. Tabs scroll instead of clipping. The
+        stepper collapses to a step counter. One widget, the right layout for the window.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Zero lock-in</h3>
+      <p>
+        No database, backend or cloud dependency. The AI client and the updater are the
+        only networked pieces, and you own the endpoints.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Verified, not vibes</h3>
+      <p>
+        The semantic palette is checked against WCAG AA across ten brand seeds in both
+        brightnesses, and a 184-case matrix pumps every component at 320&nbsp;px and
+        1600&nbsp;px in LTR and RTL.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Testing helpers included</h3>
+      <p>
+        <code>prismTestApp</code> configures the tokens, a real viewport, brightness,
+        direction and reduced motion — because a zero-size viewport makes adaptive
+        tests silently assert nothing.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>What is in it</h2>
+  <p class="sub">Roughly grouped. Every component has an interactive demo in the gallery.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Layout &amp; navigation</h3>
+      <p>AdaptiveScaffold · Tabs · MasterDetail · Stepper · Accordion · AdaptiveDialog · AdaptiveSheet</p>
+    </div>
+    <div class="card">
+      <h3>Data &amp; input</h3>
+      <p>DataTable · Calendar · Form · Search · Settings · ChipInput · OtpField · Rating · SegmentedControl</p>
+    </div>
+    <div class="card">
+      <h3>Feedback &amp; status</h3>
+      <p>Toast · Banner · StateViews · Skeleton · Pagination · ConnectionBanner · SyncStatus · Badge · Timeline</p>
+    </div>
+    <div class="card">
+      <h3>Content &amp; platform</h3>
+      <p>Markdown · CodeView · Changelog · Palette · Avatar · CommandPalette · Updater · Image · AI chat</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Built to be read</h2>
+  <p class="sub">
+    The source is short, documented, and has no clever indirection. If you want to know
+    how something works, read it.
+  </p>
+  <ul class="plain">
+    <li><strong>Strict analysis.</strong> <code>strict-casts</code>, <code>strict-inference</code> and <code>strict-raw-types</code>, with zero issues.</li>
+    <li><strong>Every animated component</strong> takes its duration from the platform's reduce-motion setting.</li>
+    <li><strong>Style classes resolve against the theme.</strong> Unset fields are nullable and filled in one <code>resolve(context)</code> call.</li>
+    <li><strong>Documented trade-offs.</strong> Where something is a heuristic — token estimation, deletion detection — the docs say so.</li>
+  </ul>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="mark"><span class="dot" aria-hidden="true"></span> Prism</div>
+    <a class="bmc" href="https://buymeacoffee.com/awaisdev572">
+      <img
+        src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&amp;emoji=%E2%98%95&amp;slug=awaisdev572&amp;button_colour=FFDD00&amp;font_colour=000000&amp;font_family=Lato&amp;outline_colour=000000&amp;coffee_colour=ffffff"
+        alt="Buy Me A Coffee">
+    </a>
+    <p>
+      <a href="https://pub.dev/packages/prism_kit">pub.dev</a> ·
+      <a href="https://github.com/awaisdev5765/Prism">GitHub</a> ·
+      <a href="gallery/">Gallery</a> ·
+      <a href="api/">API</a> ·
+      MIT licensed
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
