@@ -34,8 +34,26 @@ class PrismBreakpoint {
     extraLarge,
   ];
 
+  /// Resolves which window class [width] falls into, using token-driven
+  /// thresholds when they are supplied.
+  ///
+  /// Pass `PrismTokens.of(context)` values so an app can retune what counts as
+  /// compact without forking the widget.
+  static PrismBreakpoint resolve(
+    double width, {
+    double compact = 0,
+    double mediumWidth = 600,
+    double expanded = 840,
+    double extraLarge = 1200,
+  }) {
+    if (width >= extraLarge) return PrismBreakpoint(extraLarge);
+    if (width >= expanded) return PrismBreakpoint(expanded);
+    if (width >= mediumWidth) return PrismBreakpoint(mediumWidth);
+    return PrismBreakpoint(compact);
+  }
+
   /// Resolves which built-in class [width] falls into.
-  static PrismBreakpoint resolve(double width) {
+  static PrismBreakpoint resolveStandard(double width) {
     if (width >= extraLarge.minWidth) return extraLarge;
     if (width >= expanded.minWidth) return expanded;
     if (width >= medium.minWidth) return medium;

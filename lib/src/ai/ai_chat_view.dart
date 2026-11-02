@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../markdown/markdown.dart';
 import 'ai_client.dart';
 import 'chat_message.dart';
-import 'package:prism_kit/src/markdown/markdown.dart';
 
 /// A ready-made streaming chat UI built on the `prism_ai` event model.
 ///

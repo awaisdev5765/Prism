@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../theme/theme.dart';
 import 'style.dart';
 import 'tokenizer.dart';
 
@@ -159,7 +160,7 @@ class _CopyBar extends StatelessWidget {
     return Align(
       alignment: Alignment.topRight,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 8),
+        padding: EdgeInsets.only(bottom: context.prismTokens.spaceSm),
         child: IconButton(
           visualDensity: VisualDensity.compact,
           tooltip: 'Copy to clipboard',
@@ -181,7 +182,9 @@ class _LineGutter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 12),
+      padding: EdgeInsets.only(
+        right: context.prismTokens.spaceSm + context.prismTokens.spaceXs,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,

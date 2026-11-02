@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme/theme.dart';
 import 'tokenizer.dart';
 
 /// Visual configuration for [PrismCodeView].
@@ -14,7 +15,7 @@ class PrismCodeViewStyle {
     this.tokenStyles = defaultTokenStyles,
     this.background,
     this.borderRadius = const BorderRadius.all(Radius.circular(8)),
-    this.padding = const EdgeInsets.all(14),
+    this.padding,
     this.lineNumberStyle,
     this.showLineNumbers = false,
     this.enableCopy = true,
@@ -34,7 +35,8 @@ class PrismCodeViewStyle {
   final BorderRadius borderRadius;
 
   /// Padding inside the code block.
-  final EdgeInsets padding;
+  /// Padding inside the code block. Defaults to `PrismTokens.spaceMd`.
+  final EdgeInsetsGeometry? padding;
 
   /// Style applied to the gutter line numbers.
   final TextStyle? lineNumberStyle;
@@ -105,7 +107,7 @@ class PrismCodeViewStyle {
               ? theme.colorScheme.surfaceContainerHighest
               : const Color(0xFFF6F8FA)),
       borderRadius: borderRadius,
-      padding: padding,
+      padding: padding ?? EdgeInsets.all(PrismTokens.of(context).spaceMd),
       lineNumberStyle:
           lineNumberStyle ??
           TextStyle(color: theme.colorScheme.outline, fontSize: base.fontSize),

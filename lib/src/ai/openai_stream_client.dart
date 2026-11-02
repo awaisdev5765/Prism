@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'ai_events.dart';
 import 'ai_client.dart';
+import 'ai_events.dart';
 import 'chat_message.dart';
 import 'sse_parser.dart';
 

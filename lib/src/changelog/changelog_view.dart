@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme/theme.dart';
 import 'entry.dart';
 import 'store.dart';
 
@@ -14,13 +15,35 @@ class ChangelogStyle {
     this.bulletStyle,
     this.badgeColor,
     this.badgeTextStyle,
-    this.spacing = 12,
-    this.cardPadding = const EdgeInsets.all(16),
+    this.spacing,
+    this.cardPadding,
     this.badgeText = 'NEW',
     this.showOlderLabel = 'Show older',
     this.showFewerLabel = 'Show fewer',
     this.categoryStyle,
   });
+
+  /// Returns a copy with unset fields filled from [PrismTokens].
+  ///
+  /// Call this before reading [spacing] or [cardPadding]; both are non-null
+  /// afterwards.
+  ChangelogStyle resolve(BuildContext context) {
+    final tokens = PrismTokens.of(context);
+    return ChangelogStyle(
+      cardColor: cardColor,
+      versionStyle: versionStyle,
+      dateStyle: dateStyle,
+      bulletStyle: bulletStyle,
+      badgeColor: badgeColor,
+      badgeTextStyle: badgeTextStyle,
+      spacing: spacing ?? tokens.spaceSm + tokens.spaceXs,
+      cardPadding: cardPadding ?? EdgeInsets.all(tokens.spaceMd),
+      badgeText: badgeText,
+      showOlderLabel: showOlderLabel,
+      showFewerLabel: showFewerLabel,
+      categoryStyle: categoryStyle,
+    );
+  }
 
   /// Card background; defaults to `surfaceContainerLow`.
   final Color? cardColor;
@@ -40,11 +63,13 @@ class ChangelogStyle {
   /// "New" badge text style.
   final TextStyle? badgeTextStyle;
 
-  /// Vertical gap between cards.
-  final double spacing;
+  /// Vertical gap between version cards. Defaults to
+  /// `PrismTokens.spaceSm + 4`.
+  final double? spacing;
 
   /// Inner card padding.
-  final EdgeInsetsGeometry cardPadding;
+  /// Padding inside each version card. Defaults to `PrismTokens.spaceMd`.
+  final EdgeInsetsGeometry? cardPadding;
 
   /// Badge text for highlighted versions. Defaults to `NEW`.
   final String badgeText;
@@ -114,7 +139,7 @@ class ChangelogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final parsed = entries ?? ChangelogParser.parse(changelog!);
-    final s = style ?? const ChangelogStyle();
+    final s = (style ?? const ChangelogStyle()).resolve(context);
     if (parsed.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -166,14 +191,15 @@ class _ExpandableListState extends State<_ExpandableList> {
   Widget build(BuildContext context) {
     final count = _expanded ? widget.ordered.length : widget.visibleCount;
     final theme = Theme.of(context);
-    final s = widget.style;
+    // Already resolved by the parent, but narrow once so reads are non-null.
+    final s = widget.style.resolve(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         for (var i = 0; i < count; i++)
           Padding(
-            padding: EdgeInsets.only(bottom: s.spacing),
+            padding: EdgeInsets.only(bottom: s.spacing!),
             child: _VersionCard(
               entry: widget.ordered[i],
               style: s,
@@ -269,7 +295,7 @@ class _VersionCard extends StatelessWidget {
       color: color,
       borderRadius: BorderRadius.circular(14),
       child: Padding(
-        padding: style.cardPadding,
+        padding: style.cardPadding!,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

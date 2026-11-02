@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-export 'breakpoint.dart';
-
+import '../theme/theme.dart';
 import 'breakpoint.dart';
+
+export 'breakpoint.dart';
 
 /// A responsive scaffold that adapts its navigation to the window class.
 ///
@@ -38,7 +39,7 @@ class PrismAdaptiveScaffold extends StatelessWidget {
     this.useExtendedRail = true,
     this.railLabelType,
     this.bottomNavLabelType,
-    this.transitionDuration = const Duration(milliseconds: 300),
+    this.transitionDuration,
   });
 
   /// The list of navigation destinations.
@@ -74,13 +75,18 @@ class PrismAdaptiveScaffold extends StatelessWidget {
   /// Label behavior for the bottom navigation bar.
   final NavigationDestinationLabelBehavior? bottomNavLabelType;
 
-  /// Duration for animated transitions between body pages.
-  final Duration transitionDuration;
+  /// Duration for animated transitions between body pages. Defaults to
+  /// [PrismTokens.durationMedium].
+  final Duration? transitionDuration;
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
-    final breakpoint = PrismBreakpoint.resolve(width);
+    final breakpoint = PrismBreakpoint.resolve(
+      width,
+      mediumWidth: context.prismTokens.breakpointCompact,
+      expanded: context.prismTokens.breakpointExpanded,
+    );
 
     final destinationsList = destinations
         .map(
@@ -107,6 +113,11 @@ class PrismAdaptiveScaffold extends StatelessWidget {
     return _buildCompact(context, destinationsList);
   }
 
+  /// The resolved transition duration: the caller's value, or the token
+  /// default.
+  Duration _transition(BuildContext context) =>
+      transitionDuration ?? context.prismTokens.durationMedium;
+
   Widget _buildCompact(
     BuildContext context,
     List<NavigationRailDestination> railDestinations,
@@ -119,7 +130,7 @@ class PrismAdaptiveScaffold extends StatelessWidget {
       floatingActionButton: floatingActionButton,
       body: _AnimatedBody(
         index: currentIndex,
-        duration: transitionDuration,
+        duration: _transition(context),
         builder: bodyBuilder,
       ),
       bottomNavigationBar: NavigationBar(
@@ -153,7 +164,7 @@ class PrismAdaptiveScaffold extends StatelessWidget {
           Expanded(
             child: _AnimatedBody(
               index: currentIndex,
-              duration: transitionDuration,
+              duration: _transition(context),
               builder: bodyBuilder,
             ),
           ),
@@ -176,7 +187,7 @@ class PrismAdaptiveScaffold extends StatelessWidget {
           Expanded(
             child: _AnimatedBody(
               index: currentIndex,
-              duration: transitionDuration,
+              duration: _transition(context),
               builder: bodyBuilder,
             ),
           ),

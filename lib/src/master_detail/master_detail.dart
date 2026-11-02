@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:prism_kit/src/adaptive_scaffold/adaptive_scaffold.dart';
+import '../adaptive_scaffold/adaptive_scaffold.dart';
+
+import '../theme/theme.dart';
 
 /// How the detail pane is presented on compact (phone-width) windows.
 enum PrismCompactBehavior {
@@ -57,7 +59,7 @@ class PrismMasterDetail<T> extends StatefulWidget {
     this.masterColor,
     this.detailColor,
     this.divider,
-    this.transitionDuration = const Duration(milliseconds: 200),
+    this.transitionDuration,
     this.autoFocus = false,
     this.debugCompactOverride = false,
   });
@@ -105,7 +107,9 @@ class PrismMasterDetail<T> extends StatefulWidget {
   final Widget? divider;
 
   /// Duration of the detail-pane transition.
-  final Duration transitionDuration;
+  /// Duration for animated transitions between panes. Defaults to
+  /// [PrismTokens.durationMedium].
+  final Duration? transitionDuration;
 
   /// Whether the master list grabs keyboard focus on first build, enabling
   /// arrow-key/Enter navigation without an initial click. Off by default so
@@ -271,7 +275,8 @@ class _PrismMasterDetailState<T> extends State<PrismMasterDetail<T>> {
             child: Container(
               color: widget.detailColor,
               child: AnimatedSwitcher(
-                duration: widget.transitionDuration,
+                duration: widget.transitionDuration ??
+                    context.prismTokens.durationMedium,
                 child: selectedItem == null
                     ? KeyedSubtree(
                         key: const ValueKey('empty'),

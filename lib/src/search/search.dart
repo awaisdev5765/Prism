@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:prism_kit/src/adaptive_scaffold/adaptive_scaffold.dart';
 
-import 'highlight.dart';
-
+import '../adaptive_scaffold/adaptive_scaffold.dart';
 import '../theme/theme.dart';
+import 'highlight.dart';
 
 List<T> _searchLocal<T>(PrismSearch<T> w, String query) {
   final lower = query.toLowerCase();

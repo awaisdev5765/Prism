@@ -1,5 +1,4 @@
 import 'package:flutter/painting.dart' show Color;
-
 import 'package:material_color_utilities/material_color_utilities.dart';
 
 import 'palette_target.dart';
