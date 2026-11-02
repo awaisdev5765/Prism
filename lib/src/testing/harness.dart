@@ -1,12 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages
-//
-// This library is the only place Prism touches flutter_test. It lives in a
-// separate entry point (package:prism_kit/testing.dart) so the main library
-// stays free of a test-only dependency; consumers already have flutter_test in
-// their dev_dependencies, which is where this is used.
-
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 import '../theme/theme.dart';
 
@@ -21,36 +13,45 @@ const prismTestSizes = <String, Size>{
   'desktop': Size(1440, 900),
 };
 
-/// Pumps [child] inside a fully configured Prism environment.
+/// Wraps [child] in a fully configured Prism environment, ready to pump.
 ///
 /// Writing this by hand in every test is how people accidentally test the wrong
-/// thing: a bare `MediaQueryData()` reports a zero-size viewport, so an adaptive
-/// component silently falls into its compact layout and the test passes while
-/// asserting nothing.
+/// thing. The subtle detail is the viewport: a bare `MediaQueryData()` reports a
+/// **zero** size, so an adaptive component silently falls into its compact
+/// layout and the test passes while asserting nothing.
 ///
 /// ```dart
 /// testWidgets('my screen shows the empty state', (tester) async {
-///   await pumpPrism(tester, const MyScreen(), size: .phone);
+///   await tester.pumpWidget(
+///     prismTestApp(child: const MyScreen(), size: const Size(320, 568)),
+///   );
 ///   expect(find.text('Nothing here yet'), findsOneWidget);
 /// });
 /// ```
-Future<void> pumpPrism(
-  WidgetTester tester,
-  Widget child, {
+///
+/// Pump through `tester.pumpWidget` rather than a helper: this library stays
+/// free of `flutter_test` so that `prism_kit` has no test-only runtime
+/// dependency, and a single `pumpWidget` call is all the convenience that
+/// actually buys you.
+///
+/// Combine with [prismTestSizes] to check a widget at every window class:
+///
+/// ```dart
+/// for (final entry in prismTestSizes.entries) {
+///   await tester.pumpWidget(prismTestApp(child: card, size: entry.value));
+///   await tester.pump();
+///   expect(tester.takeException(), isNull, reason: entry.key);
+/// }
+/// ```
+Widget prismTestApp({
+  required Widget child,
   PrismTokens? tokens,
   Brightness brightness = Brightness.light,
   Size? size,
   TextDirection textDirection = TextDirection.ltr,
   bool reduceMotion = false,
   ThemeData? theme,
-  bool settle = true,
-}) async {
-  if (size != null) {
-    tester.view.physicalSize = size;
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
-  }
-
+}) {
   final base =
       theme ??
       ThemeData(
@@ -58,93 +59,32 @@ Future<void> pumpPrism(
         brightness: brightness,
       );
 
-  await tester.pumpWidget(
-    MaterialApp(
-      theme: base.copyWith(
-        extensions: [
-          ...base.extensions.values.where((e) => e is! PrismTokens),
-          tokens ?? PrismTokens.fallback,
-        ],
-      ),
-      home: Builder(
-        builder: (context) => MediaQuery(
-          // Derive from the ambient MediaQuery: a fresh MediaQueryData() would
-          // report a zero-size viewport and hide layout bugs.
-          data: MediaQuery.of(
-            context,
-          ).copyWith(disableAnimations: reduceMotion),
-          child: Directionality(
-            textDirection: textDirection,
-            child: Scaffold(body: child),
-          ),
+  final app = MaterialApp(
+    theme: base.copyWith(
+      extensions: [
+        ...base.extensions.values.where((e) => e is! PrismTokens),
+        tokens ?? PrismTokens.fallback,
+      ],
+    ),
+    home: Builder(
+      builder: (context) => MediaQuery(
+        // Derive from the ambient MediaQuery: a fresh MediaQueryData() would
+        // report a zero-size viewport and hide layout bugs.
+        data: MediaQuery.of(context).copyWith(disableAnimations: reduceMotion),
+        child: Directionality(
+          textDirection: textDirection,
+          child: Scaffold(body: child),
         ),
       ),
     ),
   );
 
-  if (settle) {
-    await tester.pumpAndSettle();
-  } else {
-    await tester.pump();
-  }
-}
+  if (size == null) return app;
 
-/// Pumps [child] at every size in [prismTestSizes] and asserts it never throws
-/// or overflows.
-///
-/// Use this for any component that adapts to the window. It catches the class of
-/// bug that only appears at an extreme width.
-///
-/// ```dart
-/// testWidgets('my card survives every window size', (tester) async {
-///   await expectNoOverflow(tester, () => const MyCard());
-/// });
-/// ```
-Future<void> expectNoOverflow(
-  WidgetTester tester,
-  Widget Function() build, {
-  Brightness brightness = Brightness.light,
-  TextDirection textDirection = TextDirection.ltr,
-  PrismTokens? tokens,
-  Map<String, Size> sizes = prismTestSizes,
-}) async {
-  for (final MapEntry(key: name, value: size) in sizes.entries) {
-    await pumpPrism(
-      tester,
-      build(),
-      size: size,
-      brightness: brightness,
-      textDirection: textDirection,
-      tokens: tokens,
-      settle: false,
-    );
-    // Let implicit animations finish so a late layout change is caught too.
-    await tester.pump(const Duration(milliseconds: 400));
-
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'threw at $name (${size.width}x${size.height})',
-    );
-  }
-}
-
-/// Pumps [child] and asserts it is reachable without sight.
-///
-/// Enables the semantics tree, so the assertion is about what a screen reader
-/// would find rather than what is merely painted.
-Future<void> pumpPrismWithSemantics(
-  WidgetTester tester,
-  Widget child, {
-  Size? size,
-  Brightness brightness = Brightness.light,
-}) async {
-  final handle = tester.ensureSemantics();
-  try {
-    await pumpPrism(tester, child, size: size, brightness: brightness);
-  } finally {
-    // Disposed inside the test body: the framework checks for leaked handles
-    // before tear-downs run.
-    handle.dispose();
-  }
+  // Pin the viewport without touching the test binding, so the same helper
+  // works from a plain widget test and from a preview.
+  return MediaQuery(
+    data: MediaQueryData(size: size),
+    child: app,
+  );
 }

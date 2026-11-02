@@ -3,15 +3,12 @@
 .packages
 build/
 pubspec.lock
+example/pubspec.lock
 
-# IntelliJ / VS Code
+# IDE
 .idea/
 *.iml
 .vscode/
 
 # macOS
 .DS_Store
-
-# Generated example scaffolding that is not part of the package
-example/.metadata
-example/web/

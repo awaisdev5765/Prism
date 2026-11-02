@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:prism_kit/prism.dart';
 import 'package:prism_kit/testing.dart';
 
+import 'support/prism_test_helpers.dart';
+
 /// The harness is itself part of the public API, so it gets its own tests:
 /// a broken harness would make every consumer's tests lie.
 void main() {
@@ -120,13 +122,87 @@ void main() {
     });
   });
 
-  group('pumpPrismWithSemantics', () {
-    testWidgets('enables the semantics tree', (tester) async {
-      await pumpPrismWithSemantics(
-        tester,
-        const PrismAvatar(name: 'Ayesha Khan'),
+  group('prismTestApp', () {
+    testWidgets('installs the design system and a real viewport', (
+      tester,
+    ) async {
+      late PrismTokens tokens;
+      late Size viewport;
+      await tester.pumpWidget(
+        prismTestApp(
+          size: prismTestSizes['phone'],
+          tokens: const PrismTokens(spaceMd: 21),
+          child: Builder(
+            builder: (context) {
+              tokens = context.prismTokens;
+              viewport = MediaQuery.sizeOf(context);
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
       );
-      expect(find.bySemanticsLabel('Ayesha Khan'), findsOneWidget);
+
+      expect(tokens.spaceMd, 21);
+      expect(viewport, prismTestSizes['phone']);
+    });
+
+    testWidgets('defaults to a viewport that is not zero', (tester) async {
+      late Size viewport;
+      await tester.pumpWidget(
+        prismTestApp(
+          child: Builder(
+            builder: (context) {
+              viewport = MediaQuery.sizeOf(context);
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+      // The whole point of this helper: a bare MediaQueryData() would be 0x0,
+      // which would silently make adaptive components take their compact path.
+      expect(viewport.width, greaterThan(0));
+      expect(viewport.height, greaterThan(0));
+    });
+
+    testWidgets('can request RTL, dark mode and reduced motion', (
+      tester,
+    ) async {
+      late TextDirection direction;
+      late Brightness brightness;
+      late bool reduceMotion;
+      await tester.pumpWidget(
+        prismTestApp(
+          textDirection: TextDirection.rtl,
+          brightness: Brightness.dark,
+          reduceMotion: true,
+          child: Builder(
+            builder: (context) {
+              direction = Directionality.of(context);
+              brightness = Theme.of(context).brightness;
+              reduceMotion = context.prismReduceMotion;
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+
+      expect(direction, TextDirection.rtl);
+      expect(brightness, Brightness.dark);
+      expect(reduceMotion, isTrue);
+    });
+
+    testWidgets('the semantics tree is inspectable after a plain pump', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      try {
+        await tester.pumpWidget(
+          prismTestApp(child: const PrismAvatar(name: 'Ayesha Khan')),
+        );
+        expect(find.bySemanticsLabel('Ayesha Khan'), findsOneWidget);
+      } finally {
+        handle.dispose();
+      }
     });
   });
 

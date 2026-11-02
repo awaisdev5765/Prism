@@ -19,5 +19,4 @@
 /// is actually installed.
 library;
 
-export 'src/testing/harness.dart'
-    show expectNoOverflow, prismTestSizes, pumpPrism, pumpPrismWithSemantics;
+export 'src/testing/harness.dart' show prismTestApp, prismTestSizes;
