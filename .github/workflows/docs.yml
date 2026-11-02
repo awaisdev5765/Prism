@@ -40,33 +40,27 @@ jobs:
         run: flutter pub get
 
       # Run the suite here rather than trusting a number someone typed into a
-      # template. Several suites generate their cases in loops, so counting
-      # declarations understates the real total, and the landing page should not
-      # claim a figure it cannot reproduce. A failing suite also stops the docs
-      # from shipping a page that says "tests passing".
+      # template: several suites generate their cases in loops, so counting
+      # declarations understates the real total, and the page should not claim a
+      # figure it cannot reproduce.
       #
-      # Split into two steps on purpose. Running the tests must fail the job when
-      # they are red; reading the count out of their output must not, or a
-      # cosmetic change in the reporter would block a docs deploy. pipefail keeps
-      # the first honest while `|| true` keeps the second harmless.
+      # JSON rather than the human reporter, because the page states a count and
+      # parsing formatted output is fragile -- it wraps numbers in ANSI codes,
+      # trails the summary with a tearDownAll line, and a test name can contain a
+      # '+'. The exit status is still the test result, so a red suite fails here.
       - name: Run tests
-        run: |
-          set -o pipefail
-          flutter test 2>&1 | tee /tmp/test-output.txt
+        run: flutter test --reporter json > /tmp/test-report.json
 
-      - name: Read the test count for the landing page
+      - name: Summarise the run and read the count
+        # Always runs. When the suite is red this summary is the most useful
+        # line in the log, and the job has already failed so the deploy is
+        # skipped regardless.
+        if: always()
         run: |
-          # Take the largest count in the file rather than the last line: the
-          # final line is usually the summary, but a tearDownAll line sometimes
-          # trails it, and a test name can contain a '+' that would fool a
-          # line-oriented parse.
-          count=$(grep -oE '\+[0-9]+' /tmp/test-output.txt | tr -d '+' | sort -n | tail -1 || true)
+          count=$(python3 site/test_summary.py /tmp/test-report.json 2>/tmp/summary.txt || true)
+          cat /tmp/summary.txt
           if [ -z "$count" ]; then
-            echo "No test count found in the output; the page will report a lower bound."
-            echo "Last lines of test output:"
-            tail -20 /tmp/test-output.txt
-          else
-            echo "Tests that ran: $count"
+            echo "No count available; the page will report a lower bound."
           fi
           echo "TESTS=$count" >> "$GITHUB_ENV"
 
