@@ -115,8 +115,9 @@ class PrismAdaptiveScaffold extends StatelessWidget {
 
   /// The resolved transition duration: the caller's value, or the token
   /// default.
-  Duration _transition(BuildContext context) =>
-      transitionDuration ?? context.prismTokens.durationMedium;
+  Duration _transition(BuildContext context) => context.prismMotion(
+    transitionDuration ?? context.prismTokens.durationMedium,
+  );
 
   Widget _buildCompact(
     BuildContext context,

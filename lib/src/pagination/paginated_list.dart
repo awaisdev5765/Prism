@@ -238,10 +238,15 @@ class _PrismPaginatedListState<T> extends State<PrismPaginatedList<T>> {
       return Padding(
         padding: EdgeInsets.all(context.prismTokens.spaceMd),
         child: Center(
-          child: SizedBox(
-            width: spinnerSize,
-            height: spinnerSize,
-            child: const CircularProgressIndicator(strokeWidth: 2),
+          child: Semantics(
+            // A spinner alone announces nothing; say what is happening.
+            liveRegion: true,
+            label: 'Loading more items',
+            child: SizedBox(
+              width: spinnerSize,
+              height: spinnerSize,
+              child: const CircularProgressIndicator(strokeWidth: 2),
+            ),
           ),
         ),
       );
@@ -250,9 +255,13 @@ class _PrismPaginatedListState<T> extends State<PrismPaginatedList<T>> {
       return Padding(
         padding: EdgeInsets.all(context.prismTokens.spaceMd),
         child: Center(
-          child: Text(
-            widget.noMoreLabel,
-            style: Theme.of(context).textTheme.bodySmall,
+          child: Semantics(
+            liveRegion: true,
+            label: widget.noMoreLabel,
+            child: Text(
+              widget.noMoreLabel,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           ),
         ),
       );

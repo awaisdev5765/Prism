@@ -149,28 +149,34 @@ class _PrismSkeletonState extends State<PrismSkeleton>
       decoration: BoxDecoration(color: color, borderRadius: _radius(tokens)),
     );
 
-    final reduceMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+    // Skeletons are pure decoration. Announcing a placeholder is noise, and a
+    // screen reader user cannot act on it, so the whole subtree is excluded and
+    // the real loading state should be announced by its owner instead.
     final controller = _controller;
-    if (controller == null || reduceMotion) return block(base);
+    if (controller == null || context.prismReduceMotion) {
+      return ExcludeSemantics(child: block(base));
+    }
 
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (context, _) {
-        // Sweep a soft gradient highlight from left to right.
-        final t = controller.value;
-        return ShaderMask(
-          blendMode: BlendMode.srcATop,
-          shaderCallback: (bounds) {
-            return LinearGradient(
-              begin: Alignment(-1 - 2 * (1 - t), 0),
-              end: Alignment(1 - 2 * (1 - t) + 1, 0),
-              colors: [base, highlight, base],
-              stops: const [0.35, 0.5, 0.65],
-            ).createShader(bounds);
-          },
-          child: block(base),
-        );
-      },
+    return ExcludeSemantics(
+      child: AnimatedBuilder(
+        animation: controller,
+        builder: (context, _) {
+          // Sweep a soft gradient highlight from left to right.
+          final t = controller.value;
+          return ShaderMask(
+            blendMode: BlendMode.srcATop,
+            shaderCallback: (bounds) {
+              return LinearGradient(
+                begin: Alignment(-1 - 2 * (1 - t), 0),
+                end: Alignment(1 - 2 * (1 - t) + 1, 0),
+                colors: [base, highlight, base],
+                stops: const [0.35, 0.5, 0.65],
+              ).createShader(bounds);
+            },
+            child: block(base),
+          );
+        },
+      ),
     );
   }
 }

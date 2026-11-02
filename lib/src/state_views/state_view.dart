@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'state.dart';
 import 'style.dart';
 
+import '../theme/theme.dart';
+
 /// Renders one widget for all four async UI states: loading, error, empty,
 /// and success — with built-in retry and smart defaults.
 ///
@@ -166,9 +168,23 @@ class PrismStateView<T> extends StatelessWidget {
       PrismViewSuccess(:final data) => successBuilder(data),
     };
 
-    return AnimatedSwitcher(
-      duration: transition,
-      child: KeyedSubtree(key: ValueKey(state.runtimeType), child: stateView),
+    return Semantics(
+      // The state changes without user input (a fetch finishes, a request
+      // fails), so the region is live: a screen reader hears the outcome.
+      liveRegion: true,
+      container: true,
+      label: switch (state) {
+        PrismViewLoading(:final message) =>
+          loadingMessage ?? message ?? 'Loading',
+        PrismViewError(:final error) =>
+          errorMessage ?? error?.toString() ?? 'Something went wrong.',
+        PrismViewEmpty() => emptyMessage ?? 'Nothing here yet.',
+        PrismViewSuccess() => null,
+      },
+      child: AnimatedSwitcher(
+        duration: context.prismMotion(transition),
+        child: KeyedSubtree(key: ValueKey(state.runtimeType), child: stateView),
+      ),
     );
   }
 }

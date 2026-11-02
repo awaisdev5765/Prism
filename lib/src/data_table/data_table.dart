@@ -296,59 +296,68 @@ class _PrismDataTableState<T> extends State<PrismDataTable<T>> {
                 onTap: widget.onRowTap == null
                     ? null
                     : () => widget.onRowTap!(rows[index], index),
-                child: Container(
-                  padding: EdgeInsets.all(tokens.spaceMd),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(tokens.radiusLg),
-                    border: Border.all(
-                      color: colors.outline,
-                      width: tokens.borderWidth,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // First visible column acts as the card title.
-                      DefaultTextStyle.merge(
-                        style: Theme.of(context).textTheme.titleSmall,
-                        child: shown.first.cell(context, rows[index], index),
+                child: Semantics(
+                  container: true,
+                  child: Container(
+                    padding: EdgeInsets.all(tokens.spaceMd),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(tokens.radiusLg),
+                      border: Border.all(
+                        color: colors.outline,
+                        width: tokens.borderWidth,
                       ),
-                      for (final column in shown.skip(1))
-                        Padding(
-                          padding: EdgeInsets.only(top: tokens.spaceSm),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 96,
-                                child: Text(
-                                  column.label,
-                                  style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(
-                                        color: scheme.onSurfaceVariant,
-                                      ),
-                                ),
-                              ),
-                              Expanded(
-                                child: DefaultTextStyle.merge(
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                  child: column.cell(
-                                    context,
-                                    rows[index],
-                                    index,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // First visible column acts as the card title.
+                        DefaultTextStyle.merge(
+                          style: Theme.of(context).textTheme.titleSmall,
+                          child: shown.first.cell(context, rows[index], index),
+                        ),
+                        for (final column in shown.skip(1))
+                          Padding(
+                            padding: EdgeInsets.only(top: tokens.spaceSm),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 96,
+                                  child: Text(
+                                    column.label,
+                                    style: Theme.of(context).textTheme.bodySmall
+                                        ?.copyWith(
+                                          color: scheme.onSurfaceVariant,
+                                        ),
                                   ),
                                 ),
-                              ),
-                            ],
+                                Expanded(
+                                  child: DefaultTextStyle.merge(
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium,
+                                    child: column.cell(
+                                      context,
+                                      rows[index],
+                                      index,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      if (widget.trailing != null)
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: widget.trailing!(context, rows[index], index),
-                        ),
-                    ],
+                        if (widget.trailing != null)
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: widget.trailing!(
+                              context,
+                              rows[index],
+                              index,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -394,6 +403,17 @@ class _HeaderCell extends StatelessWidget {
       ],
     );
     if (!sortable) return row;
-    return InkWell(onTap: onTap, child: row);
+    // A sortable header is a button, and the state has to live in the label:
+    // Flutter's `sortKey` orders siblings, it does not express sort state.
+    return Semantics(
+      button: true,
+      label: sorted
+          ? '$label, sorted ${ascending ? 'ascending' : 'descending'}. '
+                'Activate to reverse.'
+          : '$label, sortable',
+      child: ExcludeSemantics(
+        child: InkWell(onTap: onTap, child: row),
+      ),
+    );
   }
 }

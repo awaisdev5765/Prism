@@ -150,11 +150,11 @@ class _PrismConnectionBannerState extends State<PrismConnectionBanner> {
     final visible = !_online || showReconnected;
 
     return AnimatedSize(
-      duration: tokens.durationMedium,
+      duration: context.prismMotion(tokens.durationMedium),
       curve: tokens.curveStandard,
       alignment: Alignment.topCenter,
       child: AnimatedSwitcher(
-        duration: tokens.durationMedium,
+        duration: context.prismMotion(tokens.durationMedium),
         switchInCurve: tokens.curveEmphasized,
         switchOutCurve: tokens.curveExit,
         child: !visible

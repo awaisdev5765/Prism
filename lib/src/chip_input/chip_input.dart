@@ -334,15 +334,20 @@ class _DefaultChip extends StatelessWidget {
             ),
           ),
           if (onRemove != null) ...[
-            const SizedBox(width: 2),
+            SizedBox(width: tokens.spaceXs / 2),
             Semantics(
               button: true,
               label: 'Remove $label',
               child: InkWell(
                 onTap: onRemove,
                 customBorder: const CircleBorder(),
-                child: Padding(
-                  padding: const EdgeInsets.all(2),
+                // The icon stays small, but the touch target does not: a
+                // 19 px hit area is unusable for anyone with a tremor or a
+                // large thumb, and fails the 32 dp floor Material sets for
+                // controls embedded in a chip.
+                child: SizedBox(
+                  width: tokens.spaceXl,
+                  height: tokens.spaceXl,
                   child: Icon(
                     Icons.close,
                     size: 15,

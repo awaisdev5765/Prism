@@ -401,7 +401,7 @@ class _Marker extends StatelessWidget {
     }
 
     return AnimatedContainer(
-      duration: context.prismTokens.durationMedium,
+      duration: context.prismMotion(context.prismTokens.durationMedium),
       curve: context.prismTokens.curveStandard,
       width: size,
       height: size,
@@ -442,7 +442,7 @@ class _Connector extends StatelessWidget {
     final tokens = context.prismTokens;
     final colors = context.prismColors;
     return AnimatedContainer(
-      duration: tokens.durationMedium,
+      duration: context.prismMotion(tokens.durationMedium),
       height: 2,
       color: done ? colors.success : colors.outline,
     );

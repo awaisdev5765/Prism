@@ -307,7 +307,7 @@ class _OtpBox extends StatelessWidget {
     }
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 140),
+      duration: context.prismMotion(const Duration(milliseconds: 140)),
       curve: Curves.easeOut,
       width: size,
       height: size,

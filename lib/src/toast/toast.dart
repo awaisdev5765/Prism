@@ -235,7 +235,7 @@ class _ToastCard extends StatefulWidget {
 class _CardState extends State<_ToastCard> with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
-    duration: context.prismTokens.durationMedium,
+    duration: context.prismMotion(context.prismTokens.durationMedium),
   )..forward();
   late final Animation<double> _fade = CurvedAnimation(
     parent: _controller,
@@ -358,17 +358,35 @@ class _CardState extends State<_ToastCard> with SingleTickerProviderStateMixin {
       ),
     );
 
-    return FadeTransition(
-      opacity: _fade,
-      child: SlideTransition(
-        position:
-            Tween<Offset>(
-              begin: widget.wide ? const Offset(0.2, 0) : const Offset(0, 1),
-              end: Offset.zero,
-            ).animate(
-              CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
-            ),
-        child: toast,
+    // A toast appears without the user doing anything, so it must be a live
+    // region or a screen reader user will never learn it happened. The action
+    // button is announced as part of the same node.
+    final announcement =
+        '${message.title == null ? '' : '${message.title}. '}${message.message}';
+
+    return Semantics(
+      liveRegion: true,
+      container: true,
+      label: announcement,
+      child: ExcludeSemantics(
+        child: FadeTransition(
+          opacity: _fade,
+          child: SlideTransition(
+            position:
+                Tween<Offset>(
+                  begin: widget.wide
+                      ? const Offset(0.2, 0)
+                      : const Offset(0, 1),
+                  end: Offset.zero,
+                ).animate(
+                  CurvedAnimation(
+                    parent: _controller,
+                    curve: Curves.easeOutCubic,
+                  ),
+                ),
+            child: toast,
+          ),
+        ),
       ),
     );
   }
