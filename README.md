@@ -688,28 +688,48 @@ cycle. Disabled by default, so `enabled: kDebugMode` makes it release-safe.
 
 ## 🧪 Testing your own screens
 
-`package:prism_kit/testing.dart` ships the same helpers Prism's own 672 tests
-use, so your tests run in the same environment:
+`package:prism_kit/testing.dart` gives your tests the same environment Prism's
+own 766 tests run in:
 
 ```dart
 import 'package:prism_kit/testing.dart';
 
 testWidgets('the dashboard shows an empty state', (tester) async {
-  await pumpPrism(tester, const Dashboard(), size: const Size(320, 568));
+  await tester.pumpWidget(
+    prismTestApp(child: const Dashboard(), size: const Size(320, 568)),
+  );
   expect(find.text('Nothing here yet'), findsOneWidget);
-});
-
-testWidgets('the card survives every window size', (tester) async {
-  await expectNoOverflow(tester, () => const MyCard());
 });
 ```
 
-`pumpPrism` installs the design system, a **real** viewport, brightness, text
-direction and reduced-motion setting in one call. That last detail is the point:
-a bare `MediaQueryData()` reports a zero-size viewport, so an adaptive component
-silently falls into its compact layout and the test passes while asserting
-nothing. `expectNoOverflow` pumps at phone, tablet and desktop widths and fails
-on any exception — it is what caught the `PrismChipInput` overflow.
+`prismTestApp` configures the design system, a **real** viewport, brightness,
+text direction and reduced-motion setting. That viewport detail is the whole
+point: a bare `MediaQueryData()` reports a **zero** size, so an adaptive
+component silently takes its compact layout and your test passes while asserting
+nothing.
+
+To check a widget at every window class:
+
+```dart
+for (final entry in prismTestSizes.entries) {
+  await tester.pumpWidget(prismTestApp(child: card, size: entry.value));
+  await tester.pump();
+  expect(tester.takeException(), isNull, reason: entry.key);
+}
+```
+
+That loop is what caught the `PrismChipInput` overflow, and Prism's own version
+of it lives in `test/support/`.
+
+### Why there is no `pumpPrism` helper
+
+Prism deliberately does **not** depend on `flutter_test` at runtime. Putting it
+in `dependencies` to ship a `WidgetTester` wrapper would drag the test framework
+into every consumer's production dependency graph, which is a bad trade for two
+convenience functions. Your call site is one `pumpWidget` either way.
+
+If you do want the wrappers, they are about forty lines over this public API —
+see `test/support/prism_test_helpers.dart` and copy them.
 
 ---
 
