@@ -1,5 +1,52 @@
 # Changelog
 
+## 1.3.0
+
+### Added
+- **`PrismSyncStatus`** — a compact sync indicator with six phases (idle,
+  pushing, pulling, offline, failed, paused), progress, a retry action that only
+  appears on failure, and a live region so a failed sync is announced. Prism
+  takes no sync dependency: `PrismSyncSnapshot` is a plain value type and the
+  adapter from `flutter_local_first` is a compiler-checked switch.
+- **`package:prism_kit/testing.dart`** — `pumpPrism`, `expectNoOverflow` and
+  `pumpPrismWithSemantics`, the same helpers Prism's own suite uses. `pumpPrism`
+  installs a real viewport (a bare `MediaQueryData()` reports size zero, which
+  silently makes adaptive components take their compact path), the design system,
+  brightness, text direction and reduced-motion setting.
+- **`context.prismMotion(...)` and `context.prismReduceMotion`** for honouring
+  the platform's reduce-motion setting.
+- **`docs/VERSIONING.md`** — semantic versioning and deprecation policy, noting
+  that visual defaults and accessibility semantics are both API.
+- **CI, publish and docs workflows.** Publish runs on a `v*` tag, verifies the
+  tag matches `pubspec.yaml`, and skips cleanly when no credentials are present.
+  Docs builds the API reference plus the web gallery and deploys both to Pages.
+- **`theme_contrast_test.dart`** — the semantic palette is verified against WCAG
+  AA (4.5:1 text, 3:1 accents) across ten brand seeds in both brightnesses.
+- **`component_matrix_test.dart`** — 184 cases pumping every component at 320 px
+  and 1600 px, in light and dark, in LTR and RTL.
+- **`accessibility_test.dart`** — 15 tests covering live regions, hidden
+  decorative content, touch targets, sortable-header semantics, reduce motion and
+  RTL rendering.
+
+### Changed
+- **Every animated component now honours reduce motion**, routing its duration
+  through `context.prismMotion(...)`. Previously one of 28 areas respected it.
+- `PrismSkeleton` is wrapped in `ExcludeSemantics`: announcing placeholders is
+  noise for a screen reader user.
+- `PrismToast` and `PrismStateView` are live regions, so state the user did not
+  trigger is actually announced.
+- `PrismDataTable` sortable headers announce sortability, the current direction
+  and the next action.
+- `PrismPaginatedList` announces loading and end-of-list.
+- The chip remove affordance meets the 32 dp minimum touch target; it was
+  roughly 19 px.
+
+### Fixed
+- **`PrismChipInput` overflowed by 48 px** when a tag was wider than the field,
+  because the chip label was a bare `Text` that could not shrink. It is now
+  `Flexible` with ellipsis, and the untruncated value still reaches assistive
+  tech. Found by the new component matrix.
+
 ## 1.2.0
 
 A consistency release: the design system introduced in 1.1.0 now actually

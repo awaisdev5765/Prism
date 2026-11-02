@@ -1,0 +1,60 @@
+name: Publish
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to pub.dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify the tag matches the pubspec version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pubspec="$(grep '^version:' pubspec.yaml | awk '{print $2}')"
+          if [ "$tag" != "$pubspec" ]; then
+            echo "Tag $tag does not match pubspec version $pubspec"
+            exit 1
+          fi
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      - name: Dry-run the publish
+        run: flutter pub publish --dry-run
+
+      - name: Configure pub.dev credentials
+        id: creds
+        env:
+          PUB_CREDENTIALS: ${{ secrets.PUB_CREDENTIALS }}
+        run: |
+          if [ -z "$PUB_CREDENTIALS" ]; then
+            echo "PUB_CREDENTIALS is not set; skipping the real publish."
+            echo "have_creds=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          mkdir -p "$HOME/.config/dart"
+          printf '%s' "$PUB_CREDENTIALS" > "$HOME/.config/dart/pub-credentials.json"
+          echo "have_creds=true" >> "$GITHUB_OUTPUT"
+
+      - name: Publish
+        if: steps.creds.outputs.have_creds == 'true'
+        run: flutter pub publish --force

@@ -1,15 +1,15 @@
 <p align="center">
-  <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-27%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
+  <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-28%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
 </p>
 
 <h1 align="center">🔷 Prism</h1>
-<h3 align="center">One dependency. 27 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
+<h3 align="center">One dependency. 28 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
 
 <p align="center">
   <img src="https://img.shields.io/badge/pub.dev-prism__kit-0175C2?logo=dart&logoColor=white" alt="pub.dev">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT">
   <img src="https://img.shields.io/badge/Flutter-3.27%2B-02569B?logo=flutter&logoColor=white" alt="Flutter">
-  <img src="https://img.shields.io/badge/tests-400%20passing-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-672%20passing-brightgreen" alt="tests">
 </p>
 
 ---
@@ -70,6 +70,7 @@ import 'package:prism_kit/prism.dart';
 | 25 | **CommandPalette** | ⌘K launcher with fuzzy search, grouping and keyboard navigation |
 | 26 | **AdaptiveSheet** | Bottom sheet on phones, centred dialog on desktop — one call |
 | 27 | **ConnectionBanner** | Offline/online banner with debounce, retry and live-region announcements |
+| 28 | **SyncStatus** | Compact, live-region sync indicator with progress, retry and six phases |
 
 ### Design system
 
@@ -508,7 +509,7 @@ Container(color: context.prismColors.surfaceRaised)
 Container(color: context.prismColors.forRole(PrismSemantic.success).background)
 ```
 
-**Every one of the 27 components reads these tokens** — toasts, banners, forms,
+**Every one of the 28 components reads these tokens** — toasts, banners, forms,
 data tables, the command palette, everything. Change `spaceMd` once and the whole
 app changes rhythm together; switch `brightness` and every semantic colour
 follows.
@@ -522,6 +523,56 @@ colour happens to be green.
 
 If you register no tokens at all, components fall back to `PrismTokens.fallback`
 and behave exactly as before. Nothing throws, nothing breaks.
+
+Motion follows the platform's reduce-motion setting automatically — every
+animated component reads its duration through `context.prismMotion(...)`, so you
+do not have to remember to gate each one.
+
+### SyncStatus — a live sync indicator
+
+```dart
+ValueListenableBuilder(
+  valueListenable: syncEngine.state,
+  builder: (context, state, _) => PrismSyncStatus(snapshot: snapshotOf(state)),
+)
+```
+
+Six phases (idle, pushing, pulling, offline, failed, paused), each with its own
+icon, label and semantic colour. It is a live region, so a failed sync is
+announced rather than silently ignored, and it offers a retry action only when
+there is something to retry.
+
+Prism has no sync dependency. `PrismSyncSnapshot` is a plain value type, and the
+adapter from [`flutter_local_first`](https://pub.dev/packages/flutter_local_first)'s
+sealed `SyncState` is a compiler-checked switch — see the example on
+`PrismSyncPhase`.
+
+---
+
+## 🧪 Testing your own screens
+
+`package:prism_kit/testing.dart` ships the same helpers Prism's own 672 tests
+use, so your tests run in the same environment:
+
+```dart
+import 'package:prism_kit/testing.dart';
+
+testWidgets('the dashboard shows an empty state', (tester) async {
+  await pumpPrism(tester, const Dashboard(), size: const Size(320, 568));
+  expect(find.text('Nothing here yet'), findsOneWidget);
+});
+
+testWidgets('the card survives every window size', (tester) async {
+  await expectNoOverflow(tester, () => const MyCard());
+});
+```
+
+`pumpPrism` installs the design system, a **real** viewport, brightness, text
+direction and reduced-motion setting in one call. That last detail is the point:
+a bare `MediaQueryData()` reports a zero-size viewport, so an adaptive component
+silently falls into its compact layout and the test passes while asserting
+nothing. `expectNoOverflow` pumps at phone, tablet and desktop widths and fails
+on any exception — it is what caught the `PrismChipInput` overflow.
 
 ---
 
@@ -543,10 +594,17 @@ and behave exactly as before. Nothing throws, nothing breaks.
 
 ## 🧪 Quality
 
-- **400 tests** (unit + widget) across all components
+- **672 tests** (unit + widget) across all components
 - **Every component is covered by design-system tests** that install
   deliberately unusual `PrismTokens` and assert the component actually reads
   them — a hard-coded radius, duration or colour fails CI
+- **A 184-case component matrix** pumps every component at 320 px and 1600 px, in
+  light and dark, in LTR and RTL, failing on any exception or overflow
+- **The semantic palette is verified against WCAG AA** across ten brand seeds in
+  both brightnesses, and the four roles are asserted to stay distinguishable
+- **Accessibility is tested, not assumed**: live regions for state the user did
+  not trigger, decorative content hidden from screen readers, minimum touch
+  targets, and reduced motion honoured by every animated component
 - Zero analyzer issues under `strict-casts`, `strict-inference` and
   `strict-raw-types`, plus a curated lint set
 - Light and dark verified separately, and components verified to degrade
@@ -594,7 +652,8 @@ cd example && flutter build web
 
 Issues and PRs welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md) — the two
 rules that matter are **read the design system, never hard-code** and **adapt to
-the window**.
+the window**. Release and deprecation policy is in
+[docs/VERSIONING.md](docs/VERSIONING.md).
 
 The quickest meaningful contribution is a component that misbehaves on a
 1200 px-wide window or in dark mode; the design-system tests will tell you if a
