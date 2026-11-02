@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../theme/theme.dart';
+
 /// The visual/semantic type of a toast.
 enum PrismToastType {
   /// Positive confirmation — check icon, success colors.
@@ -183,7 +185,10 @@ class _ToastHost extends StatelessWidget {
   }
 
   Widget _build(BuildContext context) {
-    final wide = MediaQuery.sizeOf(context).width >= 600;
+    final tokens = context.prismTokens;
+    final wide = MediaQuery.sizeOf(context).width >= tokens.breakpointCompact;
+    final gap = tokens.spaceSm;
+    final inset = tokens.spaceMd;
     final slots = List<_ToastSlot>.of(manager.slots);
     final column = Column(
       mainAxisSize: MainAxisSize.min,
@@ -191,24 +196,26 @@ class _ToastHost extends StatelessWidget {
         for (final slot in slots.reversed)
           Padding(
             key: ValueKey(slot),
-            padding: const EdgeInsets.only(top: 8),
+            padding: EdgeInsets.only(top: gap),
             child: _ToastCard(slot: slot, wide: wide),
           ),
       ],
     );
 
     if (wide) {
+      // Desktop: stacked top-right, where it will not cover content.
       return Positioned(
-        top: 16,
-        right: 16,
-        width: 380,
+        top: inset,
+        right: inset,
+        width: tokens.controlHeight * 8.6,
         child: IgnorePointer(ignoring: slots.isEmpty, child: column),
       );
     }
+    // Mobile: bottom-centred, above the safe area.
     return Positioned(
-      left: 16,
-      right: 16,
-      bottom: MediaQuery.paddingOf(context).bottom + 16,
+      left: inset,
+      right: inset,
+      bottom: MediaQuery.paddingOf(context).bottom + inset,
       child: IgnorePointer(ignoring: slots.isEmpty, child: column),
     );
   }
@@ -228,7 +235,7 @@ class _ToastCard extends StatefulWidget {
 class _CardState extends State<_ToastCard> with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 250),
+    duration: context.prismTokens.durationMedium,
   )..forward();
   late final Animation<double> _fade = CurvedAnimation(
     parent: _controller,
@@ -268,6 +275,7 @@ class _CardState extends State<_ToastCard> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final message = widget.slot.message;
     final scheme = Theme.of(context).colorScheme;
+    final tokens = context.prismTokens;
     final (bg, fg, icon) = switch (message.type) {
       PrismToastType.success => (
         scheme.primaryContainer,
@@ -294,7 +302,7 @@ class _CardState extends State<_ToastCard> with SingleTickerProviderStateMixin {
     final content = Row(
       children: [
         Icon(icon, color: fg, size: 24),
-        const SizedBox(width: 12),
+        SizedBox(width: tokens.spaceSm + tokens.spaceXs),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -337,10 +345,15 @@ class _CardState extends State<_ToastCard> with SingleTickerProviderStateMixin {
     final toast = Material(
       color: bg,
       elevation: 4,
-      shadowColor: Colors.black38,
-      borderRadius: BorderRadius.circular(14),
+      shadowColor: scheme.shadow,
+      borderRadius: BorderRadius.circular(tokens.radiusLg),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 6, 12),
+        padding: EdgeInsets.fromLTRB(
+          tokens.spaceMd,
+          tokens.spaceSm + tokens.spaceXs,
+          tokens.spaceXs + 2,
+          tokens.spaceSm + tokens.spaceXs,
+        ),
         child: content,
       ),
     );

@@ -94,12 +94,12 @@ void main() {
       expect(palette.colors, isNotEmpty);
       final extracted = palette.colors.toSet();
       expect(
-        extracted.any((c) => c.red > 200 && c.green < 100),
+        extracted.any((c) => (c.r * 255) > 200 && (c.g * 255) < 100),
         isTrue,
         reason: 'expected a red-ish color in the palette: $extracted',
       );
       expect(
-        extracted.any((c) => c.green > 200 && c.red < 100),
+        extracted.any((c) => (c.g * 255) > 200 && (c.r * 255) < 100),
         isTrue,
         reason: 'expected a green-ish color in the palette: $extracted',
       );
@@ -123,7 +123,7 @@ void main() {
 
       // Only the red half was sampled, so no green should dominate.
       expect(
-        leftPalette.colors.any((c) => c.green > 200 && c.red < 100),
+        leftPalette.colors.any((c) => (c.g * 255) > 200 && (c.r * 255) < 100),
         isFalse,
         reason: 'region should have excluded the green half',
       );

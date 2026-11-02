@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../theme/theme.dart';
+
 import 'announcement.dart';
 import 'store.dart';
 
@@ -79,12 +81,38 @@ class PrismBannerStyle {
   const PrismBannerStyle({
     this.color,
     this.foregroundColor,
-    this.borderRadius = 12,
-    this.margin = const EdgeInsets.fromLTRB(12, 8, 12, 0),
-    this.padding = const EdgeInsets.fromLTRB(16, 12, 8, 12),
+    this.borderRadius,
+    this.margin,
+    this.padding,
     this.titleStyle,
     this.messageStyle,
   });
+
+  /// Returns a copy with unset fields filled from [PrismTokens].
+  PrismBannerStyle resolve(BuildContext context) {
+    final tokens = PrismTokens.of(context);
+    return PrismBannerStyle(
+      color: color,
+      foregroundColor: foregroundColor,
+      borderRadius: borderRadius ?? tokens.radiusMd,
+      margin: margin ??
+          EdgeInsets.fromLTRB(
+            tokens.spaceSm + tokens.spaceXs,
+            tokens.spaceSm,
+            tokens.spaceSm + tokens.spaceXs,
+            0,
+          ),
+      padding: padding ??
+          EdgeInsets.fromLTRB(
+            tokens.spaceMd,
+            tokens.spaceSm + tokens.spaceXs,
+            tokens.spaceSm,
+            tokens.spaceSm + tokens.spaceXs,
+          ),
+      titleStyle: titleStyle,
+      messageStyle: messageStyle,
+    );
+  }
 
   /// Background color; defaults to the severity's container color.
   final Color? color;
@@ -92,14 +120,14 @@ class PrismBannerStyle {
   /// Text/icon color; defaults to the severity's on-container color.
   final Color? foregroundColor;
 
-  /// Corner radius of the banner card.
-  final double borderRadius;
+  /// Corner radius of the banner card. Defaults to [PrismTokens.radiusMd].
+  final double? borderRadius;
 
-  /// Outer margin around the banner.
-  final EdgeInsetsGeometry margin;
+  /// Outer margin around the banner. Derived from [PrismTokens] by default.
+  final EdgeInsetsGeometry? margin;
 
-  /// Inner padding.
-  final EdgeInsetsGeometry padding;
+  /// Inner padding. Derived from [PrismTokens] by default.
+  final EdgeInsetsGeometry? padding;
 
   /// Style for [PrismAnnouncement.title].
   final TextStyle? titleStyle;
@@ -165,7 +193,13 @@ class _PrismBannerState extends State<PrismBanner> {
   @override
   Widget build(BuildContext context) {
     final announcement = _select();
-    final style = widget.style ?? const PrismBannerStyle();
+    final style = (widget.style ?? const PrismBannerStyle()).resolve(context);
+    final tokens = context.prismTokens;
+    // resolve() fills these, but the analyzer cannot see through the optional
+    // types, so narrow once here.
+    final radius = style.borderRadius!;
+    final margin = style.margin!;
+    final padding = style.padding!;
     if (announcement == null) return const SizedBox.shrink();
 
     final scheme = Theme.of(context).colorScheme;
@@ -203,7 +237,7 @@ class _PrismBannerState extends State<PrismBanner> {
                               ))
                           .copyWith(color: fg),
                 ),
-              const SizedBox(height: 2),
+              SizedBox(height: tokens.spaceXs / 2),
               Text(
                 announcement.message,
                 style: (style.messageStyle ?? const TextStyle(fontSize: 13.5))
@@ -214,7 +248,7 @@ class _PrismBannerState extends State<PrismBanner> {
         ),
         if (announcement.actionLabel != null)
           Padding(
-            padding: const EdgeInsets.only(left: 8),
+            padding: EdgeInsets.only(left: tokens.spaceSm),
             child: TextButton(
               onPressed: () {
                 announcement.onAction?.call();
@@ -225,7 +259,7 @@ class _PrismBannerState extends State<PrismBanner> {
             ),
           ),
         Padding(
-          padding: const EdgeInsets.only(left: 4),
+          padding: EdgeInsets.only(left: tokens.spaceXs),
           child: IconButton(
             tooltip: 'Dismiss',
             icon: const Icon(Icons.close, size: 20),
@@ -240,14 +274,14 @@ class _PrismBannerState extends State<PrismBanner> {
       alignment: Alignment.topCenter,
       child: Container(
         constraints: BoxConstraints(maxWidth: widget.maxWidth),
-        margin: style.margin,
+        margin: margin,
         child: Material(
           color: style.color ?? bg,
-          borderRadius: BorderRadius.circular(style.borderRadius),
+          borderRadius: BorderRadius.circular(radius),
           child: InkWell(
-            borderRadius: BorderRadius.circular(style.borderRadius),
+            borderRadius: BorderRadius.circular(radius),
             onTap: announcement.onAction,
-            child: Padding(padding: style.padding, child: content),
+            child: Padding(padding: padding, child: content),
           ),
         ),
       ),

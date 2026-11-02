@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:prism_kit/prism.dart';
-import 'package:prism_kit/src/markdown/markdown.dart' show PrismMarkdown;
 
 void main() {
   Future<void> pumpView(

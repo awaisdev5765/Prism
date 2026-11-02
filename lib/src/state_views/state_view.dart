@@ -80,15 +80,23 @@ class PrismStateView<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final resolved = (style ?? const PrismStateViewStyle()).resolve(context);
+    // resolve() fills every field, but the analyzer cannot see through the
+    // optional types, so coalesce once here instead of at each use site.
+    final iconSize = resolved.iconSize ?? 48;
+    final gap = resolved.gap ?? 8;
+    final padding = resolved.padding ?? const EdgeInsets.all(24);
+    final transition = resolved.transitionDuration ??
+        const Duration(milliseconds: 250);
 
     final stateView = switch (state) {
       PrismViewLoading(:final message) => _Centered(
+        padding: padding,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              width: 36,
-              height: 36,
+              width: iconSize,
+              height: iconSize,
               child: CircularProgressIndicator(color: resolved.accentColor),
             ),
             if ((loadingMessage ?? message) != null) ...[
@@ -103,48 +111,50 @@ class PrismStateView<T> extends StatelessWidget {
         ),
       ),
       PrismViewError(:final error) => _Centered(
+        padding: padding,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               errorIcon ?? Icons.error_outline,
-              size: 48,
+              size: iconSize,
               color: resolved.errorColor,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: gap),
             Text(
               errorMessage ?? (error?.toString() ?? 'Something went wrong.'),
               style: resolved.messageStyle,
               textAlign: TextAlign.center,
             ),
             if (onRetry != null) ...[
-              const SizedBox(height: 16),
+              SizedBox(height: gap * 2),
               FilledButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Retry'),
+                label: Text(resolved.retryLabel ?? 'Retry'),
               ),
             ],
           ],
         ),
       ),
       PrismViewEmpty() => _Centered(
+        padding: padding,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               emptyIcon ?? Icons.inbox_outlined,
-              size: 48,
+              size: iconSize,
               color: resolved.iconColor,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: gap),
             Text(
               emptyMessage ?? 'Nothing here yet.',
               style: resolved.messageStyle,
               textAlign: TextAlign.center,
             ),
             if (emptyActionLabel != null && onEmptyAction != null) ...[
-              const SizedBox(height: 16),
+              SizedBox(height: gap * 2),
               FilledButton.tonal(
                 onPressed: onEmptyAction,
                 child: Text(emptyActionLabel!),
@@ -157,21 +167,20 @@ class PrismStateView<T> extends StatelessWidget {
     };
 
     return AnimatedSwitcher(
-      duration: resolved.transitionDuration,
+      duration: transition,
       child: KeyedSubtree(key: ValueKey(state.runtimeType), child: stateView),
     );
   }
 }
 
 class _Centered extends StatelessWidget {
-  const _Centered({required this.child});
+  const _Centered({required this.child, required this.padding});
 
   final Widget child;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(padding: const EdgeInsets.all(24), child: child),
-    );
+    return Center(child: Padding(padding: padding, child: child));
   }
 }
