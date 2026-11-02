@@ -84,3 +84,7 @@ export 'src/otp_field/otp_field.dart';
 export 'src/skeleton/skeleton.dart';
 export 'src/stepper/stepper.dart';
 export 'src/timeline/timeline.dart';
+
+// ── Added in 1.3.0 ─────────────────────────────────────────────────────────
+export 'src/sync_status/sync_status.dart'
+    show PrismSyncPhase, PrismSyncSnapshot, PrismSyncStatus;
