@@ -88,3 +88,11 @@ export 'src/timeline/timeline.dart';
 // ── Added in 1.3.0 ─────────────────────────────────────────────────────────
 export 'src/sync_status/sync_status.dart'
     show PrismSyncPhase, PrismSyncSnapshot, PrismSyncStatus;
+export 'src/accordion/accordion.dart'
+    show PrismAccordion, PrismAccordionSection;
+export 'src/badge/badge.dart' show PrismBadge;
+export 'src/calendar/calendar.dart' show PrismCalendar, PrismDateSelection;
+export 'src/rating/rating.dart' show PrismRating;
+export 'src/segmented_control/segmented_control.dart'
+    show PrismSegment, PrismSegmentedControl;
+export 'src/tabs/tabs.dart' show PrismTab, PrismTabs;
