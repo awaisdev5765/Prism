@@ -1,5 +1,51 @@
 # Changelog
 
+## 1.2.0
+
+A consistency release: the design system introduced in 1.1.0 now actually
+governs the whole library.
+
+### Changed
+- **Every component reads `PrismTokens` and `PrismColors`.** Previously the
+  original 17 components ignored the design system, so overriding tokens had no
+  effect on toasts, banners, forms, search, settings, pagination, changelogs,
+  code views, scaffolds, master-detail, dialogs or state views. A single
+  `ThemeData.extensions` override now restyles the entire app.
+- Style classes (`PrismStateViewStyle`, `PrismBannerStyle`, `ChangelogStyle`,
+  `PrismCodeViewStyle`, `PrismSearch`) gained a `resolve(BuildContext)` method
+  that fills unset fields from tokens, and their visual fields became nullable so
+  "unset" is distinguishable from "deliberately zero".
+- `PrismStateViewStyle` gained `iconSize`, `padding`, `gap` and `retryLabel`.
+- `PrismBannerStyle`, `ChangelogStyle` and `PrismCodeViewStyle` field defaults
+  are now token-derived rather than literal.
+- `PrismAdaptiveScaffold` and `PrismMasterDetail` transition durations default to
+  `PrismTokens.durationMedium`; `PrismAdaptiveScaffold` accepts token-driven
+  breakpoints.
+- `PrismSearch.debounce` defaults to `PrismTokens.durationMedium`.
+- `PrismBreakpoint.resolve` accepts custom thresholds; the previous behaviour is
+  available as `resolveStandard`.
+
+### Added
+- **15 design-system tests** that install deliberately unusual tokens and assert
+  components read them, including light/dark colour divergence, semantic-role
+  distinctness, token-driven breakpoints, and graceful behaviour when no tokens
+  are registered at all. A hard-coded radius, duration or colour now fails CI.
+- `CONTRIBUTING.md` documenting the two rules that matter and how to add a
+  component.
+- GitHub Actions workflow running formatting, strict analysis, the full test
+  suite and an example build.
+- Issue templates (bug, feature) and a pull request checklist.
+
+### Improved
+- The example gallery is now searched-indexed with keywords, has a theme-mode
+  toggle, and has a live token override so you can watch every component adopt a
+  non-default token set at once. It also builds for the web.
+
+### Fixed
+- `PrismColours.resolve` now derives `error` and `onError` from the theme rather
+  than leaving them transparent.
+- Attachment progress no longer emits 100% twice.
+
 ## 1.1.0
 
 ### Added

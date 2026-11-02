@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/pub.dev-prism__kit-0175C2?logo=dart&logoColor=white" alt="pub.dev">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT">
   <img src="https://img.shields.io/badge/Flutter-3.27%2B-02569B?logo=flutter&logoColor=white" alt="Flutter">
-  <img src="https://img.shields.io/badge/tests-385%20passing-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-400%20passing-brightgreen" alt="tests">
 </p>
 
 ---
@@ -493,18 +493,35 @@ MaterialApp(
   theme: ThemeData(
     colorSchemeSeed: Colors.teal,
     extensions: const [
-      PrismTokens(spaceMd: 20, radiusMd: 16, durationMedium: Duration(milliseconds: 200)),
+      PrismTokens(
+        spaceMd: 20,
+        radiusMd: 16,
+        durationMedium: Duration(milliseconds: 200),
+      ),
     ],
   ),
 )
 
-// Anywhere:
+// Anywhere in your app:
 Padding(padding: EdgeInsets.all(context.prismTokens.spaceMd), child: …)
 Container(color: context.prismColors.surfaceRaised)
 Container(color: context.prismColors.forRole(PrismSemantic.success).background)
 ```
 
-Every component reads these tokens, so one override restyles the whole app consistently.
+**Every one of the 27 components reads these tokens** — toasts, banners, forms,
+data tables, the command palette, everything. Change `spaceMd` once and the whole
+app changes rhythm together; switch `brightness` and every semantic colour
+follows.
+
+`PrismColors` gives you the four roles a `ColorScheme` does not spell out —
+`success`, `warning`, `error` and `info` — each with a solid accent and a
+container/on-container pair, resolved per brightness so they stay legible in
+both modes. The fallback green and amber are deliberately distinct from
+`primary` and `tertiary`, so "success" still reads as success when your brand
+colour happens to be green.
+
+If you register no tokens at all, components fall back to `PrismTokens.fallback`
+and behave exactly as before. Nothing throws, nothing breaks.
 
 ---
 
@@ -526,9 +543,15 @@ Every component reads these tokens, so one override restyles the whole app consi
 
 ## 🧪 Quality
 
-- **385 tests** (unit + widget) across all components
-- Zero analyzer issues; `flutter_lints` enforced
-- Every public API documented
+- **400 tests** (unit + widget) across all components
+- **Every component is covered by design-system tests** that install
+  deliberately unusual `PrismTokens` and assert the component actually reads
+  them — a hard-coded radius, duration or colour fails CI
+- Zero analyzer issues under `strict-casts`, `strict-inference` and
+  `strict-raw-types`, plus a curated lint set
+- Light and dark verified separately, and components verified to degrade
+  gracefully when no tokens are registered at all
+- CI runs formatting, strict analysis and the full suite on every push
 
 ## 🧭 Migrating from the standalone packages
 
@@ -546,15 +569,36 @@ All class names stay identical (`PrismToast`, `PrismBanner`, `PrismSearch`, …)
 
 ## 📖 Full example
 
-The [`example/`](example/) folder contains a **gallery app** with an interactive demo for every component — run it with:
+The [`example/`](example/) folder is a **gallery app** with an interactive demo
+for every component:
 
 ```bash
 cd example && flutter run
 ```
 
+- **Searchable grid** of all 26 demos, indexed with keywords — `pin` finds the
+  OTP field, `offline` finds the connection banner.
+- **Theme toggle** (system → light → dark) so you can check both palettes.
+- **Live token override** in the app bar: flip it and every component adopts a
+  distinctly non-default spacing and radius set at once. That is the design
+  system doing its job, not a mock-up.
+- The gallery builds itself out of Prism widgets, so it is also a usage example.
+
+It also builds for the web if you want to try it without a device:
+
+```bash
+cd example && flutter build web
+```
+
 ## 🤝 Contributing
 
-Issues and PRs welcome — pick a component and improve it: [github.com/awaisdev5765/Prism](https://github.com/awaisdev5765/Prism).
+Issues and PRs welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md) — the two
+rules that matter are **read the design system, never hard-code** and **adapt to
+the window**.
+
+The quickest meaningful contribution is a component that misbehaves on a
+1200 px-wide window or in dark mode; the design-system tests will tell you if a
+fix is complete.
 
 ## ☕ Support
 
