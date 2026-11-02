@@ -168,7 +168,7 @@ void main() {
     await _pump(tester, _page(), size: const Size(1400, 900));
     final contentLeft = tester.getTopLeft(find.text('About')).dx;
     final contentRight = tester.getTopRight(find.text('About')).dx;
-    final mid = 1400 / 2;
+    const mid = 1400 / 2;
     expect(contentLeft, greaterThan(300));
     expect(contentLeft, lessThan(mid));
     expect(contentRight, greaterThan(mid));
