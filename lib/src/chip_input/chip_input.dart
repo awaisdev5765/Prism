@@ -301,6 +301,10 @@ class _DefaultChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = context.prismTokens;
     final colors = context.prismColors;
+
+    // No extra Semantics wrapper around the chip: the Text child already
+    // exposes the full, untruncated label to assistive tech, and the remove
+    // button keeps its own node so a screen reader can reach it independently.
     return Container(
       padding: EdgeInsets.only(
         left: tokens.spaceMd,
@@ -315,12 +319,18 @@ class _DefaultChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              color: colors.onInfoContainer,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
+          // Flexible rather than a bare Text: a tag longer than the available
+          // width must ellipsize instead of overflowing the field.
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: colors.onInfoContainer,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           if (onRemove != null) ...[

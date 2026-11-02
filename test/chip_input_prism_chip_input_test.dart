@@ -203,4 +203,70 @@ void main() {
     );
     expect(find.text('»custom«'), findsOneWidget);
   });
+
+  group('narrow windows', () {
+    // Regression: a tag wider than the field used to overflow the chip's Row
+    // before the label was made Flexible.
+    testWidgets(
+      'a tag longer than the field ellipsizes instead of overflowing',
+      (tester) async {
+        tester.view.physicalSize = const Size(320, 640);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.reset);
+
+        await tester.pumpWidget(
+          host(
+            PrismChipInput(
+              value: const [
+                'a-tag-far-longer-than-any-phone-can-display-comfortably',
+              ],
+              onChanged: (_) {},
+            ),
+          ),
+        );
+        await tester.pump();
+
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets('several long tags wrap rather than overflow', (tester) async {
+      tester.view.physicalSize = const Size(320, 640);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        host(
+          PrismChipInput(
+            value: const [
+              'considerably-long-tag-one',
+              'considerably-long-tag-two',
+              'considerably-long-tag-three',
+            ],
+            onChanged: (_) {},
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('the full label stays available to assistive tech', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(320, 640);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      const label = 'a-tag-that-is-far-longer-than-any-phone-can-display';
+      await tester.pumpWidget(
+        host(PrismChipInput(value: const [label], onChanged: (_) {})),
+      );
+      await tester.pump();
+
+      // Truncation is visual only: the untruncated string stays in the tree.
+      expect(find.text(label), findsOneWidget);
+    });
+  });
 }
