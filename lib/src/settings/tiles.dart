@@ -103,8 +103,9 @@ class PrismSettingsSection extends StatelessWidget {
               elevation: 0,
               color: theme.colorScheme.surfaceContainerLow,
               shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(context.prismTokens.radiusLg),
+                borderRadius: BorderRadius.circular(
+                  context.prismTokens.radiusLg,
+                ),
               ),
               child: Column(
                 children: [

@@ -156,9 +156,7 @@ class _SheetContent<T> extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: media.size.height * 0.86,
-          ),
+          constraints: BoxConstraints(maxHeight: media.size.height * 0.86),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -181,17 +179,19 @@ class _SheetContent<T> extends StatelessWidget {
                           header: true,
                           child: Text(
                             title!,
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(fontWeight: FontWeight.w700),
                           ),
                         ),
                       if (subtitle != null) ...[
                         SizedBox(height: tokens.spaceXs),
                         Text(
                           subtitle!,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                               ),
                         ),
                       ],

@@ -48,8 +48,8 @@ class PrismForceUpdateScreen extends StatelessWidget {
     final actionLabel = platform.hasStoreFlow
         ? 'Update now'
         : downloadUrl != null
-            ? 'Download latest version'
-            : 'Check for updates';
+        ? 'Download latest version'
+        : 'Check for updates';
 
     return Scaffold(
       body: SafeArea(
@@ -75,11 +75,12 @@ class PrismForceUpdateScreen extends StatelessWidget {
                 state.notes ??
                     (canDismiss
                         ? 'Update to version ${state.latest} for the latest '
-                            'improvements.'
+                              'improvements.'
                         : 'This version is no longer supported. Please update '
-                            'to continue using the app.'),
-                style: theme.textTheme.bodyMedium
-                    ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                              'to continue using the app.'),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
@@ -90,10 +91,7 @@ class PrismForceUpdateScreen extends StatelessWidget {
               ),
               if (canDismiss) ...[
                 const SizedBox(height: 8),
-                TextButton(
-                  onPressed: onSkip,
-                  child: const Text('Maybe later'),
-                ),
+                TextButton(onPressed: onSkip, child: const Text('Maybe later')),
               ],
             ],
           ),
@@ -246,9 +244,9 @@ class _PrismDownloadScreenState extends State<PrismDownloadScreen> {
   void initState() {
     super.initState();
     final manager = widget.manager ?? PrismDownloadManager();
-    _sub = manager
-        .download(url: widget.url, savePath: widget.savePath)
-        .listen((event) {
+    _sub = manager.download(url: widget.url, savePath: widget.savePath).listen((
+      event,
+    ) {
       if (event is PrismDownloadProgress) {
         setState(() => _progress = event);
       } else {
@@ -265,12 +263,11 @@ class _PrismDownloadScreenState extends State<PrismDownloadScreen> {
 
   String _label(PrismDownloadProgress progress) {
     final fraction = progress.fraction;
-    final percent =
-        fraction == null ? null : (fraction * 100).toStringAsFixed(0);
+    final percent = fraction == null
+        ? null
+        : (fraction * 100).toStringAsFixed(0);
     final speed = (progress.bytesPerSecond / 1024).toStringAsFixed(0);
-    return percent == null
-        ? '$speed KB/s'
-        : '$percent% · $speed KB/s';
+    return percent == null ? '$speed KB/s' : '$percent% · $speed KB/s';
   }
 
   @override

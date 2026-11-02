@@ -93,8 +93,9 @@ final class GeminiStreamClient implements AiStreamClient {
     var usage = const AiUsage(inputTokens: 0, outputTokens: 0);
     var finishReason = 'stop';
 
-    await for (final chunk
-        in response.stream.transform(const Utf8Decoder(allowMalformed: true))) {
+    await for (final chunk in response.stream.transform(
+      const Utf8Decoder(allowMalformed: true),
+    )) {
       for (final sse in parser.addChunk(chunk)) {
         if (sse.data.trim().isEmpty) continue;
 

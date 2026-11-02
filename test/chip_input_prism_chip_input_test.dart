@@ -8,10 +8,7 @@ Widget host(Widget child) => MaterialApp(home: Scaffold(body: child));
 void main() {
   testWidgets('shows the current chips', (tester) async {
     await tester.pumpWidget(
-      host(PrismChipInput(
-        value: const ['work', 'urgent'],
-        onChanged: (_) {},
-      )),
+      host(PrismChipInput(value: const ['work', 'urgent'], onChanged: (_) {})),
     );
     expect(find.text('work'), findsOneWidget);
     expect(find.text('urgent'), findsOneWidget);
@@ -53,10 +50,9 @@ void main() {
   testWidgets('rejects duplicates case-insensitively', (tester) async {
     List<String>? changed;
     await tester.pumpWidget(
-      host(PrismChipInput(
-        value: const ['Work'],
-        onChanged: (v) => changed = v,
-      )),
+      host(
+        PrismChipInput(value: const ['Work'], onChanged: (v) => changed = v),
+      ),
     );
     await tester.enterText(find.byType(TextField), 'work');
     await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -68,11 +64,13 @@ void main() {
   testWidgets('allowDuplicates permits repeated labels', (tester) async {
     List<String>? changed;
     await tester.pumpWidget(
-      host(PrismChipInput(
-        value: const ['Work'],
-        allowDuplicates: true,
-        onChanged: (v) => changed = v,
-      )),
+      host(
+        PrismChipInput(
+          value: const ['Work'],
+          allowDuplicates: true,
+          onChanged: (v) => changed = v,
+        ),
+      ),
     );
     await tester.enterText(find.byType(TextField), 'Work');
     await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -83,11 +81,13 @@ void main() {
   testWidgets('enforces maxChips', (tester) async {
     List<String>? changed;
     await tester.pumpWidget(
-      host(PrismChipInput(
-        value: const ['a', 'b'],
-        maxChips: 2,
-        onChanged: (v) => changed = v,
-      )),
+      host(
+        PrismChipInput(
+          value: const ['a', 'b'],
+          maxChips: 2,
+          onChanged: (v) => changed = v,
+        ),
+      ),
     );
     await tester.enterText(find.byType(TextField), 'c');
     await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -110,10 +110,12 @@ void main() {
   testWidgets('removing a chip calls onChanged', (tester) async {
     List<String>? changed;
     await tester.pumpWidget(
-      host(PrismChipInput(
-        value: const ['alpha', 'beta'],
-        onChanged: (v) => changed = v,
-      )),
+      host(
+        PrismChipInput(
+          value: const ['alpha', 'beta'],
+          onChanged: (v) => changed = v,
+        ),
+      ),
     );
     final removeAlpha = find.bySemanticsLabel('Remove alpha');
     await tester.tap(removeAlpha);
@@ -124,11 +126,13 @@ void main() {
   testWidgets('custom validator rejects a value', (tester) async {
     List<String>? changed;
     await tester.pumpWidget(
-      host(PrismChipInput(
-        value: const [],
-        onChanged: (v) => changed = v,
-        validator: (v) => v.contains('@') ? null : 'No emails please',
-      )),
+      host(
+        PrismChipInput(
+          value: const [],
+          onChanged: (v) => changed = v,
+          validator: (v) => v.contains('@') ? null : 'No emails please',
+        ),
+      ),
     );
     await tester.enterText(find.byType(TextField), 'plain');
     await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -140,11 +144,13 @@ void main() {
   testWidgets('suggestions appear on focus and can be tapped', (tester) async {
     List<String>? changed;
     await tester.pumpWidget(
-      host(PrismChipInput(
-        value: const [],
-        suggestions: const ['work', 'personal'],
-        onChanged: (v) => changed = v,
-      )),
+      host(
+        PrismChipInput(
+          value: const [],
+          suggestions: const ['work', 'personal'],
+          onChanged: (v) => changed = v,
+        ),
+      ),
     );
     await tester.tap(find.byType(TextField));
     await tester.pump();
@@ -157,11 +163,13 @@ void main() {
 
   testWidgets('already-added suggestions are filtered out', (tester) async {
     await tester.pumpWidget(
-      host(PrismChipInput(
-        value: const ['work'],
-        suggestions: const ['work', 'personal'],
-        onChanged: (_) {},
-      )),
+      host(
+        PrismChipInput(
+          value: const ['work'],
+          suggestions: const ['work', 'personal'],
+          onChanged: (_) {},
+        ),
+      ),
     );
     await tester.tap(find.byType(TextField));
     await tester.pump();
@@ -172,22 +180,26 @@ void main() {
 
   testWidgets('external errorText is displayed', (tester) async {
     await tester.pumpWidget(
-      host(PrismChipInput(
-        value: const [],
-        errorText: 'Too many tags',
-        onChanged: (_) {},
-      )),
+      host(
+        PrismChipInput(
+          value: const [],
+          errorText: 'Too many tags',
+          onChanged: (_) {},
+        ),
+      ),
     );
     expect(find.text('Too many tags'), findsOneWidget);
   });
 
   testWidgets('custom chipBuilder replaces default rendering', (tester) async {
     await tester.pumpWidget(
-      host(PrismChipInput(
-        value: const ['custom'],
-        onChanged: (_) {},
-        chipBuilder: (context, label, remove) => Text('»$label«'),
-      )),
+      host(
+        PrismChipInput(
+          value: const ['custom'],
+          onChanged: (_) {},
+          chipBuilder: (context, label, remove) => Text('»$label«'),
+        ),
+      ),
     );
     expect(find.text('»custom«'), findsOneWidget);
   });

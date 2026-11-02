@@ -85,8 +85,8 @@ class PrismStateView<T> extends StatelessWidget {
     final iconSize = resolved.iconSize ?? 48;
     final gap = resolved.gap ?? 8;
     final padding = resolved.padding ?? const EdgeInsets.all(24);
-    final transition = resolved.transitionDuration ??
-        const Duration(milliseconds: 250);
+    final transition =
+        resolved.transitionDuration ?? const Duration(milliseconds: 250);
 
     final stateView = switch (state) {
       PrismViewLoading(:final message) => _Centered(
@@ -181,6 +181,8 @@ class _Centered extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Padding(padding: padding, child: child));
+    return Center(
+      child: Padding(padding: padding, child: child),
+    );
   }
 }

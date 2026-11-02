@@ -10,7 +10,8 @@ Future<HttpServer> startEmbeddingsServer({
   int statusCode = 200,
   List<List<double>>? vectors,
 }) async {
-  final vectorsOut = vectors ??
+  final vectorsOut =
+      vectors ??
       [
         [0.1, 0.2, 0.3],
         [0.4, 0.5, 0.6],
@@ -33,19 +34,22 @@ Future<HttpServer> startEmbeddingsServer({
       data[1] = tmp;
     }
 
-    request.response.headers.contentType = ContentType.parse('application/json');
+    request.response.headers.contentType = ContentType.parse(
+      'application/json',
+    );
     request.response.statusCode = statusCode;
-    request.response.write(jsonEncode({
-      'object': 'list',
-      'data': data,
-      'model': requestJson['model'],
-      'usage': {'prompt_tokens': 5, 'total_tokens': 5},
-    }));
+    request.response.write(
+      jsonEncode({
+        'object': 'list',
+        'data': data,
+        'model': requestJson['model'],
+        'usage': {'prompt_tokens': 5, 'total_tokens': 5},
+      }),
+    );
     await request.response.close();
   });
   return server;
 }
-
 
 // flutter_test installs a fake HttpClient that answers 400 to everything;
 // clear it so the local test server can be reached.
@@ -54,8 +58,9 @@ void _disableFakeHttpOverrides() {
 }
 
 void main() {
-  testWidgets('embed returns vectors in input order (sorted by index)',
-      (tester) async {
+  testWidgets('embed returns vectors in input order (sorted by index)', (
+    tester,
+  ) async {
     await tester.runAsync(() async {
       _disableFakeHttpOverrides();
       final server = await startEmbeddingsServer();
@@ -66,10 +71,10 @@ void main() {
         apiKey: 'test',
       );
 
-      final vectors = await client.embed(
-        ['first', 'second'],
-        model: 'nomic-embed-text',
-      );
+      final vectors = await client.embed([
+        'first',
+        'second',
+      ], model: 'nomic-embed-text');
 
       // Server deliberately swapped positions; index sorting restores order.
       expect(vectors.length, 2);
@@ -106,17 +111,19 @@ void main() {
 
       await expectLater(
         client.embed(['x'], model: 'm'),
-        throwsA(isA<EmbeddingsException>()
-            .having((e) => e.statusCode, 'statusCode', 401)),
+        throwsA(
+          isA<EmbeddingsException>().having(
+            (e) => e.statusCode,
+            'statusCode',
+            401,
+          ),
+        ),
       );
     });
   });
 
   test('throws on empty inputs', () {
     final client = EmbeddingsClient(baseUrl: 'http://localhost');
-    expect(
-      () => client.embed([], model: 'm'),
-      throwsArgumentError,
-    );
+    expect(() => client.embed([], model: 'm'), throwsArgumentError);
   });
 }

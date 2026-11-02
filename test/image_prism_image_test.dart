@@ -63,11 +63,13 @@ void main() {
     final key = provider;
     final completer = provider.loadImage(key, decode);
     final done = Completer<ui.Image>();
-    completer.addListener(ImageStreamListener(
-      (info, _) => done.complete(info.image),
-      onError: (Object error, StackTrace? stack) =>
-          done.completeError(error, stack ?? StackTrace.empty),
-    ));
+    completer.addListener(
+      ImageStreamListener(
+        (info, _) => done.complete(info.image),
+        onError: (Object error, StackTrace? stack) =>
+            done.completeError(error, stack ?? StackTrace.empty),
+      ),
+    );
     return done.future;
   }
 
@@ -80,8 +82,9 @@ void main() {
       expect(codec.frameCount, greaterThanOrEqualTo(1));
     });
 
-    testWidgets('succeeds on first attempt when server is healthy',
-        (tester) async {
+    testWidgets('succeeds on first attempt when server is healthy', (
+      tester,
+    ) async {
       await tester.runAsync(() async {
         _disableFakeHttpOverrides();
         final (server, requests) = await startCountingServer(failures: 0);
@@ -126,8 +129,9 @@ void main() {
       });
     });
 
-    testWidgets('throws NetworkImageRetryException after exhausting retries',
-        (tester) async {
+    testWidgets('throws NetworkImageRetryException after exhausting retries', (
+      tester,
+    ) async {
       await tester.runAsync(() async {
         _disableFakeHttpOverrides();
         final (server, requests) = await startCountingServer(failures: 99);
@@ -145,8 +149,13 @@ void main() {
 
         await expectLater(
           loadAndAwaitImage(provider),
-          throwsA(isA<NetworkImageRetryException>()
-              .having((e) => e.attempts, 'attempts', 3)),
+          throwsA(
+            isA<NetworkImageRetryException>().having(
+              (e) => e.attempts,
+              'attempts',
+              3,
+            ),
+          ),
         );
         expect(requests.length, 3);
       });
@@ -155,8 +164,10 @@ void main() {
     testWidgets('does not retry non-transient status codes', (tester) async {
       await tester.runAsync(() async {
         _disableFakeHttpOverrides();
-        final (server, requests) =
-            await startCountingServer(failures: 99, status: 404);
+        final (server, requests) = await startCountingServer(
+          failures: 99,
+          status: 404,
+        );
         addTearDown(server.close);
 
         final provider = NetworkImageWithRetry(
@@ -171,8 +182,13 @@ void main() {
 
         await expectLater(
           loadAndAwaitImage(provider),
-          throwsA(isA<NetworkImageRetryException>()
-              .having((e) => e.lastStatusCode, 'lastStatusCode', 404)),
+          throwsA(
+            isA<NetworkImageRetryException>().having(
+              (e) => e.lastStatusCode,
+              'lastStatusCode',
+              404,
+            ),
+          ),
         );
         // 404 is not transient: exactly one attempt, no retries.
         expect(requests.length, 1);

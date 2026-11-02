@@ -19,23 +19,23 @@ final invoices = [
 Widget host(Widget child) => MaterialApp(home: Scaffold(body: child));
 
 List<PrismColumn<Invoice>> columns({bool sortable = false}) => [
-      PrismColumn<Invoice>(
-        label: 'Invoice',
-        alwaysVisible: true,
-        cell: (c, r, i) => Text(r.id),
-        sortComparator: sortable ? (a, b) => a.id.compareTo(b.id) : null,
-      ),
-      PrismColumn<Invoice>(
-        label: 'Client',
-        cell: (c, r, i) => Text(r.client),
-        sortComparator: sortable ? (a, b) => a.client.compareTo(b.client) : null,
-      ),
-      PrismColumn<Invoice>(
-        label: 'Total',
-        numeric: true,
-        cell: (c, r, i) => Text('${r.total}'),
-      ),
-    ];
+  PrismColumn<Invoice>(
+    label: 'Invoice',
+    alwaysVisible: true,
+    cell: (c, r, i) => Text(r.id),
+    sortComparator: sortable ? (a, b) => a.id.compareTo(b.id) : null,
+  ),
+  PrismColumn<Invoice>(
+    label: 'Client',
+    cell: (c, r, i) => Text(r.client),
+    sortComparator: sortable ? (a, b) => a.client.compareTo(b.client) : null,
+  ),
+  PrismColumn<Invoice>(
+    label: 'Total',
+    numeric: true,
+    cell: (c, r, i) => Text('${r.total}'),
+  ),
+];
 
 void main() {
   testWidgets('wide layout renders rows and headers', (tester) async {
@@ -43,21 +43,24 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(host(PrismDataTable<Invoice>(
-      rows: invoices,
-      columns: columns(),
-    )));
+    await tester.pumpWidget(
+      host(PrismDataTable<Invoice>(rows: invoices, columns: columns())),
+    );
     expect(find.text('Invoice'), findsOneWidget); // header
     expect(find.text('INV-1'), findsOneWidget);
     expect(find.text('Meridian'), findsOneWidget);
   });
 
   testWidgets('shows the empty message with no rows', (tester) async {
-    await tester.pumpWidget(host(PrismDataTable<Invoice>(
-      rows: const [],
-      columns: columns(),
-      emptyMessage: 'Nothing here',
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismDataTable<Invoice>(
+          rows: const [],
+          columns: columns(),
+          emptyMessage: 'Nothing here',
+        ),
+      ),
+    );
     expect(find.text('Nothing here'), findsOneWidget);
   });
 
@@ -66,10 +69,9 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(host(PrismDataTable<Invoice>(
-      rows: invoices,
-      columns: columns(),
-    )));
+    await tester.pumpWidget(
+      host(PrismDataTable<Invoice>(rows: invoices, columns: columns())),
+    );
     // alwaysVisible column is the card title; the rest become labelled pairs.
     expect(find.text('INV-1'), findsOneWidget);
     expect(find.text('Client'), findsWidgets);
@@ -83,14 +85,18 @@ void main() {
 
     Invoice? tapped;
     int? index;
-    await tester.pumpWidget(host(PrismDataTable<Invoice>(
-      rows: invoices,
-      columns: columns(),
-      onRowTap: (row, i) {
-        tapped = row;
-        index = i;
-      },
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismDataTable<Invoice>(
+          rows: invoices,
+          columns: columns(),
+          onRowTap: (row, i) {
+            tapped = row;
+            index = i;
+          },
+        ),
+      ),
+    );
     await tester.tap(find.text('Aurora'));
     await tester.pump();
     expect(tapped?.id, 'INV-2');
@@ -102,10 +108,14 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(host(PrismDataTable<Invoice>(
-      rows: invoices,
-      columns: columns(sortable: true),
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismDataTable<Invoice>(
+          rows: invoices,
+          columns: columns(sortable: true),
+        ),
+      ),
+    );
 
     // Sort by client ascending.
     await tester.tap(find.text('Client'));
@@ -133,10 +143,9 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(host(PrismDataTable<Invoice>(
-      rows: invoices,
-      columns: columns(),
-    )));
+    await tester.pumpWidget(
+      host(PrismDataTable<Invoice>(rows: invoices, columns: columns())),
+    );
     await tester.tap(find.text('Total'));
     await tester.pump();
     // Original order preserved.
@@ -148,14 +157,16 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(host(PrismDataTable<Invoice>(
-      rows: invoices,
-      columns: columns(),
-      trailing: (c, r, i) => IconButton(
-        icon: const Icon(Icons.more_vert),
-        onPressed: () {},
+    await tester.pumpWidget(
+      host(
+        PrismDataTable<Invoice>(
+          rows: invoices,
+          columns: columns(),
+          trailing: (c, r, i) =>
+              IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
+        ),
       ),
-    )));
+    );
     expect(find.byIcon(Icons.more_vert), findsNWidgets(3));
   });
 
@@ -164,11 +175,15 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(host(PrismDataTable<Invoice>(
-      rows: invoices,
-      columns: columns(),
-      zebraStripes: false,
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismDataTable<Invoice>(
+          rows: invoices,
+          columns: columns(),
+          zebraStripes: false,
+        ),
+      ),
+    );
     expect(find.text('INV-3'), findsOneWidget);
   });
 
@@ -177,11 +192,15 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(host(PrismDataTable<Invoice>(
-      rows: invoices,
-      columns: columns(),
-      compactBreakpoint: 1000,
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismDataTable<Invoice>(
+          rows: invoices,
+          columns: columns(),
+          compactBreakpoint: 1000,
+        ),
+      ),
+    );
     // Forced to cards: field labels appear instead of a header row.
     expect(find.text('Client'), findsWidgets);
   });

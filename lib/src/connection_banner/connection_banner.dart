@@ -33,7 +33,8 @@ class PrismConnectionBanner extends StatefulWidget {
   const PrismConnectionBanner({
     super.key,
     required this.source,
-    this.offlineMessage = 'You are offline — changes will sync when you reconnect',
+    this.offlineMessage =
+        'You are offline — changes will sync when you reconnect',
     this.onlineMessage,
     this.onlineDuration = const Duration(seconds: 2),
     this.settleDelay = const Duration(milliseconds: 700),
@@ -158,11 +159,7 @@ class _PrismConnectionBannerState extends State<PrismConnectionBanner> {
         switchOutCurve: tokens.curveExit,
         child: !visible
             ? const SizedBox.shrink()
-            : _banner(
-                context: context,
-                colors: colors,
-                tokens: tokens,
-              ),
+            : _banner(context: context, colors: colors, tokens: tokens),
       ),
     );
   }
@@ -178,55 +175,53 @@ class _PrismConnectionBannerState extends State<PrismConnectionBanner> {
     final message = _online ? widget.onlineMessage! : widget.offlineMessage;
 
     return Semantics(
-                liveRegion: true,
-                container: true,
-                label: message,
-                child: Container(
-                  key: ValueKey('prism-connection-${_online ? 'on' : 'off'}'),
-                  width: double.infinity,
-                  margin: widget.margin ??
-                      EdgeInsets.only(
-                        left: tokens.spaceSm,
-                        right: tokens.spaceSm,
-                        top: tokens.spaceSm,
-                      ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: tokens.spaceMd,
-                    vertical: widget.compact ? tokens.spaceXs + 2 : tokens.spaceSm,
-                  ),
-                  decoration: BoxDecoration(
-                    color: role.background,
-                    borderRadius: BorderRadius.circular(tokens.radiusMd),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        icon,
-                        size: widget.compact ? 16 : 18,
-                        color: role.foreground,
-                      ),
-                      SizedBox(width: tokens.spaceSm),
-                      Expanded(
-                        child: Text(
-                          message,
-                          style: (widget.compact
-                                  ? Theme.of(context).textTheme.bodySmall
-                                  : Theme.of(context).textTheme.bodyMedium)
-                              ?.copyWith(color: role.foreground),
-                        ),
-                      ),
-                      if (!_online && widget.onRetry != null)
-                        TextButton(
-                          onPressed: widget.onRetry,
-                          style: TextButton.styleFrom(
-                            foregroundColor: role.foreground,
-                            visualDensity: VisualDensity.compact,
-                          ),
-                          child: Text(widget.retryLabel ?? 'Retry'),
-                        ),
-                    ],
-                  ),
+      liveRegion: true,
+      container: true,
+      label: message,
+      child: Container(
+        key: ValueKey('prism-connection-${_online ? 'on' : 'off'}'),
+        width: double.infinity,
+        margin:
+            widget.margin ??
+            EdgeInsets.only(
+              left: tokens.spaceSm,
+              right: tokens.spaceSm,
+              top: tokens.spaceSm,
+            ),
+        padding: EdgeInsets.symmetric(
+          horizontal: tokens.spaceMd,
+          vertical: widget.compact ? tokens.spaceXs + 2 : tokens.spaceSm,
+        ),
+        decoration: BoxDecoration(
+          color: role.background,
+          borderRadius: BorderRadius.circular(tokens.radiusMd),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: widget.compact ? 16 : 18, color: role.foreground),
+            SizedBox(width: tokens.spaceSm),
+            Expanded(
+              child: Text(
+                message,
+                style:
+                    (widget.compact
+                            ? Theme.of(context).textTheme.bodySmall
+                            : Theme.of(context).textTheme.bodyMedium)
+                        ?.copyWith(color: role.foreground),
+              ),
+            ),
+            if (!_online && widget.onRetry != null)
+              TextButton(
+                onPressed: widget.onRetry,
+                style: TextButton.styleFrom(
+                  foregroundColor: role.foreground,
+                  visualDensity: VisualDensity.compact,
                 ),
+                child: Text(widget.retryLabel ?? 'Retry'),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -7,25 +7,25 @@ import 'package:prism_kit/prism.dart';
 Widget host(Widget child) => MaterialApp(home: Scaffold(body: child));
 
 List<PrismCommand> commands(List<String> log) => [
-      PrismCommand(
-        label: 'New note',
-        icon: Icons.add,
-        group: 'File',
-        shortcut: '⌘N',
-        onSelect: () => log.add('new'),
-      ),
-      PrismCommand(
-        label: 'Toggle theme',
-        icon: Icons.dark_mode,
-        group: 'View',
-        onSelect: () => log.add('theme'),
-      ),
-      PrismCommand(
-        label: 'Sign out',
-        group: 'Account',
-        onSelect: () => log.add('out'),
-      ),
-    ];
+  PrismCommand(
+    label: 'New note',
+    icon: Icons.add,
+    group: 'File',
+    shortcut: '⌘N',
+    onSelect: () => log.add('new'),
+  ),
+  PrismCommand(
+    label: 'Toggle theme',
+    icon: Icons.dark_mode,
+    group: 'View',
+    onSelect: () => log.add('theme'),
+  ),
+  PrismCommand(
+    label: 'Sign out',
+    group: 'Account',
+    onSelect: () => log.add('out'),
+  ),
+];
 
 void main() {
   testWidgets('lists all commands with group headers', (tester) async {
@@ -44,8 +44,9 @@ void main() {
     expect(find.text('New note'), findsNothing);
   });
 
-  testWidgets('fuzzy subsequence matching finds non-contiguous matches',
-      (tester) async {
+  testWidgets('fuzzy subsequence matching finds non-contiguous matches', (
+    tester,
+  ) async {
     await tester.pumpWidget(host(PrismCommandPalette(commands: commands([]))));
     await tester.enterText(find.byType(TextField), 'tt');
     await tester.pump();
@@ -53,15 +54,19 @@ void main() {
   });
 
   testWidgets('keywords participate in matching', (tester) async {
-    await tester.pumpWidget(host(PrismCommandPalette(
-      commands: [
-        PrismCommand(
-          label: 'Export',
-          keywords: const ['download', 'save as'],
-          onSelect: () {},
+    await tester.pumpWidget(
+      host(
+        PrismCommandPalette(
+          commands: [
+            PrismCommand(
+              label: 'Export',
+              keywords: const ['download', 'save as'],
+              onSelect: () {},
+            ),
+          ],
         ),
-      ],
-    )));
+      ),
+    );
     await tester.enterText(find.byType(TextField), 'download');
     await tester.pump();
     expect(find.text('Export'), findsOneWidget);
@@ -116,36 +121,44 @@ void main() {
     expect(log, ['out']);
   });
 
-  testWidgets('onCommandSelected fires before the command itself',
-      (tester) async {
+  testWidgets('onCommandSelected fires before the command itself', (
+    tester,
+  ) async {
     final order = <String>[];
-    await tester.pumpWidget(host(PrismCommandPalette(
-      commands: [
-        PrismCommand(label: 'Go', onSelect: () => order.add('select')),
-      ],
-      onCommandSelected: (c) => order.add('notified'),
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismCommandPalette(
+          commands: [
+            PrismCommand(label: 'Go', onSelect: () => order.add('select')),
+          ],
+          onCommandSelected: (c) => order.add('notified'),
+        ),
+      ),
+    );
     await tester.tap(find.text('Go'));
     await tester.pump();
     expect(order, ['notified', 'select']);
   });
 
   testWidgets('disabled commands are hidden', (tester) async {
-    await tester.pumpWidget(host(PrismCommandPalette(
-      commands: [
-        PrismCommand(label: 'Visible', onSelect: () {}),
-        PrismCommand(label: 'Hidden', enabled: false, onSelect: () {}),
-      ],
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismCommandPalette(
+          commands: [
+            PrismCommand(label: 'Visible', onSelect: () {}),
+            PrismCommand(label: 'Hidden', enabled: false, onSelect: () {}),
+          ],
+        ),
+      ),
+    );
     expect(find.text('Visible'), findsOneWidget);
     expect(find.text('Hidden'), findsNothing);
   });
 
   testWidgets('initialQuery pre-filters the list', (tester) async {
-    await tester.pumpWidget(host(PrismCommandPalette(
-      commands: commands([]),
-      initialQuery: 'sign',
-    )));
+    await tester.pumpWidget(
+      host(PrismCommandPalette(commands: commands([]), initialQuery: 'sign')),
+    );
     expect(find.text('Sign out'), findsOneWidget);
     expect(find.text('New note'), findsNothing);
   });
@@ -157,25 +170,25 @@ void main() {
 
   testWidgets('show() resolves with the chosen command', (tester) async {
     PrismCommand? chosen;
-    await tester.pumpWidget(MaterialApp(
-      home: Builder(
-        builder: (context) => Scaffold(
-          body: Center(
-            child: ElevatedButton(
-              onPressed: () async {
-                chosen = await PrismCommandPalette.show(
-                  context: context,
-                  commands: [
-                    PrismCommand(label: 'Pick me', onSelect: () {}),
-                  ],
-                );
-              },
-              child: const Text('open'),
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  chosen = await PrismCommandPalette.show(
+                    context: context,
+                    commands: [PrismCommand(label: 'Pick me', onSelect: () {})],
+                  );
+                },
+                child: const Text('open'),
+              ),
             ),
           ),
         ),
       ),
-    ));
+    );
 
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();

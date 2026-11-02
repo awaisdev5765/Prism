@@ -117,14 +117,16 @@ final class ColorPalette {
     int maxColors = 16,
     PaletteWeights weights = const PaletteWeights(),
   }) {
-    final swatches = candidates.entries
-        .map((e) => PaletteSwatch(argb: e.key, population: e.value))
-        .toList()
-      ..sort((a, b) => b.population.compareTo(a.population));
+    final swatches =
+        candidates.entries
+            .map((e) => PaletteSwatch(argb: e.key, population: e.value))
+            .toList()
+          ..sort((a, b) => b.population.compareTo(a.population));
 
     final trimmed = swatches.take(maxColors).toList(growable: false);
-    final maxPopulation =
-        trimmed.isEmpty ? 0.0 : trimmed.first.population.toDouble();
+    final maxPopulation = trimmed.isEmpty
+        ? 0.0
+        : trimmed.first.population.toDouble();
 
     final targets = <String, PaletteSwatch>{};
     for (final target in PaletteTarget.all) {
@@ -160,9 +162,7 @@ final class ColorPalette {
     Iterable<Color> colors, {
     PaletteWeights weights = const PaletteWeights(),
   }) {
-    final candidates = <int, int>{
-      for (final c in colors) c.toARGB32(): 1,
-    };
+    final candidates = <int, int>{for (final c in colors) c.toARGB32(): 1};
     return fromPopulations(candidates, weights: weights);
   }
 }

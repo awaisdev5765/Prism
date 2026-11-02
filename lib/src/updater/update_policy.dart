@@ -82,8 +82,9 @@ class UpdatePolicy {
     final minimumMap = (json['minimum'] as Map<String, dynamic>?) ?? const {};
     final minimumForStable = minimumMap['stable'] as String?;
     return UpdatePolicy(
-      minimumVersion:
-          minimumForStable == null ? null : PrismVersion.parse(minimumForStable),
+      minimumVersion: minimumForStable == null
+          ? null
+          : PrismVersion.parse(minimumForStable),
       channels: {
         for (final channel in UpdateChannel.values)
           if (latestMap.containsKey(channel.name)) channel,
@@ -115,16 +116,12 @@ class UpdatePolicy {
     Map<UpdateChannel, PrismVersion> latestByChannel,
   ) {
     final candidates = [
-      for (final channel in channels) ...[
-        ?latestByChannel[channel],
-      ],
+      for (final channel in channels) ...[?latestByChannel[channel]],
     ];
     if (candidates.isEmpty) {
       return const UpdatePolicyResult(UpdateDecision.upToDate);
     }
-    final latest = candidates.reduce(
-      (a, b) => a >= b ? a : b,
-    );
+    final latest = candidates.reduce((a, b) => a >= b ? a : b);
 
     final minimum = minimumVersion;
     if (minimum != null && current < minimum) {

@@ -38,6 +38,7 @@ class FetchFailure {
   final int? httpStatusCode;
 
   @override
-  String toString() => 'FetchFailure(attempt: $attempt, status: '
+  String toString() =>
+      'FetchFailure(attempt: $attempt, status: '
       '${httpStatusCode ?? 'none'}, uri: $uri)';
 }

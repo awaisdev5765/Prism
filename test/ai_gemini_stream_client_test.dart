@@ -8,8 +8,9 @@ import 'package:prism_kit/prism.dart';
 Future<HttpServer> startGeminiServer({int statusCode = 200}) async {
   final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
   server.listen((request) async {
-    request.response.headers.contentType =
-        ContentType.parse('text/event-stream');
+    request.response.headers.contentType = ContentType.parse(
+      'text/event-stream',
+    );
     request.response.statusCode = statusCode;
 
     void frame(String data) {
@@ -18,22 +19,25 @@ Future<HttpServer> startGeminiServer({int statusCode = 200}) async {
 
     if (statusCode != 200) {
       frame(
-          '{"error":{"code":400,"message":"API key not valid. Please pass a valid API key."}}');
+        '{"error":{"code":400,"message":"API key not valid. Please pass a valid API key."}}',
+      );
       await request.response.close();
       return;
     }
 
     frame(
-        '{"candidates":[{"content":{"parts":[{"text":"Hello"}],"role":"model"}}]}');
+      '{"candidates":[{"content":{"parts":[{"text":"Hello"}],"role":"model"}}]}',
+    );
     frame(
-        '{"candidates":[{"content":{"parts":[{"text":" Gemini"}],"role":"model"}}],"usageMetadata":{"promptTokenCount":7,"candidatesTokenCount":3}}');
+      '{"candidates":[{"content":{"parts":[{"text":" Gemini"}],"role":"model"}}],"usageMetadata":{"promptTokenCount":7,"candidatesTokenCount":3}}',
+    );
     frame(
-        '{"candidates":[{"finishReason":"STOP","content":{"parts":[{"text":""}],"role":"model"}}],"usageMetadata":{"promptTokenCount":7,"candidatesTokenCount":3}}');
+      '{"candidates":[{"finishReason":"STOP","content":{"parts":[{"text":""}],"role":"model"}}],"usageMetadata":{"promptTokenCount":7,"candidatesTokenCount":3}}',
+    );
     await request.response.close();
   });
   return server;
 }
-
 
 // flutter_test installs a fake HttpClient that answers 400 to everything;
 // clear it so the local SSE server can be reached.
@@ -44,8 +48,9 @@ void _disableFakeHttpOverrides() {
 void main() {
   final messages = [AiChatMessage.user('Hi')];
 
-  testWidgets('streams text deltas and terminates with AiDone + usage',
-      (tester) async {
+  testWidgets('streams text deltas and terminates with AiDone + usage', (
+    tester,
+  ) async {
     await tester.runAsync(() async {
       _disableFakeHttpOverrides();
       final server = await startGeminiServer();
@@ -58,7 +63,10 @@ void main() {
 
       final deltas = <String>[];
       AiDone? done;
-      await for (final event in client.streamChat(messages, model: 'gemini-2')) {
+      await for (final event in client.streamChat(
+        messages,
+        model: 'gemini-2',
+      )) {
         if (event is AiTextDelta) deltas.add(event.text);
         if (event is AiDone) done = event;
       }
@@ -80,10 +88,12 @@ void main() {
       server.listen((request) async {
         captured = request;
         bodyFuture = utf8.decoder.bind(request).join();
-        request.response.headers.contentType =
-            ContentType.parse('text/event-stream');
+        request.response.headers.contentType = ContentType.parse(
+          'text/event-stream',
+        );
         request.response.write(
-            'data: {"candidates":[{"content":{"parts":[{"text":"ok"}],"role":"model"}}]}\n\n');
+          'data: {"candidates":[{"content":{"parts":[{"text":"ok"}],"role":"model"}}]}\n\n',
+        );
         await request.response.close();
       });
       addTearDown(server.close);
@@ -92,10 +102,10 @@ void main() {
         apiKey: 'g-key',
         baseUrl: 'http://127.0.0.1:${server.port}',
       );
-      await for (final _ in client.streamChat(
-        [AiChatMessage.system('Be nice'), AiChatMessage.user('Hi')],
-        model: 'gemini-2',
-      )) {}
+      await for (final _ in client.streamChat([
+        AiChatMessage.system('Be nice'),
+        AiChatMessage.user('Hi'),
+      ], model: 'gemini-2')) {}
 
       expect(captured!.headers.value('x-goog-api-key'), 'g-key');
       expect(
@@ -124,7 +134,10 @@ void main() {
       );
 
       AiError? error;
-      await for (final event in client.streamChat(messages, model: 'gemini-2')) {
+      await for (final event in client.streamChat(
+        messages,
+        model: 'gemini-2',
+      )) {
         if (event is AiError) error = event;
       }
 

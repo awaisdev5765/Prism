@@ -44,8 +44,9 @@ final class AiChatController extends ChangeNotifier {
     if (_messages.isEmpty) return;
     final last = _messages.last;
     if (last.role != AiRole.assistant) return;
-    _messages[_messages.length - 1] =
-        AiChatMessage.assistant(last.content + text);
+    _messages[_messages.length - 1] = AiChatMessage.assistant(
+      last.content + text,
+    );
     notifyListeners();
   }
 
@@ -58,8 +59,7 @@ final class AiChatController extends ChangeNotifier {
   /// Reports an error as the assistant's response content.
   void reportError(String message) {
     if (_messages.isNotEmpty && _messages.last.role == AiRole.assistant) {
-      _messages[_messages.length - 1] =
-          AiChatMessage.assistant('⚠ $message');
+      _messages[_messages.length - 1] = AiChatMessage.assistant('⚠ $message');
     }
     isStreaming = false;
     notifyListeners();
@@ -185,9 +185,7 @@ class _AiChatViewState extends State<AiChatView> {
   }
 
   Widget _bubbleContent(AiChatMessage message, bool isUser, ThemeData theme) {
-    final content = message.content.isEmpty && !isUser
-        ? '…'
-        : message.content;
+    final content = message.content.isEmpty && !isUser ? '…' : message.content;
     if (!isUser && widget.markdownAssistantResponses) {
       return PrismMarkdown(
         content,
@@ -204,7 +202,8 @@ class _AiChatViewState extends State<AiChatView> {
     final userColor =
         widget.userBubbleColor ?? theme.colorScheme.primaryContainer;
     final assistantColor =
-        widget.assistantBubbleColor ?? theme.colorScheme.surfaceContainerHighest;
+        widget.assistantBubbleColor ??
+        theme.colorScheme.surfaceContainerHighest;
 
     return AnimatedBuilder(
       animation: widget.controller,
@@ -225,30 +224,31 @@ class _AiChatViewState extends State<AiChatView> {
                   final message = messages[index];
                   final isUser = message.role == AiRole.user;
                   return Align(
-                    alignment:
-                        isUser ? Alignment.centerRight : Alignment.centerLeft,
+                    alignment: isUser
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Container(
                       margin: const EdgeInsets.symmetric(
-                          vertical: 4, horizontal: 8),
+                        vertical: 4,
+                        horizontal: 8,
+                      ),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 10),
+                        horizontal: 14,
+                        vertical: 10,
+                      ),
                       constraints: BoxConstraints(
-                        maxWidth:
-                            MediaQuery.sizeOf(context).width * 0.78,
+                        maxWidth: MediaQuery.sizeOf(context).width * 0.78,
                       ),
                       decoration: BoxDecoration(
                         color: isUser ? userColor : assistantColor,
                         borderRadius: BorderRadius.only(
                           topLeft: const Radius.circular(16),
                           topRight: const Radius.circular(16),
-                          bottomLeft:
-                              Radius.circular(isUser ? 16 : 4),
-                          bottomRight:
-                              Radius.circular(isUser ? 4 : 16),
+                          bottomLeft: Radius.circular(isUser ? 16 : 4),
+                          bottomRight: Radius.circular(isUser ? 4 : 16),
                         ),
                       ),
                       child: _bubbleContent(message, isUser, theme),
-
                     ),
                   );
                 },
@@ -316,8 +316,11 @@ class _TypingIndicatorState extends State<_TypingIndicator>
             opacity: Tween<double>(begin: 0.2, end: 1.0).animate(
               CurvedAnimation(
                 parent: _controller,
-                curve: Interval(i * 0.2, (i + 1) * 0.2 + 0.4,
-                    curve: Curves.easeInOut),
+                curve: Interval(
+                  i * 0.2,
+                  (i + 1) * 0.2 + 0.4,
+                  curve: Curves.easeInOut,
+                ),
               ),
             ),
             child: Padding(

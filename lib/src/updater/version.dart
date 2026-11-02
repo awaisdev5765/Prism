@@ -41,8 +41,7 @@ class PrismVersion implements Comparable<PrismVersion> {
   /// Build component, or `0` when absent.
   int get build => _at(3);
 
-  int _at(int index) =>
-      index < components.length ? components[index] : 0;
+  int _at(int index) => index < components.length ? components[index] : 0;
 
   @override
   int compareTo(PrismVersion other) {

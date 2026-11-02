@@ -105,9 +105,9 @@ class PrismUpdateController extends ChangeNotifier {
     PrismUpdatePlatformInfo? platformInfo,
     this.autoCheck = true,
     PrismSkipStore? skipStore,
-  })  : _source = source,
-        _skipStore = skipStore,
-        platformInfo = platformInfo ?? PrismUpdatePlatformInfo.detect() {
+  }) : _source = source,
+       _skipStore = skipStore,
+       platformInfo = platformInfo ?? PrismUpdatePlatformInfo.detect() {
     if (autoCheck) {
       scheduleMicrotask(checkNow);
     }
@@ -148,8 +148,7 @@ class PrismUpdateController extends ChangeNotifier {
         RemoteUpdateSource remote => remote,
         _ => null,
       };
-      final downloadUrl =
-          remote?.downloadUrlFor(platformInfo.key);
+      final downloadUrl = remote?.downloadUrlFor(platformInfo.key);
       final notes = remote?.notesFor(result.latest ?? currentVersion);
 
       final PrismUpdateState next;
@@ -161,11 +160,11 @@ class PrismUpdateController extends ChangeNotifier {
           notes: notes,
         );
         final latestVersion = result.latest;
-        final skipped = !ignoreSkips &&
+        final skipped =
+            !ignoreSkips &&
             !result.isForced &&
             latestVersion != null &&
-            await (_skipStore?.isSkipped(latestVersion) ??
-                Future.value(false));
+            await (_skipStore?.isSkipped(latestVersion) ?? Future.value(false));
         next = skipped ? PrismUpdateSkipped(available: available) : available;
       } else {
         next = PrismUpdateUpToDate(latest: result.latest);

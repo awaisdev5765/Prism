@@ -8,8 +8,9 @@ import 'package:prism_kit/prism.dart';
 Future<HttpServer> startAnthropicServer({int statusCode = 200}) async {
   final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
   server.listen((request) async {
-    request.response.headers.contentType =
-        ContentType.parse('text/event-stream');
+    request.response.headers.contentType = ContentType.parse(
+      'text/event-stream',
+    );
     request.response.statusCode = statusCode;
 
     void frame(String event, String data) {
@@ -18,28 +19,38 @@ Future<HttpServer> startAnthropicServer({int statusCode = 200}) async {
 
     if (statusCode != 200) {
       request.response.write(
-          'event: error\ndata: {"type":"error","error":{"type":"authentication_error","message":"invalid x-api-key"}}\n\n');
+        'event: error\ndata: {"type":"error","error":{"type":"authentication_error","message":"invalid x-api-key"}}\n\n',
+      );
       await request.response.close();
       return;
     }
 
-    frame('message_start',
-        '{"type":"message_start","message":{"usage":{"input_tokens":25}}}');
-    frame('content_block_start',
-        '{"type":"content_block_start","index":0,"content_block":{"type":"text"}}');
-    frame('content_block_delta',
-        '{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}');
-    frame('content_block_delta',
-        '{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":" Claude"}}');
+    frame(
+      'message_start',
+      '{"type":"message_start","message":{"usage":{"input_tokens":25}}}',
+    );
+    frame(
+      'content_block_start',
+      '{"type":"content_block_start","index":0,"content_block":{"type":"text"}}',
+    );
+    frame(
+      'content_block_delta',
+      '{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}',
+    );
+    frame(
+      'content_block_delta',
+      '{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":" Claude"}}',
+    );
     frame('content_block_stop', '{"type":"content_block_stop","index":0}');
-    frame('message_delta',
-        '{"type":"message_delta","delta":{"stop_reason":"end_turn"},"usage":{"output_tokens":14}}');
+    frame(
+      'message_delta',
+      '{"type":"message_delta","delta":{"stop_reason":"end_turn"},"usage":{"output_tokens":14}}',
+    );
     frame('message_stop', '{"type":"message_stop"}');
     await request.response.close();
   });
   return server;
 }
-
 
 // flutter_test installs a fake HttpClient that answers 400 to everything;
 // clear it so the local SSE server can be reached.
@@ -50,8 +61,7 @@ void _disableFakeHttpOverrides() {
 void main() {
   final messages = [AiChatMessage.user('Hi')];
 
-  testWidgets('streams text deltas and terminates with AiDone',
-      (tester) async {
+  testWidgets('streams text deltas and terminates with AiDone', (tester) async {
     await tester.runAsync(() async {
       _disableFakeHttpOverrides();
       final server = await startAnthropicServer();
@@ -64,7 +74,10 @@ void main() {
 
       final deltas = <String>[];
       AiDone? done;
-      await for (final event in client.streamChat(messages, model: 'claude-4')) {
+      await for (final event in client.streamChat(
+        messages,
+        model: 'claude-4',
+      )) {
         if (event is AiTextDelta) deltas.add(event.text);
         if (event is AiDone) done = event;
       }
@@ -86,10 +99,12 @@ void main() {
       server.listen((request) async {
         captured = request;
         bodyFuture = utf8.decoder.bind(request).join();
-        request.response.headers.contentType =
-            ContentType.parse('text/event-stream');
+        request.response.headers.contentType = ContentType.parse(
+          'text/event-stream',
+        );
         request.response.write(
-            'event: message_stop\ndata: {"type":"message_stop"}\n\n');
+          'event: message_stop\ndata: {"type":"message_stop"}\n\n',
+        );
         await request.response.close();
       });
       addTearDown(server.close);
@@ -98,10 +113,10 @@ void main() {
         apiKey: 'sk-ant-test',
         baseUrl: 'http://127.0.0.1:${server.port}',
       );
-      await for (final _ in client.streamChat(
-        [AiChatMessage.system('Be brief'), AiChatMessage.user('Hi')],
-        model: 'claude-4',
-      )) {}
+      await for (final _ in client.streamChat([
+        AiChatMessage.system('Be brief'),
+        AiChatMessage.user('Hi'),
+      ], model: 'claude-4')) {}
 
       expect(captured!.headers.value('x-api-key'), 'sk-ant-test');
       expect(captured!.headers.value('anthropic-version'), '2023-06-01');
@@ -113,29 +128,41 @@ void main() {
     });
   });
 
-  testWidgets('assembles tool calls from input_json_delta partials',
-      (tester) async {
+  testWidgets('assembles tool calls from input_json_delta partials', (
+    tester,
+  ) async {
     await tester.runAsync(() async {
       _disableFakeHttpOverrides();
       final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
       server.listen((request) async {
-        request.response.headers.contentType =
-            ContentType.parse('text/event-stream');
+        request.response.headers.contentType = ContentType.parse(
+          'text/event-stream',
+        );
         void frame(String event, String data) {
           request.response.write('event: $event\ndata: $data\n\n');
         }
 
-        frame('message_start',
-            '{"type":"message_start","message":{"usage":{"input_tokens":10}}}');
-        frame('content_block_start',
-            '{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_1","name":"get_weather"}}');
-        frame('content_block_delta',
-            '{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\\"city\\":"}}');
-        frame('content_block_delta',
-            '{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":" \\"Lahore\\"}"}}');
+        frame(
+          'message_start',
+          '{"type":"message_start","message":{"usage":{"input_tokens":10}}}',
+        );
+        frame(
+          'content_block_start',
+          '{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_1","name":"get_weather"}}',
+        );
+        frame(
+          'content_block_delta',
+          '{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\\"city\\":"}}',
+        );
+        frame(
+          'content_block_delta',
+          '{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":" \\"Lahore\\"}"}}',
+        );
         frame('content_block_stop', '{"type":"content_block_stop","index":0}');
-        frame('message_delta',
-            '{"type":"message_delta","delta":{"stop_reason":"tool_use"},"usage":{"output_tokens":9}}');
+        frame(
+          'message_delta',
+          '{"type":"message_delta","delta":{"stop_reason":"tool_use"},"usage":{"output_tokens":9}}',
+        );
         frame('message_stop', '{"type":"message_stop"}');
         await request.response.close();
       });
@@ -148,7 +175,10 @@ void main() {
 
       AiToolCall? toolCall;
       AiDone? done;
-      await for (final event in client.streamChat(messages, model: 'claude-4')) {
+      await for (final event in client.streamChat(
+        messages,
+        model: 'claude-4',
+      )) {
         if (event is AiToolCall) toolCall = event;
         if (event is AiDone) done = event;
       }
@@ -172,7 +202,10 @@ void main() {
       );
 
       AiError? error;
-      await for (final event in client.streamChat(messages, model: 'claude-4')) {
+      await for (final event in client.streamChat(
+        messages,
+        model: 'claude-4',
+      )) {
         if (event is AiError) error = event;
       }
 

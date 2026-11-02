@@ -275,7 +275,8 @@ class _PrismMasterDetailState<T> extends State<PrismMasterDetail<T>> {
             child: Container(
               color: widget.detailColor,
               child: AnimatedSwitcher(
-                duration: widget.transitionDuration ??
+                duration:
+                    widget.transitionDuration ??
                     context.prismTokens.durationMedium,
                 child: selectedItem == null
                     ? KeyedSubtree(

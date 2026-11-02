@@ -14,10 +14,8 @@ import 'fetch_failure.dart';
 /// which indicates the first attempt). Returning instructions means
 /// "retry after [FetchInstructions/waitFor]"; returning null means "give up
 /// and surface the error".
-typedef FetchStrategy = Future<FetchInstructions?> Function(
-  Uri uri,
-  FetchFailure? failure,
-);
+typedef FetchStrategy =
+    Future<FetchInstructions?> Function(Uri uri, FetchFailure? failure);
 
 /// The verdict of a [FetchStrategy]: wait [waitFor], then retry.
 @immutable
@@ -91,8 +89,7 @@ class FetchStrategyBuilder {
       if (attempt >= maxTries) return null;
 
       final statusCode = failure?.httpStatusCode;
-      if (statusCode != null &&
-          !transientHttpStatusCodePredicate(statusCode)) {
+      if (statusCode != null && !transientHttpStatusCodePredicate(statusCode)) {
         return null;
       }
 

@@ -27,11 +27,9 @@ enum StoreLaunchResult {
 /// direct download flow there instead.
 class StoreFlowLauncher {
   /// Creates a launcher. [methodChannel] is injectable for tests.
-  StoreFlowLauncher({
-    MethodChannel? methodChannel,
-    this.iosAppleId,
-  }) : _channel = methodChannel ??
-            const MethodChannel('prism_updater/store_flow');
+  StoreFlowLauncher({MethodChannel? methodChannel, this.iosAppleId})
+    : _channel =
+          methodChannel ?? const MethodChannel('prism_updater/store_flow');
 
   /// The Apple ID (numeric, from `apps.apple.com/app/id…`) used to present
   /// the native App Store product sheet on iOS.

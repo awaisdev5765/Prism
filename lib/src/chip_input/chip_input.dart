@@ -74,8 +74,12 @@ class PrismChipInput extends StatefulWidget {
   final TextInputAction textInputAction;
 
   /// Replaces the default chip rendering.
-  final Widget Function(BuildContext context, String label, VoidCallback remove)?
-      chipBuilder;
+  final Widget Function(
+    BuildContext context,
+    String label,
+    VoidCallback remove,
+  )?
+  chipBuilder;
 
   /// Validates an individual entry before it is accepted. Return an error
   /// message to reject it.
@@ -161,7 +165,9 @@ class _PrismChipInputState extends State<PrismChipInput> {
   List<String> get _visibleSuggestions {
     final query = _controller.text.trim().toLowerCase();
     return widget.suggestions
-        .where((s) => !widget.value.any((v) => v.toLowerCase() == s.toLowerCase()))
+        .where(
+          (s) => !widget.value.any((v) => v.toLowerCase() == s.toLowerCase()),
+        )
         .where((s) => query.isEmpty || s.toLowerCase().contains(query))
         .take(8)
         .toList();
@@ -173,18 +179,18 @@ class _PrismChipInputState extends State<PrismChipInput> {
     final colors = context.prismColors;
     final scheme = Theme.of(context).colorScheme;
     final error = widget.errorText ?? _error;
-    final atMax = widget.maxChips != null && widget.value.length >= widget.maxChips!;
-    final suggestions = _focusNode.hasFocus ? _visibleSuggestions : const <String>[];
+    final atMax =
+        widget.maxChips != null && widget.value.length >= widget.maxChips!;
+    final suggestions = _focusNode.hasFocus
+        ? _visibleSuggestions
+        : const <String>[];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         if (widget.label != null) ...[
-          Text(
-            widget.label!,
-            style: Theme.of(context).textTheme.labelLarge,
-          ),
+          Text(widget.label!, style: Theme.of(context).textTheme.labelLarge),
           SizedBox(height: tokens.spaceSm),
         ],
         Container(
@@ -216,7 +222,9 @@ class _PrismChipInputState extends State<PrismChipInput> {
                           ) ??
                           _DefaultChip(
                             label: widget.value[i],
-                            onRemove: widget.enabled ? () => _removeAt(i) : null,
+                            onRemove: widget.enabled
+                                ? () => _removeAt(i)
+                                : null,
                           ),
                   ],
                 ),
@@ -224,7 +232,11 @@ class _PrismChipInputState extends State<PrismChipInput> {
               Row(
                 children: [
                   if (widget.leadingIcon != null) ...[
-                    Icon(widget.leadingIcon, size: 18, color: scheme.onSurfaceVariant),
+                    Icon(
+                      widget.leadingIcon,
+                      size: 18,
+                      color: scheme.onSurfaceVariant,
+                    ),
                     SizedBox(width: tokens.spaceSm),
                   ],
                   Expanded(
@@ -255,8 +267,8 @@ class _PrismChipInputState extends State<PrismChipInput> {
           Text(
             error ?? widget.helperText!,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: error != null ? colors.error : scheme.onSurfaceVariant,
-                ),
+              color: error != null ? colors.error : scheme.onSurfaceVariant,
+            ),
           ),
         ],
         if (suggestions.isNotEmpty) ...[

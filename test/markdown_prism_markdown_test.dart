@@ -189,11 +189,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: SingleChildScrollView(
-              child: PrismMarkdown(
-                md,
-                maxLines: maxLines,
-                overflow: overflow,
-              ),
+              child: PrismMarkdown(md, maxLines: maxLines, overflow: overflow),
             ),
           ),
         ),
@@ -217,15 +213,16 @@ void main() {
       expect(text.overflow, isNull);
     });
 
-    testWidgets('paragraph with maxLines gets constraint and default ellipsis', (
-      tester,
-    ) async {
-      await pumpMd(tester, 'Hello world', maxLines: 2);
-      final text = findFirstRichTextText();
-      expect(text, isNotNull);
-      expect(text!.maxLines, 2);
-      expect(text.overflow, TextOverflow.ellipsis);
-    });
+    testWidgets(
+      'paragraph with maxLines gets constraint and default ellipsis',
+      (tester) async {
+        await pumpMd(tester, 'Hello world', maxLines: 2);
+        final text = findFirstRichTextText();
+        expect(text, isNotNull);
+        expect(text!.maxLines, 2);
+        expect(text.overflow, TextOverflow.ellipsis);
+      },
+    );
 
     testWidgets('custom overflow is passed through', (tester) async {
       await pumpMd(
@@ -274,17 +271,17 @@ void main() {
           .where((w) => w.data != null && w.data!.contains('print'))
           .toList();
       for (final t in codeTexts) {
-        expect(t.maxLines, isNull,
-            reason: 'code blocks must not be constrained by maxLines');
+        expect(
+          t.maxLines,
+          isNull,
+          reason: 'code blocks must not be constrained by maxLines',
+        );
       }
     });
   });
 
   group('async parsing', () {
-    Future<List<md.Node>> syncRunner(
-      String data,
-      md.ExtensionSet? ext,
-    ) async {
+    Future<List<md.Node>> syncRunner(String data, md.ExtensionSet? ext) async {
       final document = md.Document(
         extensionSet: ext ?? md.ExtensionSet.gitHubWeb,
       );
@@ -323,11 +320,7 @@ void main() {
     });
 
     testWidgets('shows placeholder while parsing', (tester) async {
-      await pumpMd(
-        tester,
-        'Hello',
-        placeholder: const Text('LOADING'),
-      );
+      await pumpMd(tester, 'Hello', placeholder: const Text('LOADING'));
 
       expect(find.text('LOADING'), findsOneWidget);
 
@@ -341,9 +334,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(body: PrismMarkdown('Instant')),
-        ),
+        const MaterialApp(home: Scaffold(body: PrismMarkdown('Instant'))),
       );
       expect(find.text('Instant'), findsOneWidget);
       await tester.pumpAndSettle();

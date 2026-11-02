@@ -86,8 +86,7 @@ double scoreCandidate({
   final chromaScore =
       1.0 - (candidate.chroma - target.targetChroma).abs() / 100.0;
   final toneScore = 1.0 - (candidate.tone - target.targetTone).abs() / 100.0;
-  final populationScore =
-      maxPopulation <= 0 ? 0.0 : population / maxPopulation;
+  final populationScore = maxPopulation <= 0 ? 0.0 : population / maxPopulation;
 
   double clamp01(double v) => v < 0 ? 0 : (v > 1 ? 1 : v);
 

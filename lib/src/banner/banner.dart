@@ -95,14 +95,16 @@ class PrismBannerStyle {
       color: color,
       foregroundColor: foregroundColor,
       borderRadius: borderRadius ?? tokens.radiusMd,
-      margin: margin ??
+      margin:
+          margin ??
           EdgeInsets.fromLTRB(
             tokens.spaceSm + tokens.spaceXs,
             tokens.spaceSm,
             tokens.spaceSm + tokens.spaceXs,
             0,
           ),
-      padding: padding ??
+      padding:
+          padding ??
           EdgeInsets.fromLTRB(
             tokens.spaceMd,
             tokens.spaceSm + tokens.spaceXs,

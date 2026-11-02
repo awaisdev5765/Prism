@@ -60,8 +60,9 @@ void main() {
     expect(find.text('Preferences'), findsOneWidget);
   });
 
-  testWidgets('compact layout shows "Step X of Y" and the progress bar',
-      (tester) async {
+  testWidgets('compact layout shows "Step X of Y" and the progress bar', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(400, 800);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -85,18 +86,23 @@ void main() {
     expect(find.text('Optional'), findsOneWidget);
   });
 
-  testWidgets('tapping a step reports its index in the wide layout',
-      (tester) async {
+  testWidgets('tapping a step reports its index in the wide layout', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(1400, 900);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
     int? tapped;
-    await tester.pumpWidget(host(PrismStepper(
-      steps: steps,
-      currentIndex: 0,
-      onStepTapped: (i) => tapped = i,
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismStepper(
+          steps: steps,
+          currentIndex: 0,
+          onStepTapped: (i) => tapped = i,
+        ),
+      ),
+    );
     await tester.tap(find.text('Profile'));
     await tester.pump();
     expect(tapped, 1);
@@ -108,14 +114,18 @@ void main() {
     addTearDown(tester.view.reset);
 
     int? tapped;
-    await tester.pumpWidget(host(PrismStepper(
-      currentIndex: 0,
-      onStepTapped: (i) => tapped = i,
-      steps: const [
-        PrismStep(title: 'One'),
-        PrismStep(title: 'Locked', isEnabled: false),
-      ],
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismStepper(
+          currentIndex: 0,
+          onStepTapped: (i) => tapped = i,
+          steps: const [
+            PrismStep(title: 'One'),
+            PrismStep(title: 'Locked', isEnabled: false),
+          ],
+        ),
+      ),
+    );
     await tester.tap(find.text('Locked'));
     await tester.pump();
     expect(tapped, isNull);

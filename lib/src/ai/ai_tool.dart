@@ -21,10 +21,7 @@ final class AiTool {
     required this.name,
     required this.description,
     required this.execute,
-    this.parametersSchema = const {
-      'type': 'object',
-      'properties': {},
-    },
+    this.parametersSchema = const {'type': 'object', 'properties': {}},
   });
 
   /// Tool name the model references (snake_case, e.g. `get_weather`).
@@ -58,11 +55,11 @@ final class AiTool {
 
   /// The OpenAI tool declaration shape.
   Map<String, Object?> toRequestJson() => {
-        'type': 'function',
-        'function': {
-          'name': name,
-          'description': description,
-          'parameters': parametersSchema,
-        },
-      };
+    'type': 'function',
+    'function': {
+      'name': name,
+      'description': description,
+      'parameters': parametersSchema,
+    },
+  };
 }

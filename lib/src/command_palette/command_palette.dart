@@ -136,7 +136,10 @@ class PrismCommandPalette extends StatefulWidget {
       builder: (dialogContext) => Align(
         alignment: const Alignment(0, -0.55),
         child: Dialog(
-          insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 48,
+          ),
           backgroundColor: Colors.transparent,
           elevation: 0,
           child: ConstrainedBox(
@@ -201,7 +204,9 @@ class _PrismCommandPaletteState extends State<PrismCommandPalette> {
       int? score;
       if (label.startsWith(trimmed)) {
         score = 0;
-      } else if (label.split(RegExp(r'\s+')).any((w) => w.startsWith(trimmed))) {
+      } else if (label
+          .split(RegExp(r'\s+'))
+          .any((w) => w.startsWith(trimmed))) {
         score = 1;
       } else if (label.contains(trimmed)) {
         score = 2;
@@ -286,10 +291,10 @@ class _PrismCommandPaletteState extends State<PrismCommandPalette> {
           child: Text(
             entry.key.toUpperCase(),
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                  letterSpacing: 0.8,
-                  fontWeight: FontWeight.w700,
-                ),
+              color: scheme.onSurfaceVariant,
+              letterSpacing: 0.8,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
       );
@@ -345,7 +350,9 @@ class _PrismCommandPaletteState extends State<PrismCommandPalette> {
                         hintText: widget.placeholder,
                       ),
                       onSubmitted: (_) {
-                        if (_matches.isNotEmpty) _select(_matches[_highlighted]);
+                        if (_matches.isNotEmpty) {
+                          _select(_matches[_highlighted]);
+                        }
                       },
                     ),
                   ),
@@ -375,9 +382,7 @@ class _PrismCommandPaletteState extends State<PrismCommandPalette> {
                         SizedBox(height: tokens.spaceSm),
                         Text(
                           widget.emptyMessage,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
+                          style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: scheme.onSurfaceVariant),
                         ),
                       ],
@@ -450,20 +455,16 @@ class _CommandTile extends StatelessWidget {
                     children: [
                       Text(
                         command.label,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(
-                              fontWeight:
-                                  highlighted ? FontWeight.w600 : FontWeight.w400,
-                            ),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: highlighted
+                              ? FontWeight.w600
+                              : FontWeight.w400,
+                        ),
                       ),
                       if (command.subtitle != null)
                         Text(
                           command.subtitle!,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
+                          style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(color: scheme.onSurfaceVariant),
                         ),
                     ],

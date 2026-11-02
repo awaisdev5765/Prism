@@ -6,8 +6,7 @@ import 'package:prism_kit/prism.dart';
 
 void main() {
   group('ColorPalette.fromColors', () {
-    test('exposes every color and ranks the first as dominant by default',
-        () {
+    test('exposes every color and ranks the first as dominant by default', () {
       final palette = ColorPalette.fromColors([
         const Color(0xFFFF0000), // red
         const Color(0xFF00FF00), // green
@@ -15,10 +14,11 @@ void main() {
       ]);
 
       expect(palette.swatches.length, 3);
-      expect(
-        palette.colors.toSet(),
-        {const Color(0xFFFF0000), const Color(0xFF00FF00), const Color(0xFF0000FF)},
-      );
+      expect(palette.colors.toSet(), {
+        const Color(0xFFFF0000),
+        const Color(0xFF00FF00),
+        const Color(0xFF0000FF),
+      });
       expect(palette.dominantColor, isNotNull);
     });
 
@@ -78,56 +78,60 @@ void main() {
       return recorder.endRecording().toImage(width, height);
     }
 
-    testWidgets('extracts dominant colors from a two-tone image',
-        skip: true, // TODO: ui.Image rasterization needs on-device verification
-        (tester) async {
-      final image = await createTwoToneImage(
-        64,
-        64,
-        const Color(0xFFFF0000),
-        const Color(0xFF00FF00),
-      );
-      addTearDown(image.dispose);
+    testWidgets(
+      'extracts dominant colors from a two-tone image',
+      skip: true, // TODO: ui.Image rasterization needs on-device verification
+      (tester) async {
+        final image = await createTwoToneImage(
+          64,
+          64,
+          const Color(0xFFFF0000),
+          const Color(0xFF00FF00),
+        );
+        addTearDown(image.dispose);
 
-      final palette = await PaletteExtractor.fromImage(image);
+        final palette = await PaletteExtractor.fromImage(image);
 
-      expect(palette.colors, isNotEmpty);
-      final extracted = palette.colors.toSet();
-      expect(
-        extracted.any((c) => (c.r * 255) > 200 && (c.g * 255) < 100),
-        isTrue,
-        reason: 'expected a red-ish color in the palette: $extracted',
-      );
-      expect(
-        extracted.any((c) => (c.g * 255) > 200 && (c.r * 255) < 100),
-        isTrue,
-        reason: 'expected a green-ish color in the palette: $extracted',
-      );
-    });
+        expect(palette.colors, isNotEmpty);
+        final extracted = palette.colors.toSet();
+        expect(
+          extracted.any((c) => (c.r * 255) > 200 && (c.g * 255) < 100),
+          isTrue,
+          reason: 'expected a red-ish color in the palette: $extracted',
+        );
+        expect(
+          extracted.any((c) => (c.g * 255) > 200 && (c.r * 255) < 100),
+          isTrue,
+          reason: 'expected a green-ish color in the palette: $extracted',
+        );
+      },
+    );
 
-    testWidgets('region sampling restricts extraction to the sub-rectangle',
-        skip: true, // TODO: ui.Image rasterization needs on-device verification
-        (tester) async {
-      final image = await createTwoToneImage(
-        64,
-        64,
-        const Color(0xFFFF0000), // left half: red
-        const Color(0xFF00FF00), // right half: green
-      );
-      addTearDown(image.dispose);
+    testWidgets(
+      'region sampling restricts extraction to the sub-rectangle',
+      skip: true, // TODO: ui.Image rasterization needs on-device verification
+      (tester) async {
+        final image = await createTwoToneImage(
+          64,
+          64,
+          const Color(0xFFFF0000), // left half: red
+          const Color(0xFF00FF00), // right half: green
+        );
+        addTearDown(image.dispose);
 
-      final leftPalette = await PaletteExtractor.fromImage(
-        image,
-        region: const Rect.fromLTWH(0, 0, 0.5, 1),
-      );
+        final leftPalette = await PaletteExtractor.fromImage(
+          image,
+          region: const Rect.fromLTWH(0, 0, 0.5, 1),
+        );
 
-      // Only the red half was sampled, so no green should dominate.
-      expect(
-        leftPalette.colors.any((c) => (c.g * 255) > 200 && (c.r * 255) < 100),
-        isFalse,
-        reason: 'region should have excluded the green half',
-      );
-    });
+        // Only the red half was sampled, so no green should dominate.
+        expect(
+          leftPalette.colors.any((c) => (c.g * 255) > 200 && (c.r * 255) < 100),
+          isFalse,
+          reason: 'region should have excluded the green half',
+        );
+      },
+    );
 
     testWidgets('throws on empty pixel list', (tester) async {
       await expectLater(

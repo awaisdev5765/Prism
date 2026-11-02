@@ -14,22 +14,27 @@ Future<HttpServer> startAgentServer() async {
   var requestCount = 0;
   server.listen((request) async {
     requestCount++;
-    request.response.headers.contentType =
-        ContentType.parse('text/event-stream');
+    request.response.headers.contentType = ContentType.parse(
+      'text/event-stream',
+    );
 
     if (requestCount == 1) {
       // Model asks to call the weather tool
       request.response.write(
-          'data: {"choices":[{"delta":{"tool_calls":[{"id":"call_1","type":"function","function":{"name":"get_weather","arguments":"{\\"city\\": \\"Lahore\\"}"}}]}}]}\n\n');
+        'data: {"choices":[{"delta":{"tool_calls":[{"id":"call_1","type":"function","function":{"name":"get_weather","arguments":"{\\"city\\": \\"Lahore\\"}"}}]}}]}\n\n',
+      );
       request.response.write(
-          'data: {"choices":[{"delta":{},"finish_reason":"tool_calls"}]}\n\n');
+        'data: {"choices":[{"delta":{},"finish_reason":"tool_calls"}]}\n\n',
+      );
       request.response.write('data: [DONE]\n\n');
     } else {
       // Model responds with final text after seeing the tool result
       request.response.write(
-          'data: {"choices":[{"delta":{"content":"The weather in Lahore is sunny and warm."}}]}\n\n');
+        'data: {"choices":[{"delta":{"content":"The weather in Lahore is sunny and warm."}}]}\n\n',
+      );
       request.response.write(
-          'data: {"choices":[{"delta":{},"finish_reason":"stop"}]}\n\n');
+        'data: {"choices":[{"delta":{},"finish_reason":"stop"}]}\n\n',
+      );
       request.response.write('data: [DONE]\n\n');
     }
     await request.response.close();
@@ -38,8 +43,9 @@ Future<HttpServer> startAgentServer() async {
 }
 
 void main() {
-  testWidgets('agent loop: tool call → execute → final response',
-      (tester) async {
+  testWidgets('agent loop: tool call → execute → final response', (
+    tester,
+  ) async {
     await tester.runAsync(() async {
       _disableFakeHttpOverrides();
       final server = await startAgentServer();
@@ -67,10 +73,9 @@ void main() {
         maxIterations: 3,
       );
 
-      final result = await agent.run(
-        [AiChatMessage.user('Weather in Lahore?')],
-        model: 'gpt-4o',
-      );
+      final result = await agent.run([
+        AiChatMessage.user('Weather in Lahore?'),
+      ], model: 'gpt-4o');
 
       expect(toolExecuted, isTrue, reason: 'tool should have been executed');
       expect(receivedArgs, {'city': 'Lahore'});
@@ -82,8 +87,9 @@ void main() {
     });
   });
 
-  testWidgets('agent returns final text without tools when none needed',
-      (tester) async {
+  testWidgets('agent returns final text without tools when none needed', (
+    tester,
+  ) async {
     await tester.runAsync(() async {
       _disableFakeHttpOverrides();
       final server = await startAgentServer();
@@ -98,10 +104,9 @@ void main() {
         maxIterations: 3,
       );
 
-      final result = await agent.run(
-        [AiChatMessage.user('Hi')],
-        model: 'gpt-4o',
-      );
+      final result = await agent.run([
+        AiChatMessage.user('Hi'),
+      ], model: 'gpt-4o');
 
       // Single iteration, no tool calls
       expect(result.iterations, 1);

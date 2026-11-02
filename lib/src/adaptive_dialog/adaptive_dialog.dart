@@ -139,8 +139,7 @@ class PrismAdaptiveDialog {
         shape:
             shape ??
             RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.circular(context.prismTokens.radiusLg),
+              borderRadius: BorderRadius.circular(context.prismTokens.radiusLg),
             ),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: maxWidth ?? 420),

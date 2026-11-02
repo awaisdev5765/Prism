@@ -81,8 +81,9 @@ final class AnthropicStreamClient implements AiStreamClient {
     final parser = SseParser();
     final state = _AnthropicStreamState();
 
-    await for (final chunk
-        in response.stream.transform(const Utf8Decoder(allowMalformed: true))) {
+    await for (final chunk in response.stream.transform(
+      const Utf8Decoder(allowMalformed: true),
+    )) {
       for (final sseEvent in parser.addChunk(chunk)) {
         for (final event in state.consume(sseEvent)) {
           if (event is _DoneSignal) {

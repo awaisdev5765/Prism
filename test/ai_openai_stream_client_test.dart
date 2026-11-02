@@ -6,12 +6,15 @@ import 'package:prism_kit/prism.dart';
 
 /// Local HTTP server that streams an SSE frame per line, each terminated
 /// with a blank line (the real wire format), with realistic delays.
-Future<HttpServer> startStreamingServer(List<String> sseLines,
-    {int statusCode = 200}) async {
+Future<HttpServer> startStreamingServer(
+  List<String> sseLines, {
+  int statusCode = 200,
+}) async {
   final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
   server.listen((request) async {
-    request.response.headers.contentType =
-        ContentType.parse('text/event-stream');
+    request.response.headers.contentType = ContentType.parse(
+      'text/event-stream',
+    );
     request.response.statusCode = statusCode;
     for (final line in sseLines) {
       request.response.write('$line\n\n');
@@ -23,7 +26,6 @@ Future<HttpServer> startStreamingServer(List<String> sseLines,
   return server;
 }
 
-
 // flutter_test installs a fake HttpClient that answers 400 to everything;
 // clear it so the local SSE server can be reached.
 void _disableFakeHttpOverrides() {
@@ -33,8 +35,7 @@ void _disableFakeHttpOverrides() {
 void main() {
   final messages = [AiChatMessage.user('Hello!')];
 
-  testWidgets('streams text deltas and terminates with AiDone',
-      (tester) async {
+  testWidgets('streams text deltas and terminates with AiDone', (tester) async {
     await tester.runAsync(() async {
       _disableFakeHttpOverrides();
       final server = await startStreamingServer([
@@ -53,8 +54,7 @@ void main() {
 
       final deltas = <String>[];
       Object? lastEvent;
-      await for (final event
-          in client.streamChat(messages, model: 'gpt-4o')) {
+      await for (final event in client.streamChat(messages, model: 'gpt-4o')) {
         if (event is AiTextDelta) deltas.add(event.text);
         lastEvent = event;
       }
@@ -93,10 +93,9 @@ void main() {
   testWidgets('surfaces provider errors as AiError events', (tester) async {
     await tester.runAsync(() async {
       _disableFakeHttpOverrides();
-      final server = await startStreamingServer(
-        ['data: {"error":{"message":"Invalid API key"}}'],
-        statusCode: 401,
-      );
+      final server = await startStreamingServer([
+        'data: {"error":{"message":"Invalid API key"}}',
+      ], statusCode: 401);
       addTearDown(server.close);
 
       final client = OpenAiStreamClient(
@@ -115,8 +114,9 @@ void main() {
     });
   });
 
-  testWidgets('emits tool call events when the model calls a tool',
-      (tester) async {
+  testWidgets('emits tool call events when the model calls a tool', (
+    tester,
+  ) async {
     await tester.runAsync(() async {
       _disableFakeHttpOverrides();
       final server = await startStreamingServer([
@@ -141,8 +141,9 @@ void main() {
     });
   });
 
-  testWidgets('assembles streamed tool-call fragments into one call',
-      (tester) async {
+  testWidgets('assembles streamed tool-call fragments into one call', (
+    tester,
+  ) async {
     await tester.runAsync(() async {
       _disableFakeHttpOverrides();
       final server = await startStreamingServer([
@@ -180,8 +181,9 @@ void main() {
     });
   });
 
-  testWidgets('request carries model, messages and auth header',
-      (tester) async {
+  testWidgets('request carries model, messages and auth header', (
+    tester,
+  ) async {
     await tester.runAsync(() async {
       _disableFakeHttpOverrides();
       HttpRequest? captured;
@@ -190,8 +192,9 @@ void main() {
       server.listen((request) async {
         captured = request;
         bodyFuture = utf8.decoder.bind(request).join();
-        request.response.headers.contentType =
-            ContentType.parse('text/event-stream');
+        request.response.headers.contentType = ContentType.parse(
+          'text/event-stream',
+        );
         request.response.write('data: [DONE]\n\n');
         await request.response.close();
       });

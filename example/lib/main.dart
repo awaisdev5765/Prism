@@ -11,92 +11,376 @@ import 'package:prism_kit/prism.dart';
 
 void main() => runApp(const PrismGalleryApp());
 
-class PrismGalleryApp extends StatelessWidget {
+/// The gallery shell.
+///
+/// It exercises the parts of Prism that are easiest to get wrong when you are
+/// the one building the library: theming, a live token override, and the
+/// adaptive shell doing real work on a real screen.
+class PrismGalleryApp extends StatefulWidget {
   const PrismGalleryApp({super.key});
 
   @override
+  State<PrismGalleryApp> createState() => _PrismGalleryAppState();
+}
+
+class _PrismGalleryAppState extends State<PrismGalleryApp> {
+  ThemeMode _mode = ThemeMode.system;
+
+  /// When true, the app is themed with deliberately unusual tokens so you can
+  /// see every component adopt them at once. This is the design system doing
+  /// its job, not a mock-up.
+  bool _compactSpacing = false;
+
+  void _toggleMode() {
+    setState(() {
+      _mode = switch (_mode) {
+        ThemeMode.system => ThemeMode.light,
+        ThemeMode.light => ThemeMode.dark,
+        ThemeMode.dark => ThemeMode.system,
+      };
+    });
+  }
+
+  void _toggleTokens() => setState(() => _compactSpacing = !_compactSpacing);
+
+  @override
   Widget build(BuildContext context) {
+    const seed = Color(0xFF39A9DB);
+
+    // One token set, installed in both themes. Flip the switch in the app bar
+    // and watch every component change rhythm at once.
+    final tokens = _compactSpacing
+        ? const PrismTokens(
+            spaceMd: 10,
+            spaceLg: 14,
+            radiusSm: 2,
+            radiusMd: 3,
+            radiusLg: 4,
+            radiusXl: 6,
+          )
+        : PrismTokens.fallback;
+
     return MaterialApp(
       title: 'Prism gallery',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorSchemeSeed: const Color(0xFF39A9DB)),
+      themeMode: _mode,
+      theme: ThemeData(colorSchemeSeed: seed, extensions: [tokens]),
       darkTheme: ThemeData(
-        colorSchemeSeed: const Color(0xFF39A9DB),
+        colorSchemeSeed: seed,
         brightness: Brightness.dark,
+        extensions: [tokens],
       ),
-      home: const GalleryHome(),
+      home: GalleryHome(
+        themeMode: _mode,
+        onToggleTheme: _toggleMode,
+        compactTokens: _compactSpacing,
+        onToggleTokens: _toggleTokens,
+      ),
     );
   }
 }
 
-class GalleryHome extends StatelessWidget {
-  const GalleryHome({super.key});
+/// A searchable grid of every component demo.
+class GalleryHome extends StatefulWidget {
+  const GalleryHome({
+    super.key,
+    required this.themeMode,
+    required this.onToggleTheme,
+    required this.compactTokens,
+    required this.onToggleTokens,
+  });
 
-  static final demos = <(String, IconData, WidgetBuilder)>[
-    ('Adaptive scaffold', Icons.smartphone, _build(ScaffoldDemo())),
-    ('Toast', Icons.notifications_none, _build(ToastDemo())),
-    ('Banner', Icons.campaign_outlined, _build(BannerDemo())),
-    ('Search', Icons.search, _build(SearchDemo())),
-    ('Settings', Icons.settings_outlined, _build(SettingsDemo())),
-    ('Markdown', Icons.article_outlined, _build(MarkdownDemo())),
-    ('Code view', Icons.code, _build(CodeDemo())),
-    ('Form', Icons.edit_note, _build(FormDemo())),
-    ('Pagination', Icons.menu, _build(PaginationDemo())),
-    ('Master-detail', Icons.view_agenda_outlined, _build(MasterDetailDemo())),
-    ('Adaptive dialog', Icons.open_in_full, _build(DialogDemo())),
-    ('State views', Icons.extension_outlined, _build(StateViewsDemo())),
-    ('Palette', Icons.palette_outlined, _build(PaletteDemo())),
-    ('Changelog', Icons.history, _build(ChangelogDemo())),
-    ('AI chat', Icons.smart_toy_outlined, _build(AiDemo())),
-    ('Skeleton', Icons.blur_on, _build(SkeletonDemo())),
-    ('Avatar', Icons.account_circle_outlined, _build(AvatarDemo())),
-    ('Chip input', Icons.label_outline, _build(ChipInputDemo())),
-    ('OTP field', Icons.password, _build(OtpDemo())),
-    ('Timeline', Icons.timeline, _build(TimelineDemo())),
-    ('Stepper', Icons.linear_scale, _build(StepperDemo())),
-    ('Data table', Icons.table_chart_outlined, _build(DataTableDemo())),
-    ('Command palette', Icons.keyboard_command_key, _build(CommandPaletteDemo())),
-    ('Adaptive sheet', Icons.vertical_align_bottom, _build(AdaptiveSheetDemo())),
-    ('Connection banner', Icons.cloud_off_outlined, _build(ConnectionDemo())),
-    ('Design tokens', Icons.palette, _build(TokensDemo())),
+  /// Current theme mode, shown on the toggle button.
+  final ThemeMode themeMode;
+
+  /// Cycles system → light → dark.
+  final VoidCallback onToggleTheme;
+
+  /// Whether the unusual token set is active.
+  final bool compactTokens;
+
+  /// Installs or removes the unusual token set.
+  final VoidCallback onToggleTokens;
+
+  @override
+  State<GalleryHome> createState() => _GalleryHomeState();
+}
+
+class _GalleryHomeState extends State<GalleryHome> {
+  final _controller = TextEditingController();
+
+  /// Every demo, in the order they appear in the grid.
+  ///
+  /// `keywords` are extra search terms, so "table" finds the data table and
+  /// "pin" finds the OTP field.
+  static const _demos = <_Demo>[
+    _Demo('Adaptive scaffold', Icons.smartphone, [
+      'nav',
+      'rail',
+      'responsive',
+    ], _scaffold),
+    _Demo('Toast', Icons.notifications_none, [
+      'snackbar',
+      'notification',
+    ], _toast),
+    _Demo('Banner', Icons.campaign_outlined, [
+      'announcement',
+      'dismiss',
+    ], _banner),
+    _Demo('Search', Icons.search, ['filter', 'query', 'fuzzy'], _search),
+    _Demo('Settings', Icons.settings_outlined, [
+      'preferences',
+      'tiles',
+    ], _settings),
+    _Demo('Markdown', Icons.article_outlined, [
+      'gfm',
+      'commonmark',
+      'text',
+    ], _markdown),
+    _Demo('Code view', Icons.code, ['syntax', 'highlight', 'copy'], _code),
+    _Demo('Form', Icons.edit_note, ['validation', 'fields', 'submit'], _form),
+    _Demo('Pagination', Icons.menu, [
+      'infinite',
+      'scroll',
+      'list',
+    ], _pagination),
+    _Demo('Master-detail', Icons.view_agenda_outlined, [
+      'split',
+      'panes',
+    ], _masterDetail),
+    _Demo('Adaptive dialog', Icons.open_in_full, ['modal', 'confirm'], _dialog),
+    _Demo('State views', Icons.extension_outlined, [
+      'loading',
+      'empty',
+      'error',
+    ], _stateViews),
+    _Demo('Palette', Icons.palette_outlined, [
+      'colour',
+      'extract',
+      'theme',
+    ], _palette),
+    _Demo('Changelog', Icons.history, [
+      'releases',
+      'version',
+      'whats new',
+    ], _changelog),
+    _Demo('AI chat', Icons.smart_toy_outlined, [
+      'llm',
+      'openai',
+      'ollama',
+      'streaming',
+    ], _ai),
+    _Demo('Skeleton', Icons.blur_on, [
+      'loading',
+      'shimmer',
+      'placeholder',
+    ], _skeleton),
+    _Demo('Avatar', Icons.account_circle_outlined, [
+      'initials',
+      'profile',
+      'presence',
+    ], _avatar),
+    _Demo('Chip input', Icons.label_outline, [
+      'tags',
+      'tokens',
+      'labels',
+    ], _chipInput),
+    _Demo('OTP field', Icons.password, ['pin', 'code', 'verification'], _otp),
+    _Demo('Timeline', Icons.timeline, [
+      'activity',
+      'steps',
+      'history',
+    ], _timeline),
+    _Demo('Stepper', Icons.linear_scale, [
+      'wizard',
+      'progress',
+      'steps',
+    ], _stepper),
+    _Demo('Data table', Icons.table_chart_outlined, [
+      'grid',
+      'sort',
+      'rows',
+      'columns',
+    ], _dataTable),
+    _Demo('Command palette', Icons.keyboard_command_key, [
+      'launcher',
+      'shortcut',
+      'cmd k',
+    ], _commandPalette),
+    _Demo('Adaptive sheet', Icons.vertical_align_bottom, [
+      'bottom sheet',
+      'modal',
+    ], _adaptiveSheet),
+    _Demo('Connection banner', Icons.cloud_off_outlined, [
+      'offline',
+      'network',
+    ], _connection),
+    _Demo('Design tokens', Icons.palette, [
+      'spacing',
+      'radius',
+      'motion',
+    ], _tokens),
   ];
 
-  static WidgetBuilder _build(Widget widget) => (_) => widget;
+  static Widget _scaffold() => const ScaffoldDemo();
+  static Widget _toast() => const ToastDemo();
+  static Widget _banner() => const BannerDemo();
+  static Widget _search() => const SearchDemo();
+  static Widget _settings() => const SettingsDemo();
+  static Widget _markdown() => const MarkdownDemo();
+  static Widget _code() => const CodeDemo();
+  static Widget _form() => const FormDemo();
+  static Widget _pagination() => const PaginationDemo();
+  static Widget _masterDetail() => const MasterDetailDemo();
+  static Widget _dialog() => const DialogDemo();
+  static Widget _stateViews() => const StateViewsDemo();
+  static Widget _palette() => const PaletteDemo();
+  static Widget _changelog() => const ChangelogDemo();
+  static Widget _ai() => const AiDemo();
+  static Widget _skeleton() => const SkeletonDemo();
+  static Widget _avatar() => const AvatarDemo();
+  static Widget _chipInput() => const ChipInputDemo();
+  static Widget _otp() => const OtpDemo();
+  static Widget _timeline() => const TimelineDemo();
+  static Widget _stepper() => const StepperDemo();
+  static Widget _dataTable() => const DataTableDemo();
+  static Widget _commandPalette() => const CommandPaletteDemo();
+  static Widget _adaptiveSheet() => const AdaptiveSheetDemo();
+  static Widget _connection() => const ConnectionDemo();
+  static Widget _tokens() => const TokensDemo();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  List<_Demo> get _visible {
+    final query = _controller.text.trim().toLowerCase();
+    if (query.isEmpty) return _demos;
+    return _demos.where((d) => d.matches(query)).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final tokens = context.prismTokens;
+    final demos = _visible;
+    final columns = switch (MediaQuery.sizeOf(context).width) {
+      < 520 => 2,
+      < 840 => 3,
+      _ => 4,
+    };
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Prism gallery')),
-      body: GridView.count(
-        crossAxisCount: MediaQuery.sizeOf(context).width > 600 ? 3 : 2,
-        padding: const EdgeInsets.all(16),
+      appBar: AppBar(
+        title: const Text('Prism gallery'),
+        actions: [
+          IconButton(
+            tooltip: widget.compactTokens
+                ? 'Restore default tokens'
+                : 'Apply a distinctly non-default token set',
+            icon: Icon(widget.compactTokens ? Icons.tune : Icons.tune_outlined),
+            onPressed: widget.onToggleTokens,
+          ),
+          IconButton(
+            tooltip: 'Theme: ${widget.themeMode.name}',
+            icon: Icon(switch (widget.themeMode) {
+              ThemeMode.system => Icons.brightness_auto_outlined,
+              ThemeMode.light => Icons.light_mode_outlined,
+              ThemeMode.dark => Icons.dark_mode_outlined,
+            }),
+            onPressed: widget.onToggleTheme,
+          ),
+        ],
+      ),
+      body: Column(
         children: [
-          for (final (name, icon, builder) in demos)
-            Card(
-              child: InkWell(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(builder: builder),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(icon, size: 32),
-                      const SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Text(name, textAlign: TextAlign.center),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+              tokens.spaceMd,
+              tokens.spaceMd,
+              tokens.spaceMd,
+              tokens.spaceSm,
             ),
+            // PrismSearch, used by Prism on itself.
+            child: PrismSearch<_Demo>(
+              items: _demos,
+              itemLabel: (d) => d.name,
+              hintText: 'Find a component…',
+              onSelected: (demo) => _open(demo.name),
+            ),
+          ),
+          Expanded(
+            child: demos.isEmpty
+                ? const PrismStateView<List<_Demo>>(
+                    state: PrismViewEmpty(),
+                    emptyMessage: 'No component matches that search.',
+                    successBuilder: _never,
+                  )
+                : GridView.builder(
+                    padding: EdgeInsets.all(tokens.spaceMd),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: columns,
+                      mainAxisSpacing: tokens.spaceSm,
+                      crossAxisSpacing: tokens.spaceSm,
+                    ),
+                    itemCount: demos.length,
+                    itemBuilder: (context, i) {
+                      final demo = demos[i];
+                      return Card(
+                        margin: EdgeInsets.zero,
+                        child: InkWell(
+                          onTap: () => _open(demo.name),
+                          child: Padding(
+                            padding: EdgeInsets.all(tokens.spaceSm),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(demo.icon, size: tokens.spaceXl),
+                                SizedBox(height: tokens.spaceSm),
+                                Text(
+                                  demo.name,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
         ],
       ),
     );
   }
+
+  static Widget _never(List<_Demo> _) => const SizedBox.shrink();
+
+  void _open(String name) {
+    final demo = _demos.firstWhere((d) => d.name == name);
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(builder: (_) => demo.build()),
+    );
+  }
+}
+
+/// One entry in the gallery grid.
+@immutable
+class _Demo {
+  const _Demo(this.name, this.icon, this.keywords, this.build);
+
+  final String name;
+  final IconData icon;
+  final List<String> keywords;
+  final Widget Function() build;
+
+  bool matches(String query) =>
+      name.toLowerCase().contains(query) ||
+      keywords.any((k) => k.contains(query));
 }
 
 // ─── Adaptive scaffold ──────────────────────────────────────────────────────
@@ -118,9 +402,21 @@ class _ScaffoldDemoState extends State<ScaffoldDemo> {
       currentIndex: _index,
       onDestinationSelected: (i) => setState(() => _index = i),
       destinations: const [
-        AdaptiveDestination(icon: Icons.home_outlined, selectedIcon: Icons.home, label: 'Home'),
-        AdaptiveDestination(icon: Icons.search_outlined, selectedIcon: Icons.search, label: 'Search'),
-        AdaptiveDestination(icon: Icons.settings_outlined, selectedIcon: Icons.settings, label: 'Settings'),
+        AdaptiveDestination(
+          icon: Icons.home_outlined,
+          selectedIcon: Icons.home,
+          label: 'Home',
+        ),
+        AdaptiveDestination(
+          icon: Icons.search_outlined,
+          selectedIcon: Icons.search,
+          label: 'Search',
+        ),
+        AdaptiveDestination(
+          icon: Icons.settings_outlined,
+          selectedIcon: Icons.settings,
+          label: 'Settings',
+        ),
       ],
       bodyBuilder: (i) => Center(
         child: Text(
@@ -148,11 +444,13 @@ class ToastDemo extends StatelessWidget {
           alignment: WrapAlignment.center,
           children: [
             FilledButton(
-              onPressed: () => PrismToast.success(context, 'Saved successfully'),
+              onPressed: () =>
+                  PrismToast.success(context, 'Saved successfully'),
               child: const Text('Success'),
             ),
             FilledButton(
-              onPressed: () => PrismToast.error(context, 'Something went wrong'),
+              onPressed: () =>
+                  PrismToast.error(context, 'Something went wrong'),
               child: const Text('Error'),
             ),
             FilledButton(
@@ -207,7 +505,8 @@ class BannerDemo extends StatelessWidget {
                 id: 'gallery-demo-2',
                 version: 1,
                 title: 'Critical notice',
-                message: 'Highest severity wins with PrismBannerPriority.severity.',
+                message:
+                    'Highest severity wins with PrismBannerPriority.severity.',
                 severity: PrismSeverity.error,
               ),
             ],
@@ -232,11 +531,34 @@ class SearchDemo extends StatelessWidget {
   const SearchDemo({super.key});
 
   static const fruits = [
-    'Apple', 'Apricot', 'Banana', 'Blueberry', 'Cherry', 'Cranberry',
-    'Dragonfruit', 'Durian', 'Elderberry', 'Fig', 'Grape', 'Guava',
-    'Kiwi', 'Lemon', 'Lime', 'Mango', 'Melon', 'Nectarine', 'Orange',
-    'Papaya', 'Peach', 'Pear', 'Pineapple', 'Plum', 'Raspberry',
-    'Strawberry', 'Tangerine', 'Watermelon',
+    'Apple',
+    'Apricot',
+    'Banana',
+    'Blueberry',
+    'Cherry',
+    'Cranberry',
+    'Dragonfruit',
+    'Durian',
+    'Elderberry',
+    'Fig',
+    'Grape',
+    'Guava',
+    'Kiwi',
+    'Lemon',
+    'Lime',
+    'Mango',
+    'Melon',
+    'Nectarine',
+    'Orange',
+    'Papaya',
+    'Peach',
+    'Pear',
+    'Pineapple',
+    'Plum',
+    'Raspberry',
+    'Strawberry',
+    'Tangerine',
+    'Watermelon',
   ];
 
   @override
@@ -379,7 +701,9 @@ class CodeDemo extends StatelessWidget {
         children: [
           PrismCodeView(code: "void main() {\n  print('Hello, Prism!');\n}"),
           const SizedBox(height: 16),
-          const Text('Built-in Dart & JSON tokenizers — bring your own with LanguageTokenizer.'),
+          const Text(
+            'Built-in Dart & JSON tokenizers — bring your own with LanguageTokenizer.',
+          ),
         ],
       ),
     );
@@ -450,7 +774,9 @@ class _FormDemoState extends State<FormDemo> {
                       (values) async => _mockRegister(values),
                     );
                     setState(() {
-                      _result = ok ? '✅ Account created!' : '❌ Check the fields';
+                      _result = ok
+                          ? '✅ Account created!'
+                          : '❌ Check the fields';
                     });
                   },
                   child: const Text('Create account'),
@@ -519,7 +845,8 @@ class MasterDetailDemo extends StatelessWidget {
           title: Text(item),
           subtitle: const Text('Last message preview…'),
         ),
-        detailBuilder: (context, item) => Center(child: Text('Detail of $item')),
+        detailBuilder: (context, item) =>
+            Center(child: Text('Detail of $item')),
         empty: (context) => const Center(child: Text('Pick a conversation')),
       ),
     );
@@ -601,7 +928,11 @@ class _StateViewsDemoState extends State<StateViewsDemo> {
         case 0:
           _notifier.value = const PrismViewLoading();
         case 1:
-          _notifier.value = const PrismViewSuccess(['Note A', 'Note B', 'Note C']);
+          _notifier.value = const PrismViewSuccess([
+            'Note A',
+            'Note B',
+            'Note C',
+          ]);
         case 2:
           _notifier.value = const PrismViewEmpty();
         case 3:
@@ -641,8 +972,10 @@ class PaletteDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = <Color>[
-      const Color(0xFF39A9DB), const Color(0xFFF39237),
-      const Color(0xFF2E7D5B), const Color(0xFFB04141),
+      const Color(0xFF39A9DB),
+      const Color(0xFFF39237),
+      const Color(0xFF2E7D5B),
+      const Color(0xFFB04141),
     ];
     return Scaffold(
       appBar: AppBar(title: const Text('PrismPalette')),
@@ -664,7 +997,10 @@ class PaletteDemo extends StatelessWidget {
                   Container(
                     width: 64,
                     height: 64,
-                    decoration: BoxDecoration(color: c, borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(
+                      color: c,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
               ],
             ),
@@ -785,7 +1121,9 @@ class SkeletonDemo extends StatelessWidget {
             children: [
               PrismSkeleton.circle(diameter: 44),
               SizedBox(width: 12),
-              Expanded(child: PrismSkeletonText(lines: 2, lastLineFraction: 0.4)),
+              Expanded(
+                child: PrismSkeletonText(lines: 2, lastLineFraction: 0.4),
+              ),
             ],
           ),
         ],
@@ -806,8 +1144,10 @@ class AvatarDemo extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Text('Initials are derived automatically and the colour is '
-              'stable for a given name.'),
+          const Text(
+            'Initials are derived automatically and the colour is '
+            'stable for a given name.',
+          ),
           const SizedBox(height: 16),
           Wrap(
             spacing: 12,
@@ -828,7 +1168,10 @@ class AvatarDemo extends StatelessWidget {
               PrismAvatar(name: 'Online User', presence: PrismPresence.online),
               PrismAvatar(name: 'Away User', presence: PrismPresence.away),
               PrismAvatar(name: 'Busy User', presence: PrismPresence.busy),
-              PrismAvatar(name: 'Offline User', presence: PrismPresence.offline),
+              PrismAvatar(
+                name: 'Offline User',
+                presence: PrismPresence.offline,
+              ),
             ],
           ),
           const SizedBox(height: 24),
@@ -880,7 +1223,14 @@ class _ChipInputDemoState extends State<ChipInputDemo> {
             label: 'Tags',
             hint: 'Type and press Enter…',
             value: _tags,
-            suggestions: const ['dart', 'flutter', 'ui', 'mobile', 'web', 'api'],
+            suggestions: const [
+              'dart',
+              'flutter',
+              'ui',
+              'mobile',
+              'web',
+              'api',
+            ],
             helperText: 'Paste a comma-separated list to add several at once.',
             onChanged: (next) => setState(() => _tags = next),
           ),
@@ -1019,7 +1369,11 @@ class _StepperDemoState extends State<StepperDemo> {
   static const _steps = [
     PrismStep(title: 'Account', subtitle: 'Email & password'),
     PrismStep(title: 'Profile', subtitle: 'Name & photo'),
-    PrismStep(title: 'Preferences', subtitle: 'Notifications', isOptional: true),
+    PrismStep(
+      title: 'Preferences',
+      subtitle: 'Notifications',
+      isOptional: true,
+    ),
     PrismStep(title: 'Done'),
   ];
 
@@ -1039,8 +1393,10 @@ class _StepperDemoState extends State<StepperDemo> {
               onStepTapped: (i) => setState(() => _index = i),
             ),
             const SizedBox(height: 40),
-            const Text('Resize the window: the stepper collapses to a compact '
-                '"Step X of Y" header with a progress bar.'),
+            const Text(
+              'Resize the window: the stepper collapses to a compact '
+              '"Step X of Y" header with a progress bar.',
+            ),
             const Spacer(),
             Row(
               children: [
@@ -1123,8 +1479,10 @@ class DataTableDemo extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          const Text('Tap a header to sort. On a narrow window the same data '
-              'becomes labelled cards.'),
+          const Text(
+            'Tap a header to sort. On a narrow window the same data '
+            'becomes labelled cards.',
+          ),
         ],
       ),
     );
@@ -1154,8 +1512,11 @@ class CommandPaletteDemo extends StatelessWidget {
           children: [
             const Icon(Icons.keyboard_command_key, size: 48),
             const SizedBox(height: 16),
-            const Text('A ⌘K-style launcher with fuzzy search,\ngrouping and '
-                'full keyboard navigation.', textAlign: TextAlign.center),
+            const Text(
+              'A ⌘K-style launcher with fuzzy search,\ngrouping and '
+              'full keyboard navigation.',
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 24),
             FilledButton.icon(
               onPressed: () => _open(context),
@@ -1342,20 +1703,23 @@ class TokensDemo extends StatelessWidget {
     final colors = context.prismColors;
 
     Widget swatch(String label, Color color, Color onColor) => Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(tokens.radiusMd),
-          ),
-          child: Text(label, style: TextStyle(color: onColor, fontSize: 12)),
-        );
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(tokens.radiusMd),
+      ),
+      child: Text(label, style: TextStyle(color: onColor, fontSize: 12)),
+    );
 
     return Scaffold(
       appBar: AppBar(title: const Text('Prism design tokens')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text('Semantic colors', style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            'Semantic colors',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
@@ -1385,11 +1749,7 @@ class TokensDemo extends StatelessWidget {
               child: Row(
                 children: [
                   SizedBox(width: 90, child: Text(name)),
-                  Container(
-                    height: 14,
-                    width: value * 4,
-                    color: colors.info,
-                  ),
+                  Container(height: 14, width: value * 4, color: colors.info),
                   const SizedBox(width: 8),
                   Text(value.toStringAsFixed(0)),
                 ],
@@ -1416,8 +1776,10 @@ class TokensDemo extends StatelessWidget {
                     border: Border.all(color: colors.outline),
                   ),
                   alignment: Alignment.center,
-                  child: Text('$name\n${value.toStringAsFixed(0)}',
-                      textAlign: TextAlign.center),
+                  child: Text(
+                    '$name\n${value.toStringAsFixed(0)}',
+                    textAlign: TextAlign.center,
+                  ),
                 ),
             ],
           ),

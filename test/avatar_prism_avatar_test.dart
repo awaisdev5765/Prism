@@ -61,8 +61,9 @@ void main() {
     expect(seen.length, greaterThan(1));
   });
 
-  testWidgets('falls back to initials when the network image fails',
-      (tester) async {
+  testWidgets('falls back to initials when the network image fails', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       host(const PrismAvatar(name: 'Ayesha Khan', imageUrl: 'not-a-url')),
     );
@@ -74,42 +75,45 @@ void main() {
   });
 
   testWidgets('circle shape uses a circular radius', (tester) async {
-    await tester.pumpWidget(
-      host(const PrismAvatar(name: 'Ann', size: 40)),
-    );
+    await tester.pumpWidget(host(const PrismAvatar(name: 'Ann', size: 40)));
     final container = tester.widget<Container>(find.byType(Container).first);
-    final radius = ((container.decoration! as BoxDecoration).borderRadius
-        as BorderRadius?)?.topLeft.x;
+    final radius =
+        ((container.decoration! as BoxDecoration).borderRadius as BorderRadius?)
+            ?.topLeft
+            .x;
     expect(radius, 20);
   });
 
   testWidgets('rounded shape is not fully round', (tester) async {
     await tester.pumpWidget(
-      host(const PrismAvatar(
-        name: 'Ann',
-        size: 100,
-        shape: PrismAvatarShape.rounded,
-      )),
+      host(
+        const PrismAvatar(
+          name: 'Ann',
+          size: 100,
+          shape: PrismAvatarShape.rounded,
+        ),
+      ),
     );
     final container = tester.widget<Container>(find.byType(Container).first);
-    final radius = ((container.decoration! as BoxDecoration).borderRadius
-        as BorderRadius?)?.topLeft.x;
+    final radius =
+        ((container.decoration! as BoxDecoration).borderRadius as BorderRadius?)
+            ?.topLeft
+            .x;
     expect(radius, closeTo(28, 0.001));
   });
 
   testWidgets('presence dot is rendered with a semantic label', (tester) async {
     await tester.pumpWidget(
-      host(const PrismAvatar(name: 'Ayesha Khan', presence: PrismPresence.online)),
+      host(
+        const PrismAvatar(name: 'Ayesha Khan', presence: PrismPresence.online),
+      ),
     );
     expect(find.bySemanticsLabel('Ayesha Khan, online'), findsOneWidget);
   });
 
   testWidgets('badge widget is layered on the avatar', (tester) async {
     await tester.pumpWidget(
-      host(const PrismAvatar(
-        name: 'Ayesha',
-        badge: Icon(Icons.star),
-      )),
+      host(const PrismAvatar(name: 'Ayesha', badge: Icon(Icons.star))),
     );
     expect(find.byIcon(Icons.star), findsOneWidget);
   });

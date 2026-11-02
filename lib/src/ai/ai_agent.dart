@@ -90,13 +90,14 @@ final class AiAgent {
           textBuffer.write(event.text);
         }
         if (event is AiToolCall) {
-          toolCalls.add(AiToolCallRequest(
-            id: event.id,
-            name: event.name,
-            argumentsJson: event.argumentsJson,
-          ));
+          toolCalls.add(
+            AiToolCallRequest(
+              id: event.id,
+              name: event.name,
+              argumentsJson: event.argumentsJson,
+            ),
+          );
         }
-
       }
 
       fullText.write(textBuffer.toString());
@@ -113,10 +114,12 @@ final class AiAgent {
 
       // Append the assistant's tool-call message (keeping any text the
       // model produced alongside the calls so the history stays faithful).
-      conversation.add(AiChatMessage.assistantWithToolCalls(
-        toolCalls,
-        content: textBuffer.toString(),
-      ));
+      conversation.add(
+        AiChatMessage.assistantWithToolCalls(
+          toolCalls,
+          content: textBuffer.toString(),
+        ),
+      );
 
       // Execute each tool and append results.
       for (final call in toolCalls) {
@@ -124,10 +127,9 @@ final class AiAgent {
         final result = tool == null
             ? 'Error: unknown tool "${call.name}"'
             : await tool.runFromJson(call.argumentsJson);
-        conversation.add(AiChatMessage.toolResult(
-          toolCallId: call.id,
-          content: result,
-        ));
+        conversation.add(
+          AiChatMessage.toolResult(toolCallId: call.id, content: result),
+        );
       }
     }
 

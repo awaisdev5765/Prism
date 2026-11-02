@@ -36,14 +36,8 @@ void main() {
     test('compares component-wise with zero padding', () {
       expect(PrismVersion.parse('1.2.3') > PrismVersion.parse('1.2'), isTrue);
       expect(PrismVersion.parse('1.2.3') < PrismVersion.parse('1.3'), isTrue);
-      expect(
-        PrismVersion.parse('1.0') <= PrismVersion.parse('1.0.0'),
-        isTrue,
-      );
-      expect(
-        PrismVersion.parse('2.0') == PrismVersion.parse('2.0.0'),
-        isTrue,
-      );
+      expect(PrismVersion.parse('1.0') <= PrismVersion.parse('1.0.0'), isTrue);
+      expect(PrismVersion.parse('2.0') == PrismVersion.parse('2.0.0'), isTrue);
     });
 
     test('distinguishes build numbers', () {

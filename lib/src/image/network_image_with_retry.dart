@@ -94,13 +94,15 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
         key.headers?.forEach((name, value) {
           request.headers[name] = value;
         });
-        final response =
-            await http.Response.fromStream(await client.send(request));
+        final response = await http.Response.fromStream(
+          await client.send(request),
+        );
         if (response.statusCode != 200) {
           throw _HttpException(response.statusCode);
         }
-        final buffer =
-            await ui.ImmutableBuffer.fromUint8List(response.bodyBytes);
+        final buffer = await ui.ImmutableBuffer.fromUint8List(
+          response.bodyBytes,
+        );
         return await decode(buffer);
       } catch (error) {
         final statusCode = error is _HttpException ? error.statusCode : null;
@@ -137,8 +139,7 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
   int get hashCode => Object.hash(url, scale, fetchStrategy);
 
   @override
-  String toString() =>
-      'NetworkImageWithRetry("$url", scale: $scale)';
+  String toString() => 'NetworkImageWithRetry("$url", scale: $scale)';
 }
 
 /// Wraps non-200 responses so the strategy can inspect the status code.
@@ -165,7 +166,8 @@ class NetworkImageRetryException implements Exception {
   final int? lastStatusCode;
 
   @override
-  String toString() => 'NetworkImageRetryException: failed to load $uri '
+  String toString() =>
+      'NetworkImageRetryException: failed to load $uri '
       'after $attempts attempts. Last error: $lastException'
       '${lastStatusCode != null ? ' (HTTP $lastStatusCode)' : ''}';
 }

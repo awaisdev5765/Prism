@@ -21,10 +21,9 @@ void main() {
       final source = StaticUpdateSource({
         UpdateChannel.stable: PrismVersion.parse('3.0.0'),
       });
-      expect(
-        await source.fetchLatest(),
-        {UpdateChannel.stable: PrismVersion.parse('3.0.0')},
-      );
+      expect(await source.fetchLatest(), {
+        UpdateChannel.stable: PrismVersion.parse('3.0.0'),
+      });
     });
   });
 
@@ -67,22 +66,20 @@ void main() {
         source.downloadUrlFor('windows'),
         Uri.parse('https://example.com/app.exe'),
       );
-      expect(
-        source.notesFor(PrismVersion.parse('2.1.0')),
-        'Bug fixes',
-      );
+      expect(source.notesFor(PrismVersion.parse('2.1.0')), 'Bug fixes');
       expect(source.minimumVersion, isNull);
     });
 
     test('throws on non-2xx responses', () async {
-      final client = MockClient(
-        (request) async => http.Response('oops', 500),
-      );
+      final client = MockClient((request) async => http.Response('oops', 500));
       final source = RemoteUpdateSource(
         url: Uri.parse('https://example.com/updates.json'),
         client: client,
       );
-      await expectLater(source.fetchLatest(), throwsA(isA<http.ClientException>()));
+      await expectLater(
+        source.fetchLatest(),
+        throwsA(isA<http.ClientException>()),
+      );
     });
   });
 

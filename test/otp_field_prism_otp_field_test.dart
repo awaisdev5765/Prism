@@ -37,12 +37,14 @@ void main() {
   testWidgets('fires onCompleted only when the field is full', (tester) async {
     final completed = <String>[];
     await tester.pumpWidget(
-      host(PrismOtpField(
-        length: 4,
-        onChanged: (_) {},
-        onCompleted: completed.add,
-        autofocus: true,
-      )),
+      host(
+        PrismOtpField(
+          length: 4,
+          onChanged: (_) {},
+          onCompleted: completed.add,
+          autofocus: true,
+        ),
+      ),
     );
     await tester.pump();
 
@@ -58,7 +60,9 @@ void main() {
   testWidgets('a pasted code fills every box at once', (tester) async {
     final completed = <String>[];
     await tester.pumpWidget(
-      host(PrismOtpField(length: 6, onCompleted: completed.add, autofocus: true)),
+      host(
+        PrismOtpField(length: 6, onCompleted: completed.add, autofocus: true),
+      ),
     );
     await tester.pump();
     await tester.enterText(find.byType(TextField), '987654');
@@ -116,12 +120,14 @@ void main() {
   testWidgets('disabled field rejects input', (tester) async {
     final seen = <String>[];
     await tester.pumpWidget(
-      host(PrismOtpField(
-        length: 4,
-        enabled: false,
-        onChanged: seen.add,
-        autofocus: true,
-      )),
+      host(
+        PrismOtpField(
+          length: 4,
+          enabled: false,
+          onChanged: seen.add,
+          autofocus: true,
+        ),
+      ),
     );
     await tester.pump();
     await tester.enterText(find.byType(TextField), '1234');
@@ -129,8 +135,9 @@ void main() {
     expect(seen, isEmpty);
   });
 
-  testWidgets('accepts an external controller and reflects its value',
-      (tester) async {
+  testWidgets('accepts an external controller and reflects its value', (
+    tester,
+  ) async {
     final controller = TextEditingController(text: '12');
     addTearDown(controller.dispose);
     await tester.pumpWidget(
@@ -150,10 +157,12 @@ void main() {
 
   testWidgets('custom boxBuilder replaces the default box', (tester) async {
     await tester.pumpWidget(
-      host(PrismOtpField(
-        length: 3,
-        boxBuilder: (context, index, char, focused) => Text('box$index'),
-      )),
+      host(
+        PrismOtpField(
+          length: 3,
+          boxBuilder: (context, index, char, focused) => Text('box$index'),
+        ),
+      ),
     );
     expect(find.text('box0'), findsOneWidget);
     expect(find.text('box2'), findsOneWidget);

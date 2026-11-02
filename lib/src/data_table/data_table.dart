@@ -148,8 +148,8 @@ class _PrismDataTableState<T> extends State<PrismDataTable<T>> {
           child: Text(
             widget.emptyMessage,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ),
       );
@@ -185,7 +185,8 @@ class _PrismDataTableState<T> extends State<PrismDataTable<T>> {
                       child: header
                           ? _HeaderCell(
                               label: widget.columns[c].label,
-                              sortable: widget.columns[c].sortComparator != null,
+                              sortable:
+                                  widget.columns[c].sortComparator != null,
                               ascending: _sortColumn == c && _ascending,
                               sorted: _sortColumn == c,
                               onTap: () => _toggleSort(c),
@@ -193,7 +194,11 @@ class _PrismDataTableState<T> extends State<PrismDataTable<T>> {
                           : DefaultTextStyle.merge(
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
-                              child: widget.columns[c].cell(context, row, index),
+                              child: widget.columns[c].cell(
+                                context,
+                                row,
+                                index,
+                              ),
                             ),
                     ),
                   ),
@@ -246,14 +251,17 @@ class _PrismDataTableState<T> extends State<PrismDataTable<T>> {
             decoration: BoxDecoration(
               color: colors.surfaceSunken.withValues(alpha: 0.6),
               border: Border(
-                bottom: BorderSide(color: colors.outline, width: tokens.borderWidth),
+                bottom: BorderSide(
+                  color: colors.outline,
+                  width: tokens.borderWidth,
+                ),
               ),
             ),
             child: DefaultTextStyle.merge(
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: scheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: scheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
               child: buildRow(-1, rows.first, header: true),
             ),
           ),
@@ -316,16 +324,20 @@ class _PrismDataTableState<T> extends State<PrismDataTable<T>> {
                                 width: 96,
                                 child: Text(
                                   column.label,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(color: scheme.onSurfaceVariant),
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(
+                                        color: scheme.onSurfaceVariant,
+                                      ),
                                 ),
                               ),
                               Expanded(
                                 child: DefaultTextStyle.merge(
                                   style: Theme.of(context).textTheme.bodyMedium,
-                                  child: column.cell(context, rows[index], index),
+                                  child: column.cell(
+                                    context,
+                                    rows[index],
+                                    index,
+                                  ),
                                 ),
                               ),
                             ],
@@ -374,8 +386,8 @@ class _HeaderCell extends StatelessWidget {
             !sorted
                 ? Icons.unfold_more
                 : ascending
-                    ? Icons.arrow_upward
-                    : Icons.arrow_downward,
+                ? Icons.arrow_upward
+                : Icons.arrow_downward,
             size: 14,
           ),
         ],

@@ -30,24 +30,26 @@ void main() {
     expect(find.text('Checking for updates…'), findsOneWidget);
   });
 
-  testWidgets('GateBehavior.block renders forced screen via softUpdateBuilder',
-      (tester) async {
-    // The gate is exercised through the controller in integration-style
-    // tests; here we verify the soft-update card builds standalone.
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: PrismSoftUpdateCard(
-            state: PrismUpdateAvailable(
-              current: PrismVersion.parse('1.0.0'),
-              result: const UpdatePolicyResult(UpdateDecision.softUpdate),
+  testWidgets(
+    'GateBehavior.block renders forced screen via softUpdateBuilder',
+    (tester) async {
+      // The gate is exercised through the controller in integration-style
+      // tests; here we verify the soft-update card builds standalone.
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PrismSoftUpdateCard(
+              state: PrismUpdateAvailable(
+                current: PrismVersion.parse('1.0.0'),
+                result: const UpdatePolicyResult(UpdateDecision.softUpdate),
+              ),
+              platformInfo: null,
+              onDismiss: null,
             ),
-            platformInfo: null,
-            onDismiss: null,
           ),
         ),
-      ),
-    );
-    expect(find.byType(PrismSoftUpdateCard), findsOneWidget);
-  });
+      );
+      expect(find.byType(PrismSoftUpdateCard), findsOneWidget);
+    },
+  );
 }

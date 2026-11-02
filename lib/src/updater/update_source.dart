@@ -41,8 +41,8 @@ class RemoteUpdateSource implements PrismUpdateSource {
     required this.url,
     http.Client? client,
     Map<String, String>? headers,
-  })  : _client = client ?? http.Client(),
-        _headers = headers ?? const {};
+  }) : _client = client ?? http.Client(),
+       _headers = headers ?? const {};
 
   /// The metadata endpoint URL.
   final Uri url;

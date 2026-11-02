@@ -86,7 +86,7 @@ class PrismSkipStore {
   /// Creates a skip store over [SharedPreferencesAsync] by default, or an
   /// injected [backend] (in-memory in tests).
   PrismSkipStore({SkipStoreBackend? backend})
-      : _backend = backend ?? AsyncPrefsBackend(SharedPreferencesAsync());
+    : _backend = backend ?? AsyncPrefsBackend(SharedPreferencesAsync());
 
   final SkipStoreBackend _backend;
 
@@ -108,7 +108,10 @@ class PrismSkipStore {
 
   /// Records that an update to [version] was shown to the user at [at].
   Future<void> markSeen(PrismVersion version, {DateTime? at}) =>
-      _backend.setString('$_seenPrefix$version', (at ?? DateTime.now()).toIso8601String());
+      _backend.setString(
+        '$_seenPrefix$version',
+        (at ?? DateTime.now()).toIso8601String(),
+      );
 
   /// When [version]'s update was last shown, or `null` if never shown.
   Future<DateTime?> seenAt(PrismVersion version) async {

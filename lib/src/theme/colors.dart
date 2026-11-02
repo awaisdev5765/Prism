@@ -173,17 +173,21 @@ class PrismColors {
     // A hand-tuned green keeps "success" distinct from the primary hue,
     // which is often blue or purple in Material You.
     final success = isDark ? const Color(0xFF7BD8A8) : const Color(0xFF1B7A4B);
-    final successContainer =
-        isDark ? const Color(0xFF1E4C33) : const Color(0xFFC9F2DC);
-    final onSuccessContainer =
-        isDark ? const Color(0xFFC9F2DC) : const Color(0xFF06301A);
+    final successContainer = isDark
+        ? const Color(0xFF1E4C33)
+        : const Color(0xFFC9F2DC);
+    final onSuccessContainer = isDark
+        ? const Color(0xFFC9F2DC)
+        : const Color(0xFF06301A);
 
     // Warning leans amber, again to stay distinct from `tertiary`.
     final warning = isDark ? const Color(0xFFFFCF6B) : const Color(0xFF8A5A00);
-    final warningContainer =
-        isDark ? const Color(0xFF54401A) : const Color(0xFFFFE7B8);
-    final onWarningContainer =
-        isDark ? const Color(0xFFFFE7B8) : const Color(0xFF2E1F00);
+    final warningContainer = isDark
+        ? const Color(0xFF54401A)
+        : const Color(0xFFFFE7B8);
+    final onWarningContainer = isDark
+        ? const Color(0xFFFFE7B8)
+        : const Color(0xFF2E1F00);
 
     return PrismColors(
       success: success,
@@ -236,25 +240,25 @@ class PrismColors {
 
   @override
   int get hashCode => Object.hashAll([
-        success,
-        onSuccess,
-        successContainer,
-        onSuccessContainer,
-        warning,
-        onWarning,
-        warningContainer,
-        onWarningContainer,
-        error,
-        onError,
-        errorContainer,
-        onErrorContainer,
-        info,
-        onInfo,
-        infoContainer,
-        onInfoContainer,
-        surfaceRaised,
-        surfaceSunken,
-        outline,
-        overlay,
-      ]);
+    success,
+    onSuccess,
+    successContainer,
+    onSuccessContainer,
+    warning,
+    onWarning,
+    warningContainer,
+    onWarningContainer,
+    error,
+    onError,
+    errorContainer,
+    onErrorContainer,
+    info,
+    onInfo,
+    infoContainer,
+    onInfoContainer,
+    surfaceRaised,
+    surfaceSunken,
+    outline,
+    overlay,
+  ]);
 }

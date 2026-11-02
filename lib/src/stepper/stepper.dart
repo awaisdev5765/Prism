@@ -124,7 +124,8 @@ class PrismStepper extends StatelessWidget {
 
     if (steps.isEmpty) return const SizedBox.shrink();
 
-    final label = semanticLabel ??
+    final label =
+        semanticLabel ??
         'Step ${currentIndex + 1} of ${steps.length}: ${steps[currentIndex].title}';
 
     return Semantics(
@@ -186,14 +187,14 @@ class _CompactStepper extends StatelessWidget {
                   Text(
                     'Step ${currentIndex + 1} of ${steps.length}',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: scheme.onSurfaceVariant,
-                        ),
+                      color: scheme.onSurfaceVariant,
+                    ),
                   ),
                   Text(
                     current.title,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),
@@ -299,12 +300,15 @@ class _WideStepper extends StatelessWidget {
                             textAlign: TextAlign.center,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
                                   fontWeight: i == currentIndex
                                       ? FontWeight.w700
                                       : FontWeight.w500,
                                   color: stateOf(i) == PrismStepState.pending
-                                      ? Theme.of(context).colorScheme.onSurfaceVariant
+                                      ? Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant
                                       : null,
                                 ),
                           ),
@@ -316,9 +320,8 @@ class _WideStepper extends StatelessWidget {
                             textAlign: TextAlign.center,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                  color: colors.outline,
-                                ),
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(color: colors.outline),
                           ),
                         ],
                       ],
@@ -406,7 +409,10 @@ class _Marker extends StatelessWidget {
         color: background,
         shape: BoxShape.circle,
         border: state == PrismStepState.pending
-            ? Border.all(color: colors.outline, width: context.prismTokens.borderWidth)
+            ? Border.all(
+                color: colors.outline,
+                width: context.prismTokens.borderWidth,
+              )
             : null,
       ),
       alignment: Alignment.center,

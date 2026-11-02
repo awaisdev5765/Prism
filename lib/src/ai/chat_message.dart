@@ -27,19 +27,21 @@ final class AiChatMessage {
   factory AiChatMessage.assistantWithToolCalls(
     List<AiToolCallRequest> toolCalls, {
     String content = '',
-  }) =>
-      AiChatMessage(role: AiRole.assistant, content: content, toolCalls: toolCalls);
+  }) => AiChatMessage(
+    role: AiRole.assistant,
+    content: content,
+    toolCalls: toolCalls,
+  );
 
   /// A tool result answering a specific tool call.
   factory AiChatMessage.toolResult({
     required String toolCallId,
     required String content,
-  }) =>
-      AiChatMessage(
-        role: AiRole.tool,
-        content: content,
-        toolCallId: toolCallId,
-      );
+  }) => AiChatMessage(
+    role: AiRole.tool,
+    content: content,
+    toolCallId: toolCallId,
+  );
 
   final AiRole role;
   final String content;
@@ -59,11 +61,7 @@ final class AiChatMessage {
           'tool_calls': [for (final t in toolCalls) t.toJson()],
         };
       case AiRole.tool:
-        return {
-          'role': 'tool',
-          'tool_call_id': toolCallId,
-          'content': content,
-        };
+        return {'role': 'tool', 'tool_call_id': toolCallId, 'content': content};
       default:
         return {'role': role.name, 'content': content};
     }
@@ -87,10 +85,10 @@ final class AiToolCallRequest {
   final String argumentsJson;
 
   Map<String, Object?> toJson() => {
-        'type': 'function',
-        'id': id,
-        'function': {'name': name, 'arguments': argumentsJson},
-      };
+    'type': 'function',
+    'id': id,
+    'function': {'name': name, 'arguments': argumentsJson},
+  };
 
   @override
   String toString() => 'AiToolCallRequest($name, $argumentsJson)';

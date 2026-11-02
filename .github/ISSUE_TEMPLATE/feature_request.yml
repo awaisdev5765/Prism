@@ -1,0 +1,30 @@
+name: Feature request
+description: Suggest a new component or an improvement to an existing one
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Describe the need rather than the API you have in mind.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like Prism to do?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What are you doing today instead?
+      description: Existing packages, hand-rolled widgets, or nothing at all.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Fit
+      options:
+        - label: This can be built with no new runtime dependency
+        - label: This should adapt to window size and platform
+        - label: I would be willing to open a pull request

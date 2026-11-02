@@ -43,10 +43,7 @@ final class AiDone {
 /// Token usage reported by the provider, when available.
 @immutable
 final class AiUsage {
-  const AiUsage({
-    required this.inputTokens,
-    required this.outputTokens,
-  });
+  const AiUsage({required this.inputTokens, required this.outputTokens});
   final int inputTokens;
   final int outputTokens;
   @override
@@ -61,5 +58,6 @@ final class AiError {
   final int? statusCode;
   final Object? cause;
   @override
-  String toString() => 'AiError($message${statusCode != null ? ' [$statusCode]' : ''})';
+  String toString() =>
+      'AiError($message${statusCode != null ? ' [$statusCode]' : ''})';
 }

@@ -119,7 +119,8 @@ class PrismMarkdown extends StatefulWidget {
   final Future<List<md.Node>> Function(
     String data,
     md.ExtensionSet? extensionSet,
-  )? parseRunner;
+  )?
+  parseRunner;
 
   @override
   State<PrismMarkdown> createState() => _PrismMarkdownState();

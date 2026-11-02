@@ -30,7 +30,10 @@ final class PaletteExtractor {
 
     // Score ranks the quantized colors by suitability; put them first so
     // `dominantColor` matches the recommended color.
-    final ranked = Score.score(result.colorToCount, desired: desiredColors).toSet();
+    final ranked = Score.score(
+      result.colorToCount,
+      desired: desiredColors,
+    ).toSet();
 
     final candidates = <int, int>{
       for (final argb in ranked) argb: result.colorToCount[argb] ?? 0,
@@ -68,8 +71,7 @@ final class PaletteExtractor {
       throw ArgumentError.value(image, 'image', 'must have non-empty bounds');
     }
 
-    final byteData =
-        await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
     if (byteData == null) {
       throw StateError('Failed to read pixel data from the source image');
     }
@@ -120,4 +122,3 @@ extension _NormalizedRect on Rect {
     return Rect.fromLTRB(l, t, r, b);
   }
 }
-

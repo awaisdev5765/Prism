@@ -7,19 +7,17 @@ void main() {
 
     test('rolloutPercent 100 includes everyone', () {
       const policy = UpdatePolicy(rolloutPercent: 100);
-      final result = policy.evaluate(
-        v('1.0.0'),
-        {UpdateChannel.stable: v('2.0.0')},
-      );
+      final result = policy.evaluate(v('1.0.0'), {
+        UpdateChannel.stable: v('2.0.0'),
+      });
       expect(result.decision, UpdateDecision.softUpdate);
     });
 
     test('rolloutPercent 0 excludes everyone from soft updates', () {
       const policy = UpdatePolicy(rolloutPercent: 0, rolloutDeviceId: 'a');
-      final result = policy.evaluate(
-        v('1.0.0'),
-        {UpdateChannel.stable: v('2.0.0')},
-      );
+      final result = policy.evaluate(v('1.0.0'), {
+        UpdateChannel.stable: v('2.0.0'),
+      });
       expect(result.decision, UpdateDecision.upToDate);
       // Latest is still reported for informational purposes.
       expect(result.latest, v('2.0.0'));
@@ -33,10 +31,9 @@ void main() {
           rolloutPercent: 50,
           rolloutDeviceId: 'device-$i',
         );
-        final result = policy.evaluate(
-          v('1.0.0'),
-          {UpdateChannel.stable: v('2.0.0')},
-        );
+        final result = policy.evaluate(v('1.0.0'), {
+          UpdateChannel.stable: v('2.0.0'),
+        });
         buckets.add(result.decision.index);
         // Re-evaluating with the same id gives the same decision.
         final again = UpdatePolicy(
@@ -57,10 +54,9 @@ void main() {
           rolloutPercent: 30,
           rolloutDeviceId: 'device-$i',
         );
-        final result = policy.evaluate(
-          v('1.0.0'),
-          {UpdateChannel.stable: v('2.0.0')},
-        );
+        final result = policy.evaluate(v('1.0.0'), {
+          UpdateChannel.stable: v('2.0.0'),
+        });
         if (result.decision == UpdateDecision.softUpdate) included++;
       }
       // FNV-1a buckets should land within a few percent of 30%.
@@ -74,19 +70,17 @@ void main() {
         rolloutPercent: 0,
         rolloutDeviceId: 'a',
       );
-      final result = policy.evaluate(
-        v('1.0.0'),
-        {UpdateChannel.stable: v('2.0.0')},
-      );
+      final result = policy.evaluate(v('1.0.0'), {
+        UpdateChannel.stable: v('2.0.0'),
+      });
       expect(result.decision, UpdateDecision.forcedUpdate);
     });
 
     test('null device id is always included', () {
       const policy = UpdatePolicy(rolloutPercent: 1);
-      final result = policy.evaluate(
-        v('1.0.0'),
-        {UpdateChannel.stable: v('2.0.0')},
-      );
+      final result = policy.evaluate(v('1.0.0'), {
+        UpdateChannel.stable: v('2.0.0'),
+      });
       expect(result.decision, UpdateDecision.softUpdate);
     });
   });
@@ -114,10 +108,7 @@ void main() {
 
     test('different versions are tracked independently', () async {
       await store.skip(PrismVersion.parse('2.0.0'));
-      expect(
-        await store.isSkipped(PrismVersion.parse('2.1.0')),
-        isFalse,
-      );
+      expect(await store.isSkipped(PrismVersion.parse('2.1.0')), isFalse);
     });
 
     test('markSeen / seenAt roundtrip', () async {

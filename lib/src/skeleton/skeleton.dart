@@ -38,10 +38,10 @@ class PrismSkeleton extends StatefulWidget {
     this.baseColor,
     this.highlightColor,
     this.animate = true,
-  })  : width = diameter,
-        height = diameter,
-        borderRadius = null,
-        shape = PrismSkeletonShape.circle;
+  }) : width = diameter,
+       height = diameter,
+       borderRadius = null,
+       shape = PrismSkeletonShape.circle;
 
   /// Fixed width; stretches to the parent when null.
   final double? width;
@@ -136,20 +136,18 @@ class _PrismSkeletonState extends State<PrismSkeleton>
     final tokens = context.prismTokens;
     final colors = context.prismColors;
     final base = widget.baseColor ?? colors.surfaceSunken;
-    final highlight = widget.highlightColor ??
+    final highlight =
+        widget.highlightColor ??
         Color.alphaBlend(
           Theme.of(context).colorScheme.surface.withValues(alpha: 0.55),
           base,
         );
 
     Widget block(Color color) => Container(
-          width: widget.width,
-          height: widget.height,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: _radius(tokens),
-          ),
-        );
+      width: widget.width,
+      height: widget.height,
+      decoration: BoxDecoration(color: color, borderRadius: _radius(tokens)),
+    );
 
     final reduceMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
     final controller = _controller;
@@ -251,7 +249,8 @@ class PrismSkeletonCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (mediaHeight > 0) PrismSkeleton(height: mediaHeight, borderRadius: BorderRadius.zero),
+          if (mediaHeight > 0)
+            PrismSkeleton(height: mediaHeight, borderRadius: BorderRadius.zero),
           Padding(
             padding: padding,
             child: PrismSkeletonText(lines: lines),
@@ -276,8 +275,8 @@ class PrismSkeletonList extends StatelessWidget {
     this.mediaHeight = 160,
     this.spacing = 16,
     this.padding = const EdgeInsets.all(16),
-  })  : kind = PrismSkeletonListKind.card,
-        itemHeight = null;
+  }) : kind = PrismSkeletonListKind.card,
+       itemHeight = null;
 
   /// Creates a list of tile-shaped skeletons (avatar + two lines).
   const PrismSkeletonList.tiles({
@@ -286,8 +285,8 @@ class PrismSkeletonList extends StatelessWidget {
     this.itemHeight = 72,
     this.spacing = 8,
     this.padding = const EdgeInsets.all(16),
-  })  : kind = PrismSkeletonListKind.tile,
-        mediaHeight = 0;
+  }) : kind = PrismSkeletonListKind.tile,
+       mediaHeight = 0;
 
   /// How many items to render.
   final int count;
@@ -317,8 +316,9 @@ class PrismSkeletonList extends StatelessWidget {
           for (var i = 0; i < count; i++) ...[
             if (i > 0) SizedBox(height: spacing),
             switch (kind) {
-              PrismSkeletonListKind.card =>
-                PrismSkeletonCard(mediaHeight: mediaHeight),
+              PrismSkeletonListKind.card => PrismSkeletonCard(
+                mediaHeight: mediaHeight,
+              ),
               PrismSkeletonListKind.tile => _TileSkeleton(height: itemHeight!),
             },
           ],

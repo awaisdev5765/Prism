@@ -104,7 +104,8 @@ class PrismOtpField extends StatefulWidget {
     int index,
     String char,
     bool focused,
-  )? boxBuilder;
+  )?
+  boxBuilder;
 
   @override
   State<PrismOtpField> createState() => _PrismOtpFieldState();
@@ -234,8 +235,8 @@ class _PrismOtpFieldState extends State<PrismOtpField> {
           Text(
             error ?? widget.helperText!,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: error != null ? colors.error : scheme.onSurfaceVariant,
-                ),
+              color: error != null ? colors.error : scheme.onSurfaceVariant,
+            ),
           ),
         ],
       ],
@@ -277,10 +278,10 @@ class _OtpBox extends StatelessWidget {
     final borderColor = isError
         ? scheme.error
         : focused
-            ? accent
-            : filled
-                ? accent.withValues(alpha: 0.55)
-                : outline;
+        ? accent
+        : filled
+        ? accent.withValues(alpha: 0.55)
+        : outline;
 
     Widget content = const SizedBox.shrink();
     if (filled) {

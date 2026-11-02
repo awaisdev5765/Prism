@@ -42,13 +42,16 @@ void main() {
 
     test('lerp interpolates between two token sets', () {
       const a = PrismTokens.fallback;
-      final b = a.copyWith(spaceMd: 32, durationMedium: const Duration(milliseconds: 500));
+      final b = a.copyWith(
+        spaceMd: 32,
+        durationMedium: const Duration(milliseconds: 500),
+      );
       final mid = a.lerp(b, 0.5);
       expect(mid.spaceMd, closeTo(24, 0.001));
-      expect(mid.durationMedium.inMicroseconds, closeTo(
-        (a.durationMedium.inMicroseconds + 500000) / 2,
-        1000,
-      ));
+      expect(
+        mid.durationMedium.inMicroseconds,
+        closeTo((a.durationMedium.inMicroseconds + 500000) / 2, 1000),
+      );
     });
 
     test('lerp with a foreign extension returns itself', () {
@@ -56,7 +59,9 @@ void main() {
       expect(a.lerp(null, 0.5).spaceMd, a.spaceMd);
     });
 
-    testWidgets('of() falls back when no tokens are registered', (tester) async {
+    testWidgets('of() falls back when no tokens are registered', (
+      tester,
+    ) async {
       late PrismTokens resolved;
       await tester.pumpWidget(
         MaterialApp(
@@ -100,7 +105,11 @@ void main() {
         colors.error,
         colors.info,
       };
-      expect(accents.length, 4, reason: 'each role should be visually distinct');
+      expect(
+        accents.length,
+        4,
+        reason: 'each role should be visually distinct',
+      );
     });
 
     test('forRole returns matching container pairs', () {
@@ -125,7 +134,10 @@ void main() {
 
     test('semantic roles carry default icons', () {
       final colors = PrismColors.resolve(scheme, Brightness.light);
-      expect(colors.iconForRole(PrismSemantic.success), Icons.check_circle_outline);
+      expect(
+        colors.iconForRole(PrismSemantic.success),
+        Icons.check_circle_outline,
+      );
       expect(colors.iconForRole(PrismSemantic.error), Icons.error_outline);
     });
 

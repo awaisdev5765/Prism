@@ -23,8 +23,7 @@ class PrismUpdatePlatformInfo {
       isWeb: kIsWeb,
       isAndroid: !kIsWeb && target == TargetPlatform.android,
       isIOS: !kIsWeb && target == TargetPlatform.iOS,
-      isWindows:
-          !kIsWeb && target == TargetPlatform.windows,
+      isWindows: !kIsWeb && target == TargetPlatform.windows,
       isMacOS: !kIsWeb && target == TargetPlatform.macOS,
       isLinux: !kIsWeb && target == TargetPlatform.linux,
     );

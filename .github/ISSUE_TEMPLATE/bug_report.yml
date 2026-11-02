@@ -1,0 +1,46 @@
+name: Bug report
+description: Something in a Prism component does not work as documented
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. A minimal reproduction gets a fix much faster —
+        please include one below.
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      description: Which component is affected?
+      placeholder: PrismDataTable
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What actually happened?
+      description: Include the full error and stack trace if there is one.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: A code snippet or a link to a repo. Please remove anything unrelated.
+      render: dart
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: "`prism_kit`, Flutter and Dart versions, and the platform you saw it on."
+      placeholder: "prism_kit 1.1.0, Flutter 3.27.0, Android 14"
+    validations:
+      required: true

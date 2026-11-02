@@ -38,8 +38,9 @@ void main() {
 
     test('skips comment lines and captures event/id fields', () {
       final parser = SseParser();
-      final events = parser
-          .addChunk(': keep-alive ping\nevent: message\nid: 42\ndata: x\n\n');
+      final events = parser.addChunk(
+        ': keep-alive ping\nevent: message\nid: 42\ndata: x\n\n',
+      );
       expect(events.length, 1);
       expect(events.first.event, 'message');
       expect(events.first.id, '42');

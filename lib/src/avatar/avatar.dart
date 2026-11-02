@@ -86,11 +86,7 @@ class PrismAvatar extends StatelessWidget {
       final single = parts.first;
       return single.characters.take(max).toString().toUpperCase();
     }
-    return parts
-        .take(max)
-        .map((p) => p.characters.first)
-        .join()
-        .toUpperCase();
+    return parts.take(max).map((p) => p.characters.first).join().toUpperCase();
   }
 
   /// Deterministically picks a stable background color for [name] from the
@@ -147,10 +143,12 @@ class PrismAvatar extends StatelessWidget {
     final fg = foregroundColor ?? onColorFor(bg);
     final initials = initialsOverride ?? initialsFor(name);
     final presenceValue = presence;
-    final label = semanticLabel ??
+    final label =
+        semanticLabel ??
         (presenceValue == null ? name : '$name, ${presenceValue.label}');
 
-    final provider = image ?? (imageUrl != null ? NetworkImage(imageUrl!) : null);
+    final provider =
+        image ?? (imageUrl != null ? NetworkImage(imageUrl!) : null);
 
     Widget content = Container(
       width: size,
@@ -204,8 +202,7 @@ class PrismAvatar extends StatelessWidget {
                 ringColor: Theme.of(context).colorScheme.surface,
               ),
             ),
-          if (badge != null)
-            Positioned(right: -2, top: -2, child: badge!),
+          if (badge != null) Positioned(right: -2, top: -2, child: badge!),
         ],
       );
     }
@@ -219,7 +216,11 @@ class PrismAvatar extends StatelessWidget {
 }
 
 class _Initials extends StatelessWidget {
-  const _Initials({required this.text, required this.size, required this.color});
+  const _Initials({
+    required this.text,
+    required this.size,
+    required this.color,
+  });
 
   final String text;
   final double size;

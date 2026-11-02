@@ -175,7 +175,8 @@ class BlockBuilder {
           final first = itemChildren.first;
           if (first is md.Element && first.tag == 'input') {
             // TaskListExtension emits <input type=checkbox checked?> nodes.
-            checked = first.attributes['checked'] == 'true' ||
+            checked =
+                first.attributes['checked'] == 'true' ||
                 first.attributes.containsKey('checked');
             checkbox = 'task'; // sentinel: render as a checkbox icon below
             itemChildren = itemChildren.skip(1).toList();
@@ -217,10 +218,7 @@ class BlockBuilder {
                           child: SizedBox(
                             width: 18,
                             height: 18,
-                            child: Checkbox(
-                              value: checked,
-                              onChanged: null,
-                            ),
+                            child: Checkbox(value: checked, onChanged: null),
                           ),
                         )
                       : Text(marker, style: style.textStyle),

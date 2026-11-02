@@ -1,8 +1,17 @@
-.DS_Store
+# Dart / Flutter
 .dart_tool/
+.packages
 build/
-example/build/
-example/.dart_tool/
-example/.flutter-plugins*
-*.iml
+pubspec.lock
+
+# IntelliJ / VS Code
 .idea/
+*.iml
+.vscode/
+
+# macOS
+.DS_Store
+
+# Generated example scaffolding that is not part of the package
+example/.metadata
+example/web/

@@ -117,13 +117,14 @@ class PrismTimeline extends StatelessWidget {
         child: Text(
           'Nothing to show yet',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
       );
     }
 
-    final wideEnough = MediaQuery.sizeOf(context).width >= tokens.breakpointExpanded;
+    final wideEnough =
+        MediaQuery.sizeOf(context).width >= tokens.breakpointExpanded;
 
     return Padding(
       padding: padding ?? EdgeInsets.zero,
@@ -182,7 +183,8 @@ class _TimelineRow extends StatelessWidget {
     final colors = context.prismColors;
     final scheme = Theme.of(context).colorScheme;
 
-    final accent = entry.accentColor ??
+    final accent =
+        entry.accentColor ??
         (entry.isActive
             ? colors.accentForRole(entry.semantic)
             : colors.forRole(entry.semantic).foreground);
@@ -201,22 +203,26 @@ class _TimelineRow extends StatelessWidget {
         shape: BoxShape.circle,
         border: entry.isActive
             ? null
-            : Border.all(color: accent.withValues(alpha: 0.5), width: connectorWidth),
+            : Border.all(
+                color: accent.withValues(alpha: 0.5),
+                width: connectorWidth,
+              ),
       ),
       child: Icon(
         markerIcon,
         size: markerSize * 0.55,
         color: entry.isActive
             ? (ThemeData.estimateBrightnessForColor(accent) == Brightness.dark
-                ? Colors.white
-                : Colors.black87)
+                  ? Colors.white
+                  : Colors.black87)
             : accent,
       ),
     );
 
     final header = Column(
-      crossAxisAlignment:
-          mirror ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: mirror
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisSize: MainAxisSize.min,
@@ -225,12 +231,15 @@ class _TimelineRow extends StatelessWidget {
               child: Text(
                 entry.title,
                 textAlign: mirror ? TextAlign.end : TextAlign.start,
-                style: (dense
-                        ? Theme.of(context).textTheme.bodyMedium
-                        : Theme.of(context).textTheme.titleSmall)
-                    ?.copyWith(
-                  fontWeight: entry.isActive ? FontWeight.w700 : FontWeight.w600,
-                ),
+                style:
+                    (dense
+                            ? Theme.of(context).textTheme.bodyMedium
+                            : Theme.of(context).textTheme.titleSmall)
+                        ?.copyWith(
+                          fontWeight: entry.isActive
+                              ? FontWeight.w700
+                              : FontWeight.w600,
+                        ),
               ),
             ),
             if (entry.trailing != null) ...[
@@ -243,9 +252,9 @@ class _TimelineRow extends StatelessWidget {
           SizedBox(height: tokens.spaceXs / 2),
           Text(
             entry.timestamp!,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
           ),
         ],
         if (entry.subtitle != null) ...[
@@ -253,9 +262,9 @@ class _TimelineRow extends StatelessWidget {
           Text(
             entry.subtitle!,
             textAlign: mirror ? TextAlign.end : TextAlign.start,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
           ),
         ],
         if (entry.child != null) ...[

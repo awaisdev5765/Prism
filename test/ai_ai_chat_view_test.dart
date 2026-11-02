@@ -8,15 +8,17 @@ void main() {
     AiChatController controller, {
     bool markdown = false,
   }) async {
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: AiChatView(
-          controller: controller,
-          onSendMessage: null,
-          markdownAssistantResponses: markdown,
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: AiChatView(
+            controller: controller,
+            onSendMessage: null,
+            markdownAssistantResponses: markdown,
+          ),
         ),
       ),
-    ));
+    );
     await tester.pump();
   }
 
@@ -45,8 +47,9 @@ void main() {
     expect(controller.isStreaming, isTrue);
   });
 
-  testWidgets('appendAssistantDelta streams text into the last bubble',
-      (tester) async {
+  testWidgets('appendAssistantDelta streams text into the last bubble', (
+    tester,
+  ) async {
     final controller = AiChatController();
     controller.sendUserMessage('hi');
 
@@ -58,19 +61,19 @@ void main() {
     expect(controller.isStreaming, isFalse);
   });
 
-  testWidgets('input field sends messages through onSendMessage',
-      (tester) async {
+  testWidgets('input field sends messages through onSendMessage', (
+    tester,
+  ) async {
     final controller = AiChatController();
     final sent = <String>[];
 
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: AiChatView(
-          controller: controller,
-          onSendMessage: sent.add,
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: AiChatView(controller: controller, onSendMessage: sent.add),
         ),
       ),
-    ));
+    );
     await tester.pump();
 
     await tester.enterText(find.byType(TextField), 'ping');
@@ -91,8 +94,9 @@ void main() {
   });
 
   group('markdown assistant responses', () {
-    testWidgets('assistant bubble renders markdown when enabled',
-        (tester) async {
+    testWidgets('assistant bubble renders markdown when enabled', (
+      tester,
+    ) async {
       final controller = AiChatController();
       controller.sendUserMessage('hi');
       controller.appendAssistantDelta('# Title\n\n- item');
@@ -104,8 +108,9 @@ void main() {
       expect(find.text('item'), findsOneWidget);
     });
 
-    testWidgets('assistant bubble stays plain text when disabled',
-        (tester) async {
+    testWidgets('assistant bubble stays plain text when disabled', (
+      tester,
+    ) async {
       final controller = AiChatController();
       controller.sendUserMessage('hi');
       controller.appendAssistantDelta('# Title');

@@ -11,8 +11,8 @@ final class EmbeddingsClient {
     this.apiKey,
     http.Client? client,
     Map<String, String>? extraHeaders,
-  })  : _client = client ?? http.Client(),
-        _extraHeaders = extraHeaders ?? const {};
+  }) : _client = client ?? http.Client(),
+       _extraHeaders = extraHeaders ?? const {};
 
   final String baseUrl;
   final String? apiKey;
@@ -33,7 +33,7 @@ final class EmbeddingsClient {
   }) async {
     if (inputs.isEmpty) {
       throw ArgumentError.value(inputs, 'inputs', 'must not be empty');
-  }
+    }
 
     final uri = Uri.parse('$baseUrl/embeddings');
     final response = await _client.post(
@@ -43,12 +43,8 @@ final class EmbeddingsClient {
         if (apiKey != null && apiKey!.isNotEmpty)
           'Authorization': 'Bearer $apiKey',
         ..._extraHeaders,
-    },
-      body: jsonEncode({
-        'model': model,
-        'input': inputs,
-        ...extraBody,
-    }),
+      },
+      body: jsonEncode({'model': model, 'input': inputs, ...extraBody}),
     );
 
     if (response.statusCode != 200) {
@@ -57,26 +53,28 @@ final class EmbeddingsClient {
         '${response.body}',
         statusCode: response.statusCode,
       );
-  }
+    }
 
     final json = jsonDecode(response.body) as Map<String, Object?>;
     final data = json['data'] as List<Object?>? ?? const [];
 
-    final sorted = [...data]..sort((a, b) {
+    final sorted = [...data]
+      ..sort((a, b) {
         final ia = (a as Map<String, Object?>?)?['index'];
         final ib = (b as Map<String, Object?>?)?['index'];
         return (ia as num? ?? 0).compareTo(ib as num? ?? 0);
-    });
+      });
 
     return [
       for (final entry in sorted)
         [
-          for (final v in (entry as Map<String, Object?>?)?['embedding']
-                  as List<Object?>? ??
-              const [])
+          for (final v
+              in (entry as Map<String, Object?>?)?['embedding']
+                      as List<Object?>? ??
+                  const [])
             (v as num).toDouble(),
         ],
-      ];
+    ];
   }
 
   /// Convenience for a single input.
@@ -93,7 +91,8 @@ class EmbeddingsException implements Exception {
   final int? statusCode;
 
   @override
-  String toString() => 'EmbeddingsException: $message'
+  String toString() =>
+      'EmbeddingsException: $message'
       '${statusCode != null ? ' (HTTP $statusCode)' : ''}';
 }
 
@@ -101,8 +100,10 @@ class EmbeddingsException implements Exception {
 /// 1.0 = identical direction). Standard RAG similarity metric.
 double cosineSimilarity(List<double> a, List<double> b) {
   if (a.length != b.length) {
-      throw ArgumentError('vectors must have the same length '
-          '(${a.length} vs ${b.length})');
+    throw ArgumentError(
+      'vectors must have the same length '
+      '(${a.length} vs ${b.length})',
+    );
   }
   var dot = 0.0, normA = 0.0, normB = 0.0;
   for (var i = 0; i < a.length; i++) {
@@ -112,4 +113,4 @@ double cosineSimilarity(List<double> a, List<double> b) {
   }
   final d = math.sqrt(normA) * math.sqrt(normB);
   return d == 0 ? 0.0 : dot / d;
-  }
+}

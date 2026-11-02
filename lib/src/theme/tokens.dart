@@ -179,7 +179,9 @@ class PrismTokens extends ThemeExtension<PrismTokens> {
     if (other is! PrismTokens) return this;
     double d(double a, double b) => a + (b - a) * t;
     Duration dur(Duration a, Duration b) => Duration(
-      microseconds: (a.inMicroseconds + (b.inMicroseconds - a.inMicroseconds) * t).round(),
+      microseconds:
+          (a.inMicroseconds + (b.inMicroseconds - a.inMicroseconds) * t)
+              .round(),
     );
     return PrismTokens(
       spaceXs: d(spaceXs, other.spaceXs),

@@ -25,8 +25,7 @@ class PrismDownloadProgress extends PrismDownloadEvent {
   final double bytesPerSecond;
 
   /// Progress as a 0..1 fraction; `null` when the total is unknown.
-  double? get fraction =>
-      total > 0 ? (received / total).clamp(0.0, 1.0) : null;
+  double? get fraction => total > 0 ? (received / total).clamp(0.0, 1.0) : null;
 
   /// Whether the total size is known.
   bool get isIndeterminate => total <= 0;

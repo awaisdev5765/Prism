@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:prism_kit/prism.dart';
 
-
 PrismUpdatePlatformInfo fakePlatform({required bool storeFlow}) =>
     PrismUpdatePlatformInfo(
       isWeb: !storeFlow,
@@ -46,9 +45,9 @@ PrismUpdateController buildController({
 void main() {
   group('PrismUpdateGate', () {
     testWidgets('renders child when up to date', (tester) async {
-      final source = _ConfigurableSource(
-        {UpdateChannel.stable: PrismVersion.parse('1.0.0')},
-      );
+      final source = _ConfigurableSource({
+        UpdateChannel.stable: PrismVersion.parse('1.0.0'),
+      });
       final controller = buildController(
         source: source,
         current: PrismVersion.parse('1.0.0'),
@@ -69,9 +68,9 @@ void main() {
     });
 
     testWidgets('blocks behind forced update screen', (tester) async {
-      final source = _ConfigurableSource(
-        {UpdateChannel.stable: PrismVersion.parse('9.0.0')},
-      );
+      final source = _ConfigurableSource({
+        UpdateChannel.stable: PrismVersion.parse('9.0.0'),
+      });
       final controller = buildController(
         source: source,
         current: PrismVersion.parse('1.0.0'),
@@ -95,11 +94,10 @@ void main() {
       controller.dispose();
     });
 
-    testWidgets('banner behavior shows card over app content',
-        (tester) async {
-      final source = _ConfigurableSource(
-        {UpdateChannel.stable: PrismVersion.parse('1.1.0')},
-      );
+    testWidgets('banner behavior shows card over app content', (tester) async {
+      final source = _ConfigurableSource({
+        UpdateChannel.stable: PrismVersion.parse('1.1.0'),
+      });
       final controller = buildController(
         source: source,
         current: PrismVersion.parse('1.0.0'),
@@ -122,11 +120,12 @@ void main() {
       controller.dispose();
     });
 
-    testWidgets('custom forcedBuilder overrides default screen',
-        (tester) async {
-      final source = _ConfigurableSource(
-        {UpdateChannel.stable: PrismVersion.parse('9.0.0')},
-      );
+    testWidgets('custom forcedBuilder overrides default screen', (
+      tester,
+    ) async {
+      final source = _ConfigurableSource({
+        UpdateChannel.stable: PrismVersion.parse('9.0.0'),
+      });
       final controller = buildController(
         source: source,
         current: PrismVersion.parse('1.0.0'),
@@ -149,9 +148,9 @@ void main() {
     });
 
     testWidgets('checking state renders child by default', (tester) async {
-      final source = _ConfigurableSource(
-        {UpdateChannel.stable: PrismVersion.parse('1.0.0')},
-      );
+      final source = _ConfigurableSource({
+        UpdateChannel.stable: PrismVersion.parse('1.0.0'),
+      });
       final controller = buildController(
         source: source,
         current: PrismVersion.parse('1.0.0'),
@@ -170,11 +169,12 @@ void main() {
       controller.dispose();
     });
 
-    testWidgets('failure renders child by default (never breaks the app)',
-        (tester) async {
-      final source = _ConfigurableSource(
-        {UpdateChannel.stable: PrismVersion.parse('1.0.0')},
-      )..error = Exception('network down');
+    testWidgets('failure renders child by default (never breaks the app)', (
+      tester,
+    ) async {
+      final source = _ConfigurableSource({
+        UpdateChannel.stable: PrismVersion.parse('1.0.0'),
+      })..error = Exception('network down');
       final controller = buildController(
         source: source,
         current: PrismVersion.parse('1.0.0'),
@@ -196,8 +196,7 @@ void main() {
   });
 
   group('PrismForceUpdateScreen', () {
-    testWidgets('shows notes and skip action when dismissible',
-        (tester) async {
+    testWidgets('shows notes and skip action when dismissible', (tester) async {
       var skipped = false;
       await tester.pumpWidget(
         MaterialApp(

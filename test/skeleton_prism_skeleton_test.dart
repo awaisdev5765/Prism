@@ -7,9 +7,7 @@ Widget host(Widget child) => MaterialApp(home: Scaffold(body: child));
 
 void main() {
   testWidgets('renders a block with the requested size', (tester) async {
-    await tester.pumpWidget(
-      host(const PrismSkeleton(width: 120, height: 24)),
-    );
+    await tester.pumpWidget(host(const PrismSkeleton(width: 120, height: 24)));
     final container = tester.widget<Container>(find.byType(Container).first);
     expect(container.constraints?.maxWidth, 120);
   });
@@ -39,8 +37,9 @@ void main() {
     expect(find.byType(ShaderMask), findsNothing);
   });
 
-  testWidgets('circle constructor produces equal width and height',
-      (tester) async {
+  testWidgets('circle constructor produces equal width and height', (
+    tester,
+  ) async {
     await tester.pumpWidget(host(const PrismSkeleton.circle(diameter: 44)));
     final container = tester.widget<Container>(find.byType(Container).first);
     expect(container.constraints?.maxWidth, 44);

@@ -12,24 +12,33 @@ void main() {
     final controller = StreamController<bool>();
     addTearDown(controller.close);
 
-    await tester.pumpWidget(host(PrismConnectionBanner(
-      source: () => controller.stream,
-      settleDelay: Duration.zero,
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismConnectionBanner(
+          source: () => controller.stream,
+          settleDelay: Duration.zero,
+        ),
+      ),
+    );
     await tester.pump();
     expect(find.textContaining('offline'), findsNothing);
   });
 
-  testWidgets('shows the offline message when the source emits false',
-      (tester) async {
+  testWidgets('shows the offline message when the source emits false', (
+    tester,
+  ) async {
     final controller = StreamController<bool>();
     addTearDown(controller.close);
 
-    await tester.pumpWidget(host(PrismConnectionBanner(
-      source: () => controller.stream,
-      settleDelay: Duration.zero,
-      offlineMessage: 'No connection',
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismConnectionBanner(
+          source: () => controller.stream,
+          settleDelay: Duration.zero,
+          offlineMessage: 'No connection',
+        ),
+      ),
+    );
     controller.add(false);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 50));
@@ -40,11 +49,15 @@ void main() {
     final controller = StreamController<bool>();
     addTearDown(controller.close);
 
-    await tester.pumpWidget(host(PrismConnectionBanner(
-      source: () => controller.stream,
-      settleDelay: const Duration(seconds: 1),
-      offlineMessage: 'Offline now',
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismConnectionBanner(
+          source: () => controller.stream,
+          settleDelay: const Duration(seconds: 1),
+          offlineMessage: 'Offline now',
+        ),
+      ),
+    );
     controller.add(false);
     await tester.pump(const Duration(milliseconds: 200));
     expect(find.text('Offline now'), findsNothing);
@@ -59,11 +72,15 @@ void main() {
     final controller = StreamController<bool>();
     addTearDown(controller.close);
 
-    await tester.pumpWidget(host(PrismConnectionBanner(
-      source: () => controller.stream,
-      settleDelay: Duration.zero,
-      offlineMessage: 'Offline now',
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismConnectionBanner(
+          source: () => controller.stream,
+          settleDelay: Duration.zero,
+          offlineMessage: 'Offline now',
+        ),
+      ),
+    );
     controller.add(false);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 50));
@@ -79,12 +96,16 @@ void main() {
     final controller = StreamController<bool>();
     addTearDown(controller.close);
 
-    await tester.pumpWidget(host(PrismConnectionBanner(
-      source: () => controller.stream,
-      settleDelay: Duration.zero,
-      onlineMessage: 'Back online',
-      onlineDuration: const Duration(milliseconds: 300),
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismConnectionBanner(
+          source: () => controller.stream,
+          settleDelay: Duration.zero,
+          onlineMessage: 'Back online',
+          onlineDuration: const Duration(milliseconds: 300),
+        ),
+      ),
+    );
     controller.add(false);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 50));
@@ -103,11 +124,15 @@ void main() {
     addTearDown(controller.close);
     var retries = 0;
 
-    await tester.pumpWidget(host(PrismConnectionBanner(
-      source: () => controller.stream,
-      settleDelay: Duration.zero,
-      onRetry: () => retries++,
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismConnectionBanner(
+          source: () => controller.stream,
+          settleDelay: Duration.zero,
+          onRetry: () => retries++,
+        ),
+      ),
+    );
     controller.add(false);
     await tester.pumpAndSettle();
 
@@ -120,10 +145,14 @@ void main() {
     final controller = StreamController<bool>();
     addTearDown(controller.close);
 
-    await tester.pumpWidget(host(PrismConnectionBanner(
-      source: () => controller.stream,
-      settleDelay: Duration.zero,
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismConnectionBanner(
+          source: () => controller.stream,
+          settleDelay: Duration.zero,
+        ),
+      ),
+    );
     controller.add(false);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 50));
@@ -134,12 +163,16 @@ void main() {
     final controller = StreamController<bool>();
     addTearDown(controller.close);
 
-    await tester.pumpWidget(host(PrismConnectionBanner(
-      source: () => controller.stream,
-      settleDelay: Duration.zero,
-      assumeOnline: false,
-      offlineMessage: 'Starting offline',
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismConnectionBanner(
+          source: () => controller.stream,
+          settleDelay: Duration.zero,
+          assumeOnline: false,
+          offlineMessage: 'Starting offline',
+        ),
+      ),
+    );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 50));
     expect(find.text('Starting offline'), findsOneWidget);
@@ -151,33 +184,46 @@ void main() {
     addTearDown(first.close);
     addTearDown(second.close);
 
-    await tester.pumpWidget(host(PrismConnectionBanner(
-      source: () => first.stream,
-      settleDelay: Duration.zero,
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismConnectionBanner(
+          source: () => first.stream,
+          settleDelay: Duration.zero,
+        ),
+      ),
+    );
     await tester.pump();
 
-    await tester.pumpWidget(host(PrismConnectionBanner(
-      source: () => second.stream,
-      settleDelay: Duration.zero,
-      offlineMessage: 'Second source',
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismConnectionBanner(
+          source: () => second.stream,
+          settleDelay: Duration.zero,
+          offlineMessage: 'Second source',
+        ),
+      ),
+    );
     second.add(false);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 50));
     expect(find.text('Second source'), findsOneWidget);
   });
 
-  testWidgets('announces connectivity changes to assistive tech',
-      (tester) async {
+  testWidgets('announces connectivity changes to assistive tech', (
+    tester,
+  ) async {
     final controller = StreamController<bool>();
     addTearDown(controller.close);
 
-    await tester.pumpWidget(host(PrismConnectionBanner(
-      source: () => controller.stream,
-      settleDelay: Duration.zero,
-      offlineMessage: 'You are offline',
-    )));
+    await tester.pumpWidget(
+      host(
+        PrismConnectionBanner(
+          source: () => controller.stream,
+          settleDelay: Duration.zero,
+          offlineMessage: 'You are offline',
+        ),
+      ),
+    );
     controller.add(false);
     await tester.pumpAndSettle();
 

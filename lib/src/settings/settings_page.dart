@@ -109,8 +109,7 @@ class _PrismSettingsPageState extends State<PrismSettingsPage> {
       notifier: _effective,
       child: Scaffold(
         body: SingleChildScrollView(
-          padding:
-              EdgeInsets.symmetric(vertical: context.prismTokens.spaceSm),
+          padding: EdgeInsets.symmetric(vertical: context.prismTokens.spaceSm),
           child: Center(
             child: Container(
               constraints: BoxConstraints(maxWidth: widget.maxWidth),

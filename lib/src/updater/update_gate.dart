@@ -60,17 +60,16 @@ class PrismUpdateGate extends StatelessWidget {
       builder: (context, _) {
         final state = controller.state;
         return switch (state) {
-          PrismUpdateAvailable(isForced: true) => forcedBuilder != null
-              ? forcedBuilder!(context)
-              : PrismForceUpdateScreen(state: state),
-          PrismUpdateAvailable() => softUpdateBuilder != null
-              ? softUpdateBuilder!(context)
-              : behavior == GateBehavior.block
-                  ? PrismForceUpdateScreen(state: state, canDismiss: true)
-                  : _SoftUpdateOverlay(
-                      state: state,
-                      child: child,
-                    ),
+          PrismUpdateAvailable(isForced: true) =>
+            forcedBuilder != null
+                ? forcedBuilder!(context)
+                : PrismForceUpdateScreen(state: state),
+          PrismUpdateAvailable() =>
+            softUpdateBuilder != null
+                ? softUpdateBuilder!(context)
+                : behavior == GateBehavior.block
+                ? PrismForceUpdateScreen(state: state, canDismiss: true)
+                : _SoftUpdateOverlay(state: state, child: child),
           PrismUpdateChecking() => checkingBuilder?.call(context) ?? child,
           PrismUpdateSkipped() => child,
           PrismUpdateFailure() => failureBuilder?.call(context) ?? child,

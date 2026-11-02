@@ -40,9 +40,9 @@ void main() {
       final channel = MethodChannel('prism_updater/store_flow_test_args');
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(channel, (call) async {
-        receivedAppleId = call.arguments?['appleId'] as String?;
-        return 'launched';
-      });
+            receivedAppleId = call.arguments?['appleId'] as String?;
+            return 'launched';
+          });
       final launcher = StoreFlowLauncher(
         methodChannel: channel,
         iosAppleId: '123456789',
@@ -113,8 +113,7 @@ void main() {
       final events = <PrismDownloadEvent>[];
       await for (final event in manager.download(
         url: Uri.parse('$serverUrlBase/file.bin'),
-        savePath:
-            '${Directory.systemTemp.path}/prism_updater_fail.bin',
+        savePath: '${Directory.systemTemp.path}/prism_updater_fail.bin',
       )) {
         events.add(event);
       }

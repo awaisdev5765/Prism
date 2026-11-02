@@ -29,8 +29,8 @@ final class OpenAiStreamClient implements AiStreamClient {
     this.apiKey,
     http.Client? client,
     Map<String, String>? extraHeaders,
-  })  : _client = client ?? http.Client(),
-        _extraHeaders = extraHeaders ?? const {};
+  }) : _client = client ?? http.Client(),
+       _extraHeaders = extraHeaders ?? const {};
 
   /// Base URL of the OpenAI-compatible API, e.g.
   /// `https://api.openai.com/v1` or `http://localhost:11434/v1` (Ollama).
@@ -91,17 +91,21 @@ final class OpenAiStreamClient implements AiStreamClient {
     final usageCollector = _UsageCollector();
     final toolAssembler = _ToolCallAssembler();
 
-    await for (final chunk
-        in response.stream.transform(const Utf8Decoder(allowMalformed: true))) {
+    await for (final chunk in response.stream.transform(
+      const Utf8Decoder(allowMalformed: true),
+    )) {
       for (final event in parser.addChunk(chunk)) {
-        for (final parsed
-            in _parseEvent(event, usageCollector, toolAssembler)) {
+        for (final parsed in _parseEvent(
+          event,
+          usageCollector,
+          toolAssembler,
+        )) {
           if (parsed is _DoneSignal) {
             // Tool-call fragments are complete once the stream signals a
             // finish reason — emit the assembled calls before terminating.
             for (final call in toolAssembler.flush()) {
-          yield call;
-        }
+              yield call;
+            }
             yield AiDone(
               finishReason: parsed.finishReason ?? 'stop',
               usage: usageCollector.snapshot(),
@@ -115,8 +119,8 @@ final class OpenAiStreamClient implements AiStreamClient {
 
     // Stream ended without [DONE] — still terminate cleanly.
     for (final call in toolAssembler.flush()) {
-          yield call;
-        }
+      yield call;
+    }
     yield AiDone(finishReason: 'stop', usage: usageCollector.snapshot());
   }
 
@@ -157,7 +161,8 @@ final class OpenAiStreamClient implements AiStreamClient {
     for (final choice in choices) {
       if (choice is! Map<String, Object?>) continue;
 
-      final delta = choice['delta'] as Map<String, Object?>? ??
+      final delta =
+          choice['delta'] as Map<String, Object?>? ??
           choice['message'] as Map<String, Object?>?;
       if (delta != null) {
         final content = delta['content'];
@@ -169,12 +174,14 @@ final class OpenAiStreamClient implements AiStreamClient {
           for (final call in toolCalls) {
             if (call is! Map<String, Object?>) continue;
             final function = call['function'] as Map<String, Object?>? ?? {};
-            toolAssembler.addFragment(_ToolCallFragment(
-              index: (call['index'] as num?)?.toInt() ?? 0,
-              id: call['id'] as String?,
-              name: function['name'] as String?,
-              argumentsChunk: (function['arguments'] as String?) ?? '',
-            ));
+            toolAssembler.addFragment(
+              _ToolCallFragment(
+                index: (call['index'] as num?)?.toInt() ?? 0,
+                id: call['id'] as String?,
+                name: function['name'] as String?,
+                argumentsChunk: (function['arguments'] as String?) ?? '',
+              ),
+            );
           }
         }
       }
@@ -193,11 +200,12 @@ final class OpenAiStreamClient implements AiStreamClient {
   }
 
   static AiUsage _usageFromJson(Map<String, Object?> json) => AiUsage(
-        inputTokens: (json['prompt_tokens'] as num?)?.toInt() ?? 0,
-        outputTokens: (json['completion_tokens'] as num?)?.toInt() ??
-            (json['output_tokens'] as num?)?.toInt() ??
-            0,
-      );
+    inputTokens: (json['prompt_tokens'] as num?)?.toInt() ?? 0,
+    outputTokens:
+        (json['completion_tokens'] as num?)?.toInt() ??
+        (json['output_tokens'] as num?)?.toInt() ??
+        0,
+  );
 }
 
 /// One streamed piece of a tool call (OpenAI `delta.tool_calls[i]`).
@@ -224,9 +232,10 @@ final class _ToolCallAssembler {
   final Map<int, _ToolBuffer> _buffers = {};
 
   void addFragment(_ToolCallFragment fragment) {
-    final buffer =
-        _buffers.putIfAbsent(fragment.index, () => _ToolBuffer());
-    if (fragment.id != null && fragment.id!.isNotEmpty) buffer.id = fragment.id!;
+    final buffer = _buffers.putIfAbsent(fragment.index, () => _ToolBuffer());
+    if (fragment.id != null && fragment.id!.isNotEmpty) {
+      buffer.id = fragment.id!;
+    }
     if (fragment.name != null && fragment.name!.isNotEmpty) {
       buffer.name = fragment.name!;
     }
