@@ -44,15 +44,29 @@ jobs:
       # declarations understates the real total, and the landing page should not
       # claim a figure it cannot reproduce. A failing suite also stops the docs
       # from shipping a page that says "tests passing".
-      - name: Run tests and capture the count
+      #
+      # Split into two steps on purpose. Running the tests must fail the job when
+      # they are red; reading the count out of their output must not, or a
+      # cosmetic change in the reporter would block a docs deploy. pipefail keeps
+      # the first honest while `|| true` keeps the second harmless.
+      - name: Run tests
         run: |
           set -o pipefail
-          output=$(flutter test 2>&1)
-          echo "$output" | tail -3
-          count=$(echo "$output" | grep -oE '\+[0-9]+' | tail -1 | tr -d '+')
+          flutter test 2>&1 | tee /tmp/test-output.txt
+
+      - name: Read the test count for the landing page
+        run: |
+          # Take the largest count in the file rather than the last line: the
+          # final line is usually the summary, but a tearDownAll line sometimes
+          # trails it, and a test name can contain a '+' that would fool a
+          # line-oriented parse.
+          count=$(grep -oE '\+[0-9]+' /tmp/test-output.txt | tr -d '+' | sort -n | tail -1 || true)
           if [ -z "$count" ]; then
-            echo "Could not read a test count; the page will report a lower bound."
-            count=""
+            echo "No test count found in the output; the page will report a lower bound."
+            echo "Last lines of test output:"
+            tail -20 /tmp/test-output.txt
+          else
+            echo "Tests that ran: $count"
           fi
           echo "TESTS=$count" >> "$GITHUB_ENV"
 
