@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!--
+  Source for site/social-preview.png, the 1280x640 card used for link previews
+  and the GitHub repository social image.
+
+  Regenerate with headless Chrome:
+
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+      --headless=new --disable-gpu --hide-scrollbars \
+      --force-device-scale-factor=1 --window-size=1280,640 \
+      --screenshot=site/social-preview.png \
+      "file://$PWD/site/social-card.html"
+
+  Every claim on the card is structural on purpose. An earlier version said
+  "769 tests passing", which would have gone stale in a file nobody thinks to
+  update; the numbers that change live on the landing page, which is generated.
+-->
+<html><head><meta charset="utf-8"><style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1280px; height:640px; overflow:hidden;
+    background:#0d1417;
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color:#e9f1f4;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:0 88px; position:relative;
+  }
+  .glow {
+    position:absolute; width:900px; height:900px; right:-320px; top:-380px;
+    background:radial-gradient(circle, rgba(124,203,240,0.22), transparent 62%);
+    border-radius:50%;
+  }
+  .mark { display:flex; align-items:center; gap:16px; margin-bottom:36px; }
+  .dot { width:44px; height:44px; border-radius:13px;
+         background:linear-gradient(135deg,#7ccbf0,#7dd3a0); }
+  .mark span { font-size:26px; font-weight:700; letter-spacing:-0.01em; }
+  h1 { font-size:74px; line-height:1.06; letter-spacing:-0.032em; font-weight:800; }
+  h1 em { font-style:normal; color:#7ccbf0; }
+  .sub { margin-top:26px; font-size:26px; color:#a2b4bc; max-width:900px; line-height:1.4; }
+  .row { display:flex; gap:44px; margin-top:46px; }
+  .stat b { display:block; font-size:34px; font-weight:800; letter-spacing:-0.02em; }
+  .stat span { font-size:17px; color:#8fa2ab; }
+  .url { position:absolute; right:88px; bottom:56px; font-size:21px; color:#7ccbf0; font-weight:600; }
+</style></head><body>
+  <div class="glow"></div>
+  <div class="mark"><div class="dot"></div><span>Prism</span></div>
+  <h1>34 adaptive Flutter<br>components. <em>One design system.</em></h1>
+  <p class="sub">One dependency. Change a token once and the whole app follows.</p>
+  <div class="row">
+    <div class="stat"><b>34</b><span>components</span></div>
+    <div class="stat"><b>WCAG AA</b><span>contrast verified</span></div>
+    <div class="stat"><b>Adaptive</b><span>phone to desktop</span></div>
+    <div class="stat"><b>MIT</b><span>licensed</span></div>
+  </div>
+  <div class="url">pub.dev/packages/prism_kit</div>
+</body></html>
