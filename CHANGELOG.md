@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.4.2
+
+No library changes. This release corrects one thing the 1.4.1 release claimed but
+did not contain.
+
+### Fixed
+- **The documentation link was never actually added.** The 1.4.1 commit message
+  said it was, and the version was published from that commit, but the field is
+  absent from pubspec.yaml and pub.dev therefore shows no Documentation link. It
+  is present now and verified, pointing at the landing page with the live gallery
+  and API reference behind it.
+
+A published version cannot be edited, so correcting it needs a release.
+
 ## 1.4.1
 
 No library changes. This release updates the package metadata so the pub.dev
