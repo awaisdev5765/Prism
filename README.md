@@ -94,27 +94,9 @@ import 'package:prism_kit/prism.dart';
 | 49 | **Carousel** | Horizontally scrolling slides with a dot indicator |
 | 50 | **DividerWithLabel** | Divider with a centred label, for grouping content |
 | 51 | **Lottie** | Lottie metadata reader: dimensions, duration, frame count, preload cache |
-| 35 | **Slider** | Styled slider with semantics label and value display |
-| 36 | **Switch** | Switch with title, subtitle, icon and semantics |
-| 37 | **Checkbox** | Checkbox with title, subtitle and tristate support |
-| 38 | **Dropdown** | Dropdown field with label, icon, validation and semantics |
-| 39 | **RefreshIndicator** | Pull-to-refresh with a configurable colour |
-| 40 | **FabMenu** | Expanding FAB menu with staggered labels |
-| 41 | **LoadingOverlay** | Translucent scrim with spinner and message |
-| 42 | **EmptyState** | Icon, title, subtitle and action button |
-| 43 | **LinearProgress** | Progress bar with label and percentage display |
-| 44 | **CircularProgress** | Circular progress with a value in the middle |
-| 45 | **Card** | Card with optional tap, long-press, border and tokens |
-| 46 | **Tile** | List tile with leading, title, subtitle, badge and trailing |
-| 47 | **Divider** | Hairline divider with optional centred label |
-| 48 | **ZoomableImage** | Pinch-to-zoom image with placeholder and error fallback |
-| 49 | **Carousel** | Horizontally scrolling slides with a dot indicator |
+
 ### Design system
 
-| | |
-|---|---|
-| **PrismTokens** | Spacing scale, corner radii, motion durations and breakpoints, installable via `ThemeData.extensions` |
-| **PrismColors** | Semantic roles (success / warning / error / info) plus raised and sunken surfaces, derived from any `ColorScheme` |
 
 ---
 
