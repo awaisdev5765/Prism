@@ -53,6 +53,35 @@ constructor.
 `test/theme_design_system_test.dart` installs deliberately unusual tokens and
 asserts components pick them up — a hard-coded value fails there.
 
+### 3. Snapshot the styles you resolved
+
+`test/style_snapshot_test.dart` records what each component resolved — radii,
+paddings, colours, durations — into `test/snapshots/*.json`, and fails when any of
+it changes.
+
+Add a snapshot when you add a component:
+
+```dart
+testWidgets('my component', (tester) async {
+  await snapshot(tester, 'my_component', const MyComponent());
+});
+```
+
+To update after an intended change:
+
+```bash
+PRISM_UPDATE_SNAPSHOTS=1 flutter test test/style_snapshot_test.dart
+```
+
+**Read the diff before committing it.** A snapshot updated without being read is a
+snapshot that has stopped testing anything.
+
+These are deliberately not image goldens. Pixel comparison is platform-sensitive,
+so a golden generated on macOS fails on CI's Linux runner, and the usual fixes —
+tagging them, or tolerating a pixel difference — weaken the check until it stops
+catching the thing you wanted. Structural snapshots are platform-independent and
+diff as JSON, which means a reviewer can actually see what moved.
+
 ### 2. Adapt to the window
 
 Components should look right from a 320 px phone to a 1600 px desktop. Where a

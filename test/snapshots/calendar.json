@@ -1,0 +1,84 @@
+{
+  "box": [
+    {
+      "w": 24.0,
+      "h": 24.0
+    },
+    {
+      "w": null,
+      "h": 4.0
+    },
+    {
+      "w": null,
+      "h": 44.0
+    },
+    {
+      "w": null,
+      "h": 8.0
+    }
+  ],
+  "fill": [
+    "#00000000",
+    "#ff1b6585"
+  ],
+  "icon": [
+    {
+      "size": null,
+      "color": "none"
+    }
+  ],
+  "padding": [
+    {
+      "l": 0.0,
+      "t": 0.0,
+      "r": 0.0,
+      "b": 0.0
+    },
+    {
+      "l": 1.0,
+      "t": 1.0,
+      "r": 1.0,
+      "b": 1.0
+    },
+    {
+      "l": 8.0,
+      "t": 8.0,
+      "r": 8.0,
+      "b": 8.0
+    }
+  ],
+  "radius": [
+    {
+      "tl": 12.0,
+      "tr": 12.0,
+      "bl": 12.0,
+      "br": 12.0
+    }
+  ],
+  "text": [
+    {
+      "size": 11.0,
+      "weight": 500,
+      "color": "#ff41484d",
+      "height": 1.45
+    },
+    {
+      "size": 14.0,
+      "weight": 700,
+      "color": "#ff171c1f",
+      "height": 1.43
+    },
+    {
+      "size": null,
+      "weight": 400,
+      "color": "#ff171c1f",
+      "height": null
+    },
+    {
+      "size": null,
+      "weight": 700,
+      "color": "#ff171c1f",
+      "height": null
+    }
+  ]
+}

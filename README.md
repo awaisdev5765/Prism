@@ -757,6 +757,9 @@ see `test/support/prism_test_helpers.dart` and copy them.
   them — a hard-coded radius, duration or colour fails CI
 - **A 184-case component matrix** pumps every component at 320 px and 1600 px, in
   light and dark, in LTR and RTL, failing on any exception or overflow
+- **Style snapshots** record the radii, paddings, colours and durations each
+  component resolved, so a token moving or a component hard-coding a value fails
+  with a readable diff rather than shipping silently
 - **The semantic palette is verified against WCAG AA** across ten brand seeds in
   both brightnesses, and the four roles are asserted to stay distinguishable
 - **Accessibility is tested, not assumed**: live regions for state the user did

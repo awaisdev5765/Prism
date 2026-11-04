@@ -1,0 +1,72 @@
+{
+  "border": [
+    {
+      "width": 1.0,
+      "color": "#ffc0c7cd"
+    }
+  ],
+  "box": [
+    {
+      "w": 0.0,
+      "h": 0.0
+    },
+    {
+      "w": null,
+      "h": 8.0
+    }
+  ],
+  "fill": [
+    "#ff1b6585",
+    "#ffc0c7cd",
+    "#ffdfe3e7"
+  ],
+  "motion": [
+    240
+  ],
+  "padding": [
+    {
+      "l": 0.0,
+      "t": 0.0,
+      "r": 0.0,
+      "b": 0.0
+    },
+    {
+      "l": 1.0,
+      "t": 1.0,
+      "r": 1.0,
+      "b": 1.0
+    },
+    {
+      "l": 4.0,
+      "t": 0.0,
+      "r": 4.0,
+      "b": 0.0
+    }
+  ],
+  "text": [
+    {
+      "size": 12.0,
+      "weight": 500,
+      "color": "#ff41484d",
+      "height": 1.33
+    },
+    {
+      "size": 12.0,
+      "weight": 700,
+      "color": "#ff171c1f",
+      "height": 1.33
+    },
+    {
+      "size": 12.8,
+      "weight": 700,
+      "color": "#ff41484d",
+      "height": 1.0
+    },
+    {
+      "size": 12.8,
+      "weight": 700,
+      "color": "#ffffffff",
+      "height": 1.0
+    }
+  ]
+}
