@@ -814,7 +814,7 @@ cd example && flutter build web
 
 ## 🤝 Contributing
 
-Issues and PRs welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md) — the two
+Issues and PRs welcome. Participation is covered by the [Code of Conduct](CODE_OF_CONDUCT.md). Start with [CONTRIBUTING.md](CONTRIBUTING.md) — the two
 rules that matter are **read the design system, never hard-code** and **adapt to
 the window**. Release and deprecation policy is in
 [docs/VERSIONING.md](docs/VERSIONING.md).

@@ -16,10 +16,17 @@ cd example && flutter pub get && cd ..
 Run the checks the CI runs:
 
 ```bash
-dart format lib test          # formatting
-flutter analyze               # analysis (strict)
-flutter test                  # 400 tests
+dart format lib test                  # formatting
+flutter analyze                       # analysis (strict)
+flutter test --coverage               # tests, with an lcov report
+dart run tool/check_coverage.dart     # coverage against the threshold
 ```
+
+Two notes on those commands. Use `flutter analyze`, not `dart analyze`: the latter
+misreports on a Flutter package, emitting a cascade of errors from the SDK itself
+that reads as though the package is broken. And coverage has a floor of 88% in CI,
+a little below the current figure so ordinary churn does not fail the build while a
+real regression does.
 
 To try a change by hand, run the gallery — it has an interactive demo for every
 component:

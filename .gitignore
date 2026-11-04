@@ -12,3 +12,4 @@ example/pubspec.lock
 
 # macOS
 .DS_Store
+coverage/

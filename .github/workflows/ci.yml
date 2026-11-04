@@ -36,8 +36,15 @@ jobs:
       - name: Analyze (strict)
         run: flutter analyze
 
-      - name: Run tests
-        run: flutter test --reporter expanded
+      - name: Run tests with coverage
+        run: flutter test --coverage --reporter expanded
+
+      # The threshold sits a little below the current figure on purpose: enough
+      # headroom that ordinary churn does not fail the build, tight enough that a
+      # real regression does. The script prints the weakest files either way, so
+      # the number comes with somewhere to look.
+      - name: Check coverage
+        run: dart run tool/check_coverage.dart coverage/lcov.info --min 88
 
   example:
     name: Example builds
