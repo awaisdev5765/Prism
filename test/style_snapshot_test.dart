@@ -15,11 +15,11 @@ import 'support/style_snapshot.dart';
 void main() {
   /// Wraps a component so the snapshot covers it and not Flutter's chrome.
   Widget wrap(Widget child) => MaterialApp(
-        theme: ThemeData(colorSchemeSeed: const Color(0xFF39A9DB)),
-        home: Scaffold(
-          body: KeyedSubtree(key: StyleSnapshot.rootKey, child: child),
-        ),
-      );
+    theme: ThemeData(colorSchemeSeed: const Color(0xFF39A9DB)),
+    home: Scaffold(
+      body: KeyedSubtree(key: StyleSnapshot.rootKey, child: child),
+    ),
+  );
 
   Future<void> snapshot(
     WidgetTester tester,
@@ -59,7 +59,10 @@ void main() {
         PrismTabs(
           index: 0,
           onChanged: (_) {},
-          tabs: const [PrismTab(label: 'One'), PrismTab(label: 'Two')],
+          tabs: const [
+            PrismTab(label: 'One'),
+            PrismTab(label: 'Two'),
+          ],
           children: const [Text('a'), Text('b')],
         ),
       );
@@ -70,7 +73,10 @@ void main() {
         tester,
         'stepper',
         const PrismStepper(
-          steps: [PrismStep(title: 'One'), PrismStep(title: 'Two')],
+          steps: [
+            PrismStep(title: 'One'),
+            PrismStep(title: 'Two'),
+          ],
           currentIndex: 0,
         ),
       );

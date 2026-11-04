@@ -130,10 +130,7 @@ class StyleSnapshot {
     // the component resolved rather than the order it built them in.
     final stable = <String, Object?>{};
     for (final key in entries.keys.toList()..sort()) {
-      final values = entries[key]!
-          .map((v) => jsonEncode(v))
-          .toSet()
-          .toList()
+      final values = entries[key]!.map((v) => jsonEncode(v)).toSet().toList()
         ..sort();
       stable[key] = values.map(jsonDecode).toList();
     }
@@ -190,25 +187,27 @@ class StyleSnapshot {
       } else if (now == null) {
         changes.add('- $key: ${jsonEncode(was)}');
       } else {
-        changes.add('~ $key:\n    was ${jsonEncode(was)}\n    now ${jsonEncode(now)}');
+        changes.add(
+          '~ $key:\n    was ${jsonEncode(was)}\n    now ${jsonEncode(now)}',
+        );
       }
     }
     return changes;
   }
 
   static Map<String, Object?> _radius(BorderRadius radius) => {
-        'tl': radius.topLeft.x,
-        'tr': radius.topRight.x,
-        'bl': radius.bottomLeft.x,
-        'br': radius.bottomRight.x,
-      };
+    'tl': radius.topLeft.x,
+    'tr': radius.topRight.x,
+    'bl': radius.bottomLeft.x,
+    'br': radius.bottomRight.x,
+  };
 
   static Map<String, Object?> _insets(EdgeInsetsGeometry insets) => {
-        'l': insets.resolve(TextDirection.ltr).left,
-        't': insets.resolve(TextDirection.ltr).top,
-        'r': insets.resolve(TextDirection.ltr).right,
-        'b': insets.resolve(TextDirection.ltr).bottom,
-      };
+    'l': insets.resolve(TextDirection.ltr).left,
+    't': insets.resolve(TextDirection.ltr).top,
+    'r': insets.resolve(TextDirection.ltr).right,
+    'b': insets.resolve(TextDirection.ltr).bottom,
+  };
 
   /// Colours are recorded as ARGB integers, which diff as a readable hex value
   /// and cannot be confused by `Color`'s float channels.
@@ -218,9 +217,9 @@ class StyleSnapshot {
   }
 
   static Map<String, Object?> _textStyle(TextStyle style) => {
-        'size': style.fontSize,
-        'weight': style.fontWeight?.value,
-        'color': _colour(style.color),
-        'height': style.height,
-      };
+    'size': style.fontSize,
+    'weight': style.fontWeight?.value,
+    'color': _colour(style.color),
+    'height': style.height,
+  };
 }
