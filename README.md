@@ -77,6 +77,23 @@ import 'package:prism_kit/prism.dart';
 | 32 | **Accordion** | Collapsible sections with single-expansion mode |
 | 33 | **Rating** | Star rating with half values and full slider semantics |
 | 34 | **Badge** | Count or status dot, collapsing to `99+` and hiding at zero |
+| 35 | **Slider** | Styled slider with semantics label, value display and optional divisions |
+| 36 | **Switch** | Switch tile with title, subtitle, icon and Prism colour scheme |
+| 37 | **Checkbox** | Checkbox tile with title, subtitle and tristate support |
+| 38 | **Dropdown** | Dropdown field with label, icon, validation and semantics |
+| 39 | **RefreshIndicator** | Pull-to-refresh with a configurable colour and semantics label |
+| 40 | **FabMenu** | Expanding FAB menu with staggered labels |
+| 41 | **LoadingOverlay** | Translucent scrim with a spinner and message, blocks interaction |
+| 42 | **EmptyState** | Icon, title, subtitle and action button, in two sizes |
+| 43 | **LinearProgress** | Determinate or indeterminate bar with label and percentage |
+| 44 | **CircularProgress** | Circular progress with a value in the middle |
+| 45 | **Card** | Card with optional tap, long-press, border, radius from tokens |
+| 46 | **Tile** | List tile with leading, title, subtitle, badge and trailing widget |
+| 47 | **Divider** | Hairline divider with optional centred label |
+| 48 | **ZoomableImage** | Pinch-to-zoom image with placeholder and error fallback |
+| 49 | **Carousel** | Horizontally scrolling slides with a dot indicator |
+| 50 | **DividerWithLabel** | Divider with a centred label, for grouping content |
+| 51 | **Lottie** | Lottie metadata reader: dimensions, duration, frame count, preload cache |
 | 35 | **Slider** | Styled slider with semantics label and value display |
 | 36 | **Switch** | Switch with title, subtitle, icon and semantics |
 | 37 | **Checkbox** | Checkbox with title, subtitle and tristate support |
@@ -92,8 +109,6 @@ import 'package:prism_kit/prism.dart';
 | 47 | **Divider** | Hairline divider with optional centred label |
 | 48 | **ZoomableImage** | Pinch-to-zoom image with placeholder and error fallback |
 | 49 | **Carousel** | Horizontally scrolling slides with a dot indicator |
-| 50 | **Lottie** | Lottie metadata reader: dimensions, duration, frame count |
-
 ### Design system
 
 | | |
