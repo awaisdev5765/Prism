@@ -58,7 +58,11 @@ GROUPS: list[tuple[str, str, list[str]]] = [
         "Rendering, appearance, and the pieces that talk to the outside.",
         [
             "Markdown", "CodeView", "Changelog", "Palette", "Avatar",
-            "Image", "Updater", "PrismAi",
+            "Image", "Updater", "PrismAi", "Lottie", "DividerWithLabel",
+            "Slider", "Switch", "Checkbox", "Dropdown", "RefreshIndicator",
+            "FabMenu", "LoadingOverlay", "EmptyState", "LinearProgress",
+            "CircularProgress", "Card", "Tile", "Divider", "ZoomableImage",
+            "Carousel",
         ],
     ),
 ]
