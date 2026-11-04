@@ -174,9 +174,9 @@ def render_radii(tokens: dict[str, str]) -> str:
 
 def build(measured_tests: int | None = None) -> str:
     components = read_components()
-    if len(components) != 34:
+    if len(components) != 51:
         print(
-            f"warning: expected 34 components in README.md, found {len(components)}",
+            f"warning: expected 51 components in README.md, found {len(components)}",
             file=sys.stderr,
         )
     tokens = read_tokens()
