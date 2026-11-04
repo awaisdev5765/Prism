@@ -62,8 +62,8 @@ Map<String, Object?> buildTokenExport() {
   return {
     r'$comment':
         'Generated. Do not edit by hand; token_export_test.dart fails if this '
-            'drifts from PrismTokens. Regenerate with: '
-            'PRISM_UPDATE_TOKENS=1 flutter test test/token_export_test.dart',
+        'drifts from PrismTokens. Regenerate with: '
+        'PRISM_UPDATE_TOKENS=1 flutter test test/token_export_test.dart',
     'spacing': {
       'spaceXs': tidy(tokens.spaceXs),
       'spaceSm': tidy(tokens.spaceSm),
