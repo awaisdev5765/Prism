@@ -1,9 +1,9 @@
 <p align="center">
-  <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-34%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
+  <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-50%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
 </p>
 
 <h1 align="center">🔷 Prism</h1>
-<h3 align="center">One dependency. 34 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
+<h3 align="center">One dependency. 50 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
 
 <p align="center">
   <img src="https://img.shields.io/badge/pub.dev-prism__kit-0175C2?logo=dart&logoColor=white" alt="pub.dev">
@@ -77,6 +77,22 @@ import 'package:prism_kit/prism.dart';
 | 32 | **Accordion** | Collapsible sections with single-expansion mode |
 | 33 | **Rating** | Star rating with half values and full slider semantics |
 | 34 | **Badge** | Count or status dot, collapsing to `99+` and hiding at zero |
+| 35 | **Slider** | Styled slider with semantics label and value display |
+| 36 | **Switch** | Switch with title, subtitle, icon and semantics |
+| 37 | **Checkbox** | Checkbox with title, subtitle and tristate support |
+| 38 | **Dropdown** | Dropdown field with label, icon, validation and semantics |
+| 39 | **RefreshIndicator** | Pull-to-refresh with a configurable colour |
+| 40 | **FabMenu** | Expanding FAB menu with staggered labels |
+| 41 | **LoadingOverlay** | Translucent scrim with spinner and message |
+| 42 | **EmptyState** | Icon, title, subtitle and action button |
+| 43 | **LinearProgress** | Progress bar with label and percentage display |
+| 44 | **CircularProgress** | Circular progress with a value in the middle |
+| 45 | **Card** | Card with optional tap, long-press, border and tokens |
+| 46 | **Tile** | List tile with leading, title, subtitle, badge and trailing |
+| 47 | **Divider** | Hairline divider with optional centred label |
+| 48 | **ZoomableImage** | Pinch-to-zoom image with placeholder and error fallback |
+| 49 | **Carousel** | Horizontally scrolling slides with a dot indicator |
+| 50 | **Lottie** | Lottie metadata reader: dimensions, duration, frame count |
 
 ### Design system
 
@@ -534,7 +550,7 @@ Container(color: context.prismColors.surfaceRaised)
 Container(color: context.prismColors.forRole(PrismSemantic.success).background)
 ```
 
-**Every one of the 34 components reads these tokens** — toasts, banners, forms,
+**Every one of the 50 components reads these tokens** — toasts, banners, forms,
 data tables, the command palette, everything. Change `spaceMd` once and the whole
 app changes rhythm together; switch `brightness` and every semantic colour
 follows.

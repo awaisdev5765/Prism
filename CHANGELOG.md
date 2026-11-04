@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.5.0
+
+### Added
+- **Nine components** covering the controls, states and media every app needs:
+  - `PrismSlider`, `PrismSwitch`, `PrismCheckbox` — controls with Prism tokens and
+    semantics labels
+  - `PrismDropdown` — dropdown field with a label, icon, validation and semantics
+  - `PrismRefreshIndicator` — pull-to-refresh with a configurable colour
+  - `PrismFabMenu` — expanding floating action button menu
+  - `PrismLoadingOverlay` — full-screen scrim with a spinner and message
+  - `PrismEmptyState` — friendly empty state with icon, title, subtitle and action
+  - `PrismLinearProgress`, `PrismCircularProgress` — progress bars with labels
+  - `PrismCard`, `PrismTile`, `PrismDivider` — card and tile with tokens
+  - `PrismZoomableImage` — pinch-to-zoom with placeholder and error handling
+  - `PrismCarousel` — horizontally scrolling slides with a dot indicator
+  - `PrismDividerWithLabel` — divider with a centred label
+  - `PrismLottie` — Lottie metadata reader (dimensions, frame rate, duration) and
+    a preload cache. Prism does not include a Lottie renderer; use `lottie` or
+    `flutter_lottie` for that.
+
 ## 1.4.2
 
 No library changes. This release corrects one thing the 1.4.1 release claimed but

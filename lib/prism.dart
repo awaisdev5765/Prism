@@ -97,3 +97,21 @@ export 'src/segmented_control/segmented_control.dart'
     show PrismSegment, PrismSegmentedControl;
 export 'src/tabs/tabs.dart' show PrismTab, PrismTabs;
 export 'src/debug/debug_overlay.dart' show PrismDebugOverlay;
+
+// ── Added in 1.5.0 ─────────────────────────────────────────────────────────
+export 'src/refresh/refresh.dart'
+    show PrismFabAction, PrismFabMenu, PrismRefreshIndicator;
+export 'src/controls/controls.dart'
+    show
+        PrismCheckbox,
+        PrismDropdown,
+        PrismDropdownItem,
+        PrismSlider,
+        PrismSwitch;
+export 'src/states/states.dart' show PrismEmptyState, PrismLoadingOverlay;
+export 'src/lottie/lottie.dart' show PrismLottie, PrismLottieCache;
+export 'src/cards/cards.dart' show PrismCard, PrismDivider, PrismTile;
+export 'src/progress/progress.dart'
+    show PrismCircularProgress, PrismLinearProgress;
+export 'src/media/media.dart'
+    show PrismCarousel, PrismDividerWithLabel, PrismZoomableImage;
