@@ -31,3 +31,10 @@ export './sse_parser.dart';
 
 export 'context_budget.dart' show PrismContextBudget;
 export 'structured_output.dart' show PrismStructuredOutput;
+export 'memory.dart' show PrismMessageMemory;
+export 'prompt_chain.dart' show PrismChainStep, PrismPromptChain;
+export 'rate_limiter.dart' show PrismRateLimiter;
+export 'response_cache.dart' show PrismResponseCache;
+export 'streaming_json.dart' show StreamingJsonParser;
+export 'guard.dart' show PrismGuard;
+export 'agent_runner.dart' show PrismAgentRunner;

@@ -30,6 +30,7 @@ dependencies:
   shared_preferences: ^2.3.0
   url_launcher: ^6.3.0
   material_color_utilities: ^0.13.0
+  crypto: ^3.0.8
 
 dev_dependencies:
   flutter_test:
