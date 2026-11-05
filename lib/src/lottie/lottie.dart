@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// Parses a Lottie JSON file and reports the metadata needed to size and play

@@ -1,15 +1,15 @@
 <p align="center">
-  <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-50%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
+  <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-51%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
 </p>
 
 <h1 align="center">🔷 Prism</h1>
-<h3 align="center">One dependency. 50 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
+<h3 align="center">One dependency. 51 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
 
 <p align="center">
   <img src="https://img.shields.io/badge/pub.dev-prism__kit-0175C2?logo=dart&logoColor=white" alt="pub.dev">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT">
   <img src="https://img.shields.io/badge/Flutter-3.27%2B-02569B?logo=flutter&logoColor=white" alt="Flutter">
-  <img src="https://img.shields.io/badge/tests-766%20passing-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-844%20passing-brightgreen" alt="tests">
 </p>
 
 ---
@@ -26,7 +26,7 @@
 
 ```yaml
 dependencies:
-  prism_kit: ^1.0.0
+  prism_kit: ^1.5.0
 ```
 
 ```bash
@@ -342,6 +342,55 @@ final prompt = PrismStructuredOutput.instructJson(
 final messages = PrismContextBudget(maxTokens: 8000).fit(history);
 ```
 
+### AI-era toolkit — rate limits, guardrails, memory and more
+
+Seven production helpers for building LLM-powered apps, all composable with `PrismAi`:
+
+```dart
+// 1. Rate limiting — protect provider quotas from bursty callers
+final limiter = PrismRateLimiter(maxPerSecond: 4);
+await limiter.acquire();        // waits when the window is full
+await sendRequest();
+
+// 2. Guardrails — validate model output before it reaches the user
+final guard = PrismGuard(
+  blockedPatterns: [RegExp(r'\b(sk-)[A-Za-z0-9]{20,}')], // e.g. leaked API keys
+  maxResponseLength: 4000,
+);
+final error = guard.check(reply);
+if (error != null) reply = 'Sorry, that response was blocked.';
+
+// 3. Streaming JSON — parse fields from an incomplete response
+final parser = StreamingJsonParser();
+parser.consume(delta);                       // feed chunks as they arrive
+final fields = parser.fields;                // best-effort top-level strings
+final data = parser.complete();              // Map<String, Object?>? — null until valid JSON
+
+// 4. Message memory — a bounded, summarising chat history
+final memory = PrismMessageMemory(maxMessages: 50);
+memory.add(AiChatMessage.user('Hello!'));
+final history = memory.messages;             // oldest trimmed automatically
+
+// 5. Prompt chains — multi-step prompts with {placeholder} interpolation
+final chain = PrismPromptChain(steps: [
+  PrismChainStep('Summarise: {text}'),
+  PrismChainStep('Classify the summary: {summary}'),
+]);
+final prompts = chain.run({'text': article});
+
+// 6. Response caching — dedupe identical calls with a SHA-256 key
+final cache = PrismResponseCache();
+final key = PrismResponseCache.keyFor(prompt, model: 'gpt-4o-mini');
+final hit = cache.get(key);
+
+// 7. Agent runner — stream a tool-calling loop through guard + limiter
+final runner = PrismAgentRunner(client: client, guard: guard, limiter: limiter);
+```
+
+All seven are pure Dart, so they run on every platform and in tests without a
+widget tree. They compose freely — the agent runner reads the guard and the
+limiter; the prompt chain feeds the memory; the cache wraps any of them.
+
 ### Updater — in-app updates
 
 ```dart
@@ -547,7 +596,7 @@ Container(color: context.prismColors.surfaceRaised)
 Container(color: context.prismColors.forRole(PrismSemantic.success).background)
 ```
 
-**Every one of the 50 components reads these tokens** — toasts, banners, forms,
+**Every one of the 51 components reads these tokens** — toasts, banners, forms,
 data tables, the command palette, everything. Change `spaceMd` once and the whole
 app changes rhythm together; switch `brightness` and every semantic colour
 follows.
@@ -702,7 +751,7 @@ cycle. Disabled by default, so `enabled: kDebugMode` makes it release-safe.
 ## 🧪 Testing your own screens
 
 `package:prism_kit/testing.dart` gives your tests the same environment Prism's
-own 766 tests run in:
+own 844 tests run in:
 
 ```dart
 import 'package:prism_kit/testing.dart';
@@ -764,7 +813,7 @@ see `test/support/prism_test_helpers.dart` and copy them.
 
 ## 🧪 Quality
 
-- **766 tests** (unit + widget) across all components
+- **844 tests** (unit + widget) across all components
 - **Every component is covered by design-system tests** that install
   deliberately unusual `PrismTokens` and assert the component actually reads
   them — a hard-coded radius, duration or colour fails CI
@@ -790,7 +839,7 @@ If you previously used an individual `prism_*` package, swap the dependency and 
 
 ```diff
 - prism_toast: ^0.1.0
-+ prism_kit: ^1.0.0
++ prism_kit: ^1.5.0
 
 - import 'package:prism_toast/prism_toast.dart';
 + import 'package:prism_kit/prism.dart';

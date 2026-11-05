@@ -11,9 +11,7 @@ class PrismRateLimiter {
   Future<void> acquire() async {
     while (true) {
       final now = DateTime.now();
-      _timestamps.removeWhere(
-        (t) => now.difference(t).inMilliseconds >= 1000,
-      );
+      _timestamps.removeWhere((t) => now.difference(t).inMilliseconds >= 1000);
       if (_timestamps.length < maxPerSecond + burst - 1) break;
       final oldest = _timestamps.first;
       final waitMs = 1000 - now.difference(oldest).inMilliseconds;

@@ -145,7 +145,7 @@ class PrismSwitch extends StatelessWidget {
 
     return SwitchListTile(
       value: value,
-      onChanged: enabled ? (v) => onChanged!(v ?? false) : null,
+      onChanged: enabled ? onChanged : null,
       activeColor: scheme.primary,
       title: Text(
         title,

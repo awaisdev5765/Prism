@@ -1,7 +1,6 @@
 import 'ai_client.dart';
 import 'ai_events.dart';
 import 'chat_message.dart';
-import 'structured_output.dart';
 
 /// A single step in a [PrismPromptChain].
 ///
@@ -10,7 +9,7 @@ import 'structured_output.dart';
 ///
 /// [parse] extracts a typed value from the model's response, so the next step
 /// can reference it by the step's [outputKey].
-class PrismChainStep<T> {
+class PrismChainStep<T extends Object> {
   /// Creates a chain step.
   const PrismChainStep({
     required this.prompt,

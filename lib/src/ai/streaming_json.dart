@@ -11,7 +11,6 @@ class StreamingJsonParser {
   Map<String, String> get fields {
     final s = _buffer.toString();
     final result = <String, String>{};
-    var depth = 0;
     var inStr = false;
     var esc = false;
     var key = '';
@@ -23,13 +22,27 @@ class StreamingJsonParser {
 
     for (var i = 0; i < s.length; i++) {
       final c = s[i];
-      if (esc) { esc = false; if (readingKey) key += c; if (readingValue) value += c; continue; }
+      if (esc) {
+        esc = false;
+        if (readingKey) key += c;
+        if (readingValue) value += c;
+        continue;
+      }
       if (inStr) {
-        if (c == r'\') { esc = true; continue; }
+        if (c == r'\') {
+          esc = true;
+          continue;
+        }
         if (c == '"') {
           inStr = false;
-          if (readingKey) { readingKey = false; keyDone = true; }
-          else if (readingValue) { readingValue = false; valueStarted = true; result[key] = value; }
+          if (readingKey) {
+            readingKey = false;
+            keyDone = true;
+          } else if (readingValue) {
+            readingValue = false;
+            valueStarted = true;
+            result[key] = value;
+          }
           continue;
         }
         if (readingKey) key += c;
@@ -39,17 +52,28 @@ class StreamingJsonParser {
       // Not in string
       if (c == '"') {
         inStr = true;
-        if (!keyDone && !readingValue) { readingKey = true; key = ''; }
-        else if (keyDone && !readingValue && !valueStarted) { readingValue = true; value = ''; }
+        if (!keyDone && !readingValue) {
+          readingKey = true;
+          key = '';
+        } else if (keyDone && !readingValue && !valueStarted) {
+          readingValue = true;
+          value = '';
+        }
         continue;
       }
-      if (c == ':') { continue; }
+      if (c == ':') {
+        continue;
+      }
       if (c == ',') {
-        if (!inStr) { key = ''; value = ''; keyDone = false; readingValue = false; valueStarted = false; }
+        if (!inStr) {
+          key = '';
+          value = '';
+          keyDone = false;
+          readingValue = false;
+          valueStarted = false;
+        }
         continue;
       }
-      if (c == '{') { depth++; continue; }
-      if (c == '}') { depth--; continue; }
       // Skip digits and other chars
     }
     return result;
@@ -57,12 +81,24 @@ class StreamingJsonParser {
 
   bool get isComplete {
     final s = _buffer.toString();
-    var depth = 0; var inStr = false; var esc = false;
+    var depth = 0;
+    var inStr = false;
+    var esc = false;
     for (var i = 0; i < s.length; i++) {
       final c = s[i];
-      if (esc) { esc = false; continue; }
-      if (inStr) { if (c == r'\') esc = true; if (c == '"') inStr = false; continue; }
-      if (c == '"') { inStr = true; continue; }
+      if (esc) {
+        esc = false;
+        continue;
+      }
+      if (inStr) {
+        if (c == r'\') esc = true;
+        if (c == '"') inStr = false;
+        continue;
+      }
+      if (c == '"') {
+        inStr = true;
+        continue;
+      }
       if (c == '{') depth++;
       if (c == '}') depth--;
     }
@@ -74,7 +110,9 @@ class StreamingJsonParser {
     try {
       final decoded = jsonDecode(_buffer.toString());
       return decoded is Map<String, Object?> ? decoded : null;
-    } on FormatException { return null; }
+    } on FormatException {
+      return null;
+    }
   }
 
   void reset() => _buffer.clear();

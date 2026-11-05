@@ -259,7 +259,6 @@ class PrismDivider extends StatelessWidget {
       );
     }
 
-    final side = (indent ?? 0.0) + (endIndent ?? 0.0);
     return Row(
       children: [
         Expanded(
