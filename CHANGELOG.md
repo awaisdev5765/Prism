@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.5.1
+
+### Fixed
+- Removed a write-only variable and dead code flagged by the analyzer
+- Braced single-statement conditionals in `PrismGuard` for lint consistency
+
+### Documented
+- README now documents the AI-era toolkit (`PrismRateLimiter`, `PrismGuard`,
+  `StreamingJsonParser`, `PrismMessageMemory`, `PrismPromptChain`,
+  `PrismResponseCache`, `PrismAgentRunner`) with usage examples
+- Component count, test count and install version corrected throughout
+
 ## 1.5.0
 
 ### Added
