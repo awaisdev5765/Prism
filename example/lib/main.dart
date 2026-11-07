@@ -220,6 +220,35 @@ class _GalleryHomeState extends State<GalleryHome> {
       'radius',
       'motion',
     ], _tokens),
+    _Demo('AI message bubble', Icons.chat_bubble_outline, [
+      'ai',
+      'chat',
+      'assistant',
+      'streaming',
+    ], _aiBubble),
+    _Demo('AI composer', Icons.keyboard, [
+      'ai',
+      'input',
+      'prompt',
+      'suggestions',
+    ], _aiComposer),
+    _Demo('Color picker', Icons.colorize, [
+      'colour',
+      'hsv',
+      'hex',
+      'paint',
+    ], _colorPicker),
+    _Demo('Overlay tour', Icons.tour, [
+      'onboarding',
+      'spotlight',
+      'coach',
+      'guide',
+    ], _overlayTour),
+    _Demo('Sparkline', Icons.show_chart, [
+      'chart',
+      'trend',
+      'mini',
+    ], _sparkline),
   ];
 
   static Widget _scaffold() => const ScaffoldDemo();
@@ -248,6 +277,11 @@ class _GalleryHomeState extends State<GalleryHome> {
   static Widget _adaptiveSheet() => const AdaptiveSheetDemo();
   static Widget _connection() => const ConnectionDemo();
   static Widget _tokens() => const TokensDemo();
+  static Widget _aiBubble() => const AiBubbleDemo();
+  static Widget _aiComposer() => const AiComposerDemo();
+  static Widget _colorPicker() => const ColorPickerDemo();
+  static Widget _overlayTour() => const OverlayTourDemo();
+  static Widget _sparkline() => const SparklineDemo();
 
   @override
   void dispose() {
@@ -1796,6 +1830,227 @@ class TokensDemo extends StatelessWidget {
             'Override any of these in ThemeData.extensions: const '
             '[PrismTokens(spaceMd: 20, radiusMd: 16)].',
             style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── AI message bubble ──────────────────────────────────────────────────────
+
+class AiBubbleDemo extends StatelessWidget {
+  const AiBubbleDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('AI message bubble')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          PrismAiMessageBubble(
+            message: AiChatMessage.user('Summarise this article for me.'),
+          ),
+          const SizedBox(height: 12),
+          PrismAiMessageBubble(
+            message: AiChatMessage.assistant(
+              '## Summary\n\nThe article argues that **adaptive layouts** '
+              'beat one-size-fits-all design. Key points:\n\n'
+              '- Phones get stacked flows\n'
+              '- Desktop gets side-by-side panes',
+            ),
+            onCopy: () {},
+            onRegenerate: () {},
+          ),
+          const SizedBox(height: 12),
+          PrismAiMessageBubble(
+            message: AiChatMessage.assistantWithToolCalls(const [
+              AiToolCallRequest(
+                id: 't1',
+                name: 'fetch_weather',
+                argumentsJson: '{}',
+              ),
+            ], content: 'Checking the weather…'),
+          ),
+          const SizedBox(height: 12),
+          PrismAiMessageBubble(
+            message: AiChatMessage.assistant(''),
+            isStreaming: true,
+            thinkingLabel: 'Thinking…',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── AI composer ────────────────────────────────────────────────────────────
+
+class AiComposerDemo extends StatefulWidget {
+  const AiComposerDemo({super.key});
+
+  @override
+  State<AiComposerDemo> createState() => _AiComposerDemoState();
+}
+
+class _AiComposerDemoState extends State<AiComposerDemo> {
+  final _log = <String>[];
+  bool _busy = false;
+
+  Future<void> _send(String text) async {
+    setState(() {
+      _busy = true;
+      _log.insert(0, 'You: $text');
+    });
+    await Future<void>.delayed(const Duration(seconds: 1));
+    if (mounted) {
+      setState(() {
+        _busy = false;
+        _log.insert(0, 'Assistant: (demo) You said "$text".');
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('AI composer')),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [for (final line in _log) Text(line)],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: PrismPromptComposer(
+              busy: _busy,
+              suggestions: const ['Summarise', 'Translate', 'Explain simply'],
+              onSend: _send,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Color picker ───────────────────────────────────────────────────────────
+
+class ColorPickerDemo extends StatefulWidget {
+  const ColorPickerDemo({super.key});
+
+  @override
+  State<ColorPickerDemo> createState() => _ColorPickerDemoState();
+}
+
+class _ColorPickerDemoState extends State<ColorPickerDemo> {
+  Color _color = const Color(0xFF39A9DB);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Color picker')),
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          Container(
+            height: 80,
+            decoration: BoxDecoration(
+              color: _color,
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          const SizedBox(height: 24),
+          PrismColorPicker(
+            color: _color,
+            onChanged: (c) => setState(() => _color = c),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Overlay tour ───────────────────────────────────────────────────────────
+
+class OverlayTourDemo extends StatefulWidget {
+  const OverlayTourDemo({super.key});
+
+  @override
+  State<OverlayTourDemo> createState() => _OverlayTourDemoState();
+}
+
+class _OverlayTourDemoState extends State<OverlayTourDemo> {
+  final _fab = GlobalKey();
+  final _appBar = GlobalKey();
+  bool _tourDone = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: KeyedSubtree(key: _appBar, child: const Text('Overlay tour')),
+      ),
+      body: Center(
+        child: Text(
+          _tourDone
+              ? 'Tour complete ✓'
+              : 'A tour will spotlight this app bar and the FAB.',
+          textAlign: TextAlign.center,
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        key: _fab,
+        onPressed: () => setState(() => _tourDone = false),
+        child: const Icon(Icons.add),
+      ),
+      persistentFooterButtons: [
+        TextButton(
+          onPressed: () => setState(() => _tourDone = false),
+          child: const Text('Replay tour'),
+        ),
+      ],
+    );
+  }
+}
+
+// ─── Sparkline ──────────────────────────────────────────────────────────────
+
+class SparklineDemo extends StatelessWidget {
+  const SparklineDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Sparkline')),
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          PrismCard(
+            child: ListTile(
+              title: const Text('Revenue this week'),
+              subtitle: const Text('+12% vs last week'),
+              trailing: const PrismSparkline(
+                values: [120, 132, 128, 141, 150, 148, 166],
+                semantic: PrismSemantic.success,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          PrismCard(
+            child: ListTile(
+              title: const Text('Errors this week'),
+              subtitle: const Text('-40% — trending down'),
+              trailing: const PrismSparkline(
+                values: [20, 18, 19, 15, 12, 10, 8],
+                semantic: PrismSemantic.error,
+                fill: false,
+              ),
+            ),
           ),
         ],
       ),

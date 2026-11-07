@@ -115,3 +115,10 @@ export 'src/progress/progress.dart'
     show PrismCircularProgress, PrismLinearProgress;
 export 'src/media/media.dart'
     show PrismCarousel, PrismDividerWithLabel, PrismZoomableImage;
+export 'src/ai/thinking_indicator.dart' show PrismAiThinkingIndicator;
+export 'src/ai/ai_message_bubble.dart' show PrismAiMessageBubble;
+export 'src/ai/prompt_composer.dart' show PrismPromptComposer;
+export 'src/color_picker/color_picker.dart' show PrismColorPicker, HSV;
+export 'src/overlay_stack/overlay_stack.dart'
+    show PrismOverlayStack, PrismOverlayStep;
+export 'src/sparkline/sparkline.dart' show PrismSparkline;

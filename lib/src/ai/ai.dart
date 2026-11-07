@@ -38,3 +38,6 @@ export 'response_cache.dart' show PrismResponseCache;
 export 'streaming_json.dart' show StreamingJsonParser;
 export 'guard.dart' show PrismGuard;
 export 'agent_runner.dart' show PrismAgentRunner;
+export 'ai_message_bubble.dart' show PrismAiMessageBubble;
+export 'thinking_indicator.dart' show PrismAiThinkingIndicator;
+export 'prompt_composer.dart' show PrismPromptComposer;

@@ -1,15 +1,15 @@
 <p align="center">
-  <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-51%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
+  <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-57%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
 </p>
 
 <h1 align="center">🔷 Prism</h1>
-<h3 align="center">One dependency. 51 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
+<h3 align="center">One dependency. 57 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
 
 <p align="center">
   <img src="https://img.shields.io/badge/pub.dev-prism__kit-0175C2?logo=dart&logoColor=white" alt="pub.dev">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT">
   <img src="https://img.shields.io/badge/Flutter-3.27%2B-02569B?logo=flutter&logoColor=white" alt="Flutter">
-  <img src="https://img.shields.io/badge/tests-844%20passing-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-861%20passing-brightgreen" alt="tests">
 </p>
 
 ---
@@ -26,7 +26,7 @@
 
 ```yaml
 dependencies:
-  prism_kit: ^1.5.0
+  prism_kit: ^1.6.0
 ```
 
 ```bash
@@ -94,6 +94,12 @@ import 'package:prism_kit/prism.dart';
 | 49 | **Carousel** | Horizontally scrolling slides with a dot indicator |
 | 50 | **DividerWithLabel** | Divider with a centred label, for grouping content |
 | 51 | **Lottie** | Lottie metadata reader: dimensions, duration, frame count, preload cache |
+| 52 | **AiMessageBubble** | Token-styled chat bubble: streaming markdown, tool-call chips, copy & regenerate |
+| 53 | **AiThinkingIndicator** | Pulsing reasoning dots with live-region announcement; static under reduced motion |
+| 54 | **PromptComposer** | Prompt input with suggestion chips, send button and a busy/streaming state |
+| 55 | **ColorPicker** | HSV saturation/value box + hue bar + hex input, zero dependencies |
+| 56 | **OverlayStack** | Onboarding spotlight tour: dimmed screen, anchored tooltip cards, step dots |
+| 57 | **Sparkline** | Tiny inline trend line with gradient fill and semantic colouring |
 
 ### Design system
 
@@ -391,6 +397,30 @@ All seven are pure Dart, so they run on every platform and in tests without a
 widget tree. They compose freely — the agent runner reads the guard and the
 limiter; the prompt chain feeds the memory; the cache wraps any of them.
 
+### AI chat widgets — the visible face of the toolkit
+
+The plumbing above pairs with three ready-made UI pieces:
+
+```dart
+PrismAiMessageBubble(
+  message: lastMessage,
+  isStreaming: controller.isStreaming,   // shows the thinking indicator
+  onRegenerate: () => controller.resend(),
+)
+
+PrismAiThinkingIndicator(label: 'Searching documents…')
+
+PrismPromptComposer(
+  suggestions: const ['Summarise', 'Translate'],
+  busy: controller.isStreaming,
+  onSend: controller.send,
+)
+```
+
+Bubbles render assistant turns as markdown, expose tool calls as tappable
+chips, and announce themselves to screen readers. The composer clears itself
+after a send and disables sending while a reply streams.
+
 ### Updater — in-app updates
 
 ```dart
@@ -596,7 +626,7 @@ Container(color: context.prismColors.surfaceRaised)
 Container(color: context.prismColors.forRole(PrismSemantic.success).background)
 ```
 
-**Every one of the 51 components reads these tokens** — toasts, banners, forms,
+**Every one of the 57 components reads these tokens** — toasts, banners, forms,
 data tables, the command palette, everything. Change `spaceMd` once and the whole
 app changes rhythm together; switch `brightness` and every semantic colour
 follows.
@@ -751,7 +781,7 @@ cycle. Disabled by default, so `enabled: kDebugMode` makes it release-safe.
 ## 🧪 Testing your own screens
 
 `package:prism_kit/testing.dart` gives your tests the same environment Prism's
-own 844 tests run in:
+own 861 tests run in:
 
 ```dart
 import 'package:prism_kit/testing.dart';
@@ -813,7 +843,7 @@ see `test/support/prism_test_helpers.dart` and copy them.
 
 ## 🧪 Quality
 
-- **844 tests** (unit + widget) across all components
+- **861 tests** (unit + widget) across all components
 - **Every component is covered by design-system tests** that install
   deliberately unusual `PrismTokens` and assert the component actually reads
   them — a hard-coded radius, duration or colour fails CI
@@ -839,7 +869,7 @@ If you previously used an individual `prism_*` package, swap the dependency and 
 
 ```diff
 - prism_toast: ^0.1.0
-+ prism_kit: ^1.5.0
++ prism_kit: ^1.6.0
 
 - import 'package:prism_toast/prism_toast.dart';
 + import 'package:prism_kit/prism.dart';
@@ -860,7 +890,7 @@ for every component:
 cd example && flutter run
 ```
 
-- **Searchable grid** of all 26 demos, indexed with keywords — `pin` finds the
+- **Searchable grid** of all 31 demos, indexed with keywords — `pin` finds the
   OTP field, `offline` finds the connection banner.
 - **Theme toggle** (system → light → dark) so you can check both palettes.
 - **Live token override** in the app bar: flip it and every component adopts a

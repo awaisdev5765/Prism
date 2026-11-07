@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.6.0
+
+### Added
+- **Six components**, completing the AI conversation stack and closing input gaps:
+  - `PrismAiMessageBubble` — streaming markdown chat bubble with tool-call
+    chips, copy and regenerate actions, thinking state, and screen-reader
+    announcements
+  - `PrismAiThinkingIndicator` — pulsing reasoning dots that go static and
+    announce themselves under reduced motion
+  - `PrismPromptComposer` — prompt input with suggestion chips, a
+    streaming-aware send button, and self-clearing behaviour
+  - `PrismColorPicker` — HSV saturation/value box, hue bar and hex input, with
+    zero new dependencies
+  - `PrismOverlayStack` — onboarding spotlight tour with anchored tooltip
+    cards, step dots, and a skip button
+  - `PrismSparkline` — inline trend line with gradient fill and semantic
+    colouring for lists and tables
+- Gallery demos for all six new components
+
+### Fixed
+- Analyzer cleaned to a single unavoidable deprecation info (see 1.5.1)
+
 ## 1.5.1
 
 ### Fixed
