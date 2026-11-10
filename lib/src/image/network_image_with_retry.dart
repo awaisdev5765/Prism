@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:ui' as ui;
-
+import 'dart:ui' show Codec, ImmutableBuffer;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:http/http.dart' as http;
@@ -80,7 +79,7 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
     );
   }
 
-  Future<ui.Codec> _loadWithRetry(
+  Future<Codec> _loadWithRetry(
     NetworkImageWithRetry key,
     ImageDecoderCallback decode,
   ) async {
@@ -100,9 +99,7 @@ class NetworkImageWithRetry extends ImageProvider<NetworkImageWithRetry> {
         if (response.statusCode != 200) {
           throw _HttpException(response.statusCode);
         }
-        final buffer = await ui.ImmutableBuffer.fromUint8List(
-          response.bodyBytes,
-        );
+        final buffer = await ImmutableBuffer.fromUint8List(response.bodyBytes);
         return await decode(buffer);
       } catch (error) {
         final statusCode = error is _HttpException ? error.statusCode : null;

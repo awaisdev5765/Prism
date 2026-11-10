@@ -41,7 +41,7 @@ final class PaletteSwatch {
 /// colors plus the six classic Android-Palette swatches (vibrant, muted,
 /// and their light/dark variants).
 ///
-/// Obtain an instance with [ColorPalette.fromImage],
+/// Obtain an instance with [PaletteExtractor.fromRgbaBytes],
 /// [ColorPalette.fromPixels] or [ColorPalette.fromColors].
 final class ColorPalette {
   /// All candidate swatches found in the source, sorted by descending

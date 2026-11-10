@@ -1050,7 +1050,7 @@ class PaletteDemo extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'PrismPalette.fromImage(image) extracts:\n'
+              'PaletteExtractor.fromRgbaBytes(bytes) extracts:\n'
               'vibrant, muted, dominant colors + text contrast pairs.\n\n'
               'Sample extracted swatches:',
               textAlign: TextAlign.center,

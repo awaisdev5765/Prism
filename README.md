@@ -314,7 +314,9 @@ On compact windows it pushes a detail route (`PrismCompactBehavior.push`); on wi
 ### Palette — extract colors from images
 
 ```dart
-final palette = await PrismPalette.fromImage(image);
+final palette = await PaletteExtractor.fromRgbaBytes(
+  rgbaBytes, width: w, height: h,
+);
 final themeColor = palette.vibrantColor ?? palette.dominantColor;
 ```
 

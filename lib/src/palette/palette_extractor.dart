@@ -1,4 +1,4 @@
-import 'dart:ui' as ui;
+import 'dart:typed_data';
 
 import 'package:flutter/painting.dart' show Rect;
 import 'package:material_color_utilities/material_color_utilities.dart';
@@ -49,33 +49,44 @@ final class PaletteExtractor {
     );
   }
 
-  /// Extracts a [ColorPalette] from a source image, sampling pixels to keep
-  /// the work bounded.
+  /// Extracts a [ColorPalette] from raw RGBA pixel bytes.
+  ///
+  /// Accepts the bytes and dimensions directly instead of a `ui.Image`, which
+  /// keeps the whole palette subsystem pure bytes: it works identically on
+  /// every platform, including web, and callers can produce the bytes from
+  /// any source — a decoder, a canvas snapshot, or a plain generator.
   ///
   /// [maxSamplePixels] caps how many pixels are analyzed: larger images are
   /// subsampled with a uniform stride, which preserves the dominant colors
-  /// while keeping extraction fast. [region] limits sampling to a
-  /// normalized sub-rectangle of the image (values 0..1), mirroring the
-  /// region support of the original `palette_generator`.
-  static Future<ColorPalette> fromImage(
-    ui.Image image, {
+  /// while keeping extraction fast. [region] limits sampling to a normalized
+  /// sub-rectangle of the image (values 0..1).
+  ///
+  /// Throws [ArgumentError] when the bounds are empty or the byte count
+  /// does not match `width * height * 4`.
+  static Future<ColorPalette> fromRgbaBytes(
+    Uint8List rgbaBytes, {
+    required int width,
+    required int height,
     int maxColors = 64,
     int desiredColors = 16,
     int maxSamplePixels = 128 * 128,
     Rect? region,
     PaletteWeights weights = const PaletteWeights(),
   }) async {
-    final width = image.width;
-    final height = image.height;
     if (width <= 0 || height <= 0) {
-      throw ArgumentError.value(image, 'image', 'must have non-empty bounds');
+      throw ArgumentError(
+        'width and height must be positive, got $width x $height',
+      );
     }
-
-    final byteData = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
-    if (byteData == null) {
-      throw StateError('Failed to read pixel data from the source image');
+    final expected = width * height * 4;
+    if (rgbaBytes.length < expected) {
+      throw ArgumentError.value(
+        rgbaBytes,
+        'rgbaBytes',
+        'has ${rgbaBytes.length} bytes but $width*$height*4 = $expected '
+            'were required',
+      );
     }
-    final bytes = byteData.buffer.asUint8List();
 
     // Normalized sampling region (defaults to the full image).
     final rect = (region ?? Rect.zero).normalize();
@@ -97,9 +108,9 @@ final class PaletteExtractor {
     for (var y = y0; y < y1; y += stride) {
       for (var x = x0; x < x1; x += stride) {
         final offset = (y * width + x) * 4;
-        final r = bytes[offset];
-        final g = bytes[offset + 1];
-        final b = bytes[offset + 2];
+        final r = rgbaBytes[offset];
+        final g = rgbaBytes[offset + 1];
+        final b = rgbaBytes[offset + 2];
         pixels.add(0xFF000000 | (r << 16) | (g << 8) | b);
       }
     }

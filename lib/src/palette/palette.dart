@@ -7,7 +7,9 @@
 /// that powers Material 3 dynamic color in Flutter.
 ///
 /// ```dart
-/// final palette = await PrismPalette.fromImage(image);
+/// final palette = await PaletteExtractor.fromRgbaBytes(
+///   bytes, width: w, height: h,
+/// );
 /// final themeColor = palette.vibrantColor ?? palette.dominantColor;
 /// ```
 ///

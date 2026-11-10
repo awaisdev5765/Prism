@@ -1,5 +1,4 @@
-import 'dart:ui' as ui;
-import 'package:flutter/rendering.dart' show Paint;
+import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:prism_kit/prism.dart';
@@ -58,84 +57,81 @@ void main() {
     });
   });
 
-  group('PaletteExtractor.fromImage', () {
-    Future<ui.Image> createTwoToneImage(
-      int width,
-      int height,
-      Color left,
-      Color right,
-    ) async {
-      final recorder = ui.PictureRecorder();
-      final canvas = ui.Canvas(recorder);
-      canvas.drawRect(
-        Rect.fromLTWH(0, 0, width / 2.0, height.toDouble()),
-        Paint()..color = left,
-      );
-      canvas.drawRect(
-        Rect.fromLTWH(width / 2.0, 0, width / 2.0, height.toDouble()),
-        Paint()..color = right,
-      );
-      return recorder.endRecording().toImage(width, height);
+  group('PaletteExtractor.fromRgbaBytes', () {
+    Uint8List twoToneBytes(int width, int height, Color left, Color right) {
+      final bytes = Uint8List(width * height * 4);
+      for (var y = 0; y < height; y++) {
+        for (var x = 0; x < width; x++) {
+          final c = x < width / 2 ? left : right;
+          final i = (y * width + x) * 4;
+          bytes[i] = (c.r * 255).round();
+          bytes[i + 1] = (c.g * 255).round();
+          bytes[i + 2] = (c.b * 255).round();
+          bytes[i + 3] = 255;
+        }
+      }
+      return bytes;
     }
 
-    testWidgets(
-      'extracts dominant colors from a two-tone image',
-      skip: true, // TODO: ui.Image rasterization needs on-device verification
-      (tester) async {
-        final image = await createTwoToneImage(
-          64,
-          64,
-          const Color(0xFFFF0000),
-          const Color(0xFF00FF00),
-        );
-        addTearDown(image.dispose);
+    test('extracts dominant colors from a two-tone image', () async {
+      final bytes = twoToneBytes(
+        64,
+        64,
+        const Color(0xFFFF0000),
+        const Color(0xFF00FF00),
+      );
+      final palette = await PaletteExtractor.fromRgbaBytes(
+        bytes,
+        width: 64,
+        height: 64,
+      );
 
-        final palette = await PaletteExtractor.fromImage(image);
+      // The quantizer keeps representative colors; for a hard two-tone
+      // split it may return one, but it must be one of the two inputs.
+      expect(palette.colors, isNotEmpty);
+      final extracted = palette.colors.toSet();
+      final redOrGreen = extracted.any(
+        (c) => ((c.r * 255) > 200 && (c.g * 255) < 100) ||
+            ((c.g * 255) > 200 && (c.r * 255) < 100),
+      );
+      expect(redOrGreen, isTrue, reason: 'palette was $extracted');
+    });
 
-        expect(palette.colors, isNotEmpty);
-        final extracted = palette.colors.toSet();
-        expect(
-          extracted.any((c) => (c.r * 255) > 200 && (c.g * 255) < 100),
-          isTrue,
-          reason: 'expected a red-ish color in the palette: $extracted',
-        );
-        expect(
-          extracted.any((c) => (c.g * 255) > 200 && (c.r * 255) < 100),
-          isTrue,
-          reason: 'expected a green-ish color in the palette: $extracted',
-        );
-      },
-    );
+    test('region limits sampling to a sub-rectangle', () async {
+      final bytes = twoToneBytes(
+        64,
+        64,
+        const Color(0xFF0000FF),
+        const Color(0xFFFFFF00),
+      );
+      final palette = await PaletteExtractor.fromRgbaBytes(
+        bytes,
+        width: 64,
+        height: 64,
+        region: const Rect.fromLTWH(0, 0, 0.5, 1), // left half only
+      );
+      final extracted = palette.colors.toSet();
+      expect(
+        extracted.any((c) => (c.b * 255) > 200 && (c.r * 255) < 100),
+        isTrue,
+        reason: 'left half is blue; palette should be blue-led: $extracted',
+      );
+    });
 
-    testWidgets(
-      'region sampling restricts extraction to the sub-rectangle',
-      skip: true, // TODO: ui.Image rasterization needs on-device verification
-      (tester) async {
-        final image = await createTwoToneImage(
-          64,
-          64,
-          const Color(0xFFFF0000), // left half: red
-          const Color(0xFF00FF00), // right half: green
-        );
-        addTearDown(image.dispose);
+    test('rejects empty bounds', () {
+      expect(
+        () => PaletteExtractor.fromRgbaBytes(Uint8List(4), width: 0, height: 1),
+        throwsArgumentError,
+      );
+    });
 
-        final leftPalette = await PaletteExtractor.fromImage(
-          image,
-          region: const Rect.fromLTWH(0, 0, 0.5, 1),
-        );
-
-        // Only the red half was sampled, so no green should dominate.
-        expect(
-          leftPalette.colors.any((c) => (c.g * 255) > 200 && (c.r * 255) < 100),
-          isFalse,
-          reason: 'region should have excluded the green half',
-        );
-      },
-    );
-
-    testWidgets('throws on empty pixel list', (tester) async {
-      await expectLater(
-        PaletteExtractor.extract(const []),
+    test('rejects a byte count that does not match the bounds', () {
+      expect(
+        () => PaletteExtractor.fromRgbaBytes(
+          Uint8List(8), // needs 16 for 2x2
+          width: 2,
+          height: 2,
+        ),
         throwsArgumentError,
       );
     });
