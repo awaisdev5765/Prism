@@ -897,7 +897,7 @@ for every component:
 cd example && flutter run
 ```
 
-- **Searchable grid** of all 36 demos, indexed with keywords — `pin` finds the
+- **Searchable grid** of all 42 demos, indexed with keywords — `pin` finds the
   OTP field, `offline` finds the connection banner.
 - **Theme toggle** (system → light → dark) so you can check both palettes.
 - **Live token override** in the app bar: flip it and every component adopts a

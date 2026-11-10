@@ -276,6 +276,45 @@ class _GalleryHomeState extends State<GalleryHome> {
       'upload',
       'camera',
     ], _imagePicker),
+    _Demo('Controls', Icons.tune, [
+      'slider',
+      'switch',
+      'checkbox',
+      'dropdown',
+      'form',
+    ], _controls),
+    _Demo('Progress & states', Icons.data_usage, [
+      'progress',
+      'loading',
+      'empty',
+      'overlay',
+    ], _progressStates),
+    _Demo('Cards & tiles', Icons.view_agenda, [
+      'card',
+      'tile',
+      'divider',
+      'list',
+    ], _cardsTiles),
+    _Demo('Carousel & zoom', Icons.swipe, [
+      'carousel',
+      'zoom',
+      'swipe',
+      'gallery',
+    ], _carouselZoom),
+    _Demo('Calendar', Icons.calendar_month, [
+      'date',
+      'range',
+      'month',
+      'picker',
+    ], _calendar),
+    _Demo('Feedback bits', Icons.star_outline, [
+      'rating',
+      'badge',
+      'refresh',
+      'fab',
+      'accordion',
+      'segmented',
+    ], _feedbackBits),
   ];
 
   static Widget _scaffold() => const ScaffoldDemo();
@@ -314,6 +353,12 @@ class _GalleryHomeState extends State<GalleryHome> {
   static Widget _donutChart() => const DonutChartDemo();
   static Widget _filePicker() => const FilePickerDemo();
   static Widget _imagePicker() => const ImagePickerDemo();
+  static Widget _controls() => const ControlsDemo();
+  static Widget _progressStates() => const ProgressStatesDemo();
+  static Widget _cardsTiles() => const CardsTilesDemo();
+  static Widget _carouselZoom() => const CarouselZoomDemo();
+  static Widget _calendar() => const CalendarDemo();
+  static Widget _feedbackBits() => const FeedbackBitsDemo();
 
   @override
   void dispose() {
@@ -2260,6 +2305,313 @@ class _ImagePickerDemoState extends State<ImagePickerDemo> {
                 ..addAll(next),
             ),
             onRemove: (image) => setState(() => _images.remove(image)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Controls ───────────────────────────────────────────────────────────────
+
+class ControlsDemo extends StatefulWidget {
+  const ControlsDemo({super.key});
+
+  @override
+  State<ControlsDemo> createState() => _ControlsDemoState();
+}
+
+class _ControlsDemoState extends State<ControlsDemo> {
+  double _volume = 0.6;
+  bool _dark = true;
+  bool _terms = false;
+  String _plan = 'Pro';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Controls')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          PrismSlider(
+            value: _volume,
+            label: 'Volume ${(_volume * 100).round()}%',
+            onChanged: (v) => setState(() => _volume = v),
+          ),
+          const SizedBox(height: 12),
+          PrismSwitch(
+            title: 'Dark mode',
+            subtitle: 'Follow the theme',
+            value: _dark,
+            onChanged: (v) => setState(() => _dark = v),
+          ),
+          const SizedBox(height: 12),
+          PrismCheckbox(
+            title: 'Accept the terms',
+            value: _terms,
+            onChanged: (v) => setState(() => _terms = v),
+          ),
+          const SizedBox(height: 12),
+          PrismDropdown<String>(
+            value: _plan,
+            items: const [
+              PrismDropdownItem(value: 'Free', label: 'Free'),
+              PrismDropdownItem(value: 'Pro', label: 'Pro'),
+              PrismDropdownItem(value: 'Team', label: 'Team'),
+            ],
+            label: 'Plan',
+            onChanged: (plan) => setState(() => _plan = plan ?? _plan),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Progress & states ──────────────────────────────────────────────────────
+
+class ProgressStatesDemo extends StatefulWidget {
+  const ProgressStatesDemo({super.key});
+
+  @override
+  State<ProgressStatesDemo> createState() => _ProgressStatesDemoState();
+}
+
+class _ProgressStatesDemoState extends State<ProgressStatesDemo> {
+  bool _loading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return PrismLoadingOverlay(
+      isLoading: _loading,
+      message: 'Syncing your data…',
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Progress & states')),
+        body: Stack(
+          children: [
+            ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                PrismLinearProgress(value: 0.7, label: 'Uploading 70%'),
+                const SizedBox(height: 16),
+                const Center(child: PrismCircularProgress(value: 0.42)),
+                const SizedBox(height: 24),
+                const PrismEmptyState(
+                  icon: Icons.inbox_outlined,
+                  title: 'Nothing here yet',
+                  subtitle: 'Items you add will appear in this list.',
+                ),
+                const SizedBox(height: 16),
+                FilledButton(
+                  onPressed: () => setState(() => _loading = !_loading),
+                  child: Text(
+                    _loading ? 'Hide overlay' : 'Show loading overlay',
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Cards & tiles ──────────────────────────────────────────────────────────
+
+class CardsTilesDemo extends StatelessWidget {
+  const CardsTilesDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Cards & tiles')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          PrismCard(
+            onTap: () {},
+            child: const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text('A tappable card'),
+            ),
+          ),
+          const SizedBox(height: 12),
+          const PrismTile(
+            leading: Icon(Icons.person_outline),
+            title: 'Ayesha Khan',
+            subtitle: 'Flutter developer',
+          ),
+          const Divider(),
+          const PrismDivider(label: 'Section'),
+          const PrismTile(
+            leading: Icon(Icons.settings_outlined),
+            title: 'Settings',
+            subtitle: 'General preferences',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Carousel & zoom ────────────────────────────────────────────────────────
+
+class CarouselZoomDemo extends StatelessWidget {
+  const CarouselZoomDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Carousel & zoom')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          PrismCarousel(
+            items: const [
+              Card(
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(48),
+                    child: Text('Slide 1'),
+                  ),
+                ),
+              ),
+              Card(
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(48),
+                    child: Text('Slide 2'),
+                  ),
+                ),
+              ),
+              Card(
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(48),
+                    child: Text('Slide 3'),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          PrismZoomableImage(
+            imageUrl: 'https://picsum.photos/seed/prism/600/400',
+            placeholder: const SizedBox(
+              height: 200,
+              child: Center(child: Icon(Icons.image_outlined)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Calendar ───────────────────────────────────────────────────────────────
+
+class CalendarDemo extends StatefulWidget {
+  const CalendarDemo({super.key});
+
+  @override
+  State<CalendarDemo> createState() => _CalendarDemoState();
+}
+
+class _CalendarDemoState extends State<CalendarDemo> {
+  DateTime _month = DateTime.now();
+  final _selected = <DateTime>{};
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Calendar')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          PrismCalendar(
+            month: _month,
+            selected: _selected,
+            onDaySelected: (day) => setState(
+              () => _selected.contains(day)
+                  ? _selected.remove(day)
+                  : _selected.add(day),
+            ),
+            onMonthChanged: (m) => setState(() => _month = m),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Feedback bits ──────────────────────────────────────────────────────────
+
+class FeedbackBitsDemo extends StatefulWidget {
+  const FeedbackBitsDemo({super.key});
+
+  @override
+  State<FeedbackBitsDemo> createState() => _FeedbackBitsDemoState();
+}
+
+class _FeedbackBitsDemoState extends State<FeedbackBitsDemo> {
+  double _rating = 3.5;
+  final int _expanded = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Feedback bits')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Center(
+            child: PrismBadge(
+              count: 12,
+              child: Icon(
+                Icons.notifications_outlined,
+                size: 32,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Center(
+            child: PrismRating(
+              value: _rating,
+              allowHalf: true,
+              onChanged: (v) => setState(() => _rating = v),
+            ),
+          ),
+          const SizedBox(height: 16),
+          PrismSegmentedControl<String>(
+            value: _expanded == 0 ? 'list' : 'grid',
+            onChanged: (_) {},
+            segments: const [
+              PrismSegment(value: 'list', label: 'List'),
+              PrismSegment(value: 'grid', label: 'Grid'),
+            ],
+          ),
+          const SizedBox(height: 16),
+          PrismAccordion(
+            singleExpansion: true,
+            sections: [
+              PrismAccordionSection(
+                title: 'Delivery',
+                child: const Text('Ships in 2-4 days.'),
+              ),
+              PrismAccordionSection(
+                title: 'Returns',
+                child: const Text('Free returns within 30 days.'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          FilledButton.icon(
+            onPressed: () {},
+            icon: const Icon(Icons.add),
+            label: const Text('FAB action'),
           ),
         ],
       ),
