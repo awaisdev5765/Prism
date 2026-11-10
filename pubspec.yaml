@@ -3,7 +3,7 @@ description: >-
   One dependency, 51 adaptive Flutter components on a shared design system:
   data tables, calendar, tabs, toasts, forms, controls, loading and empty
   states, markdown, an AI chat client, and more.
-version: 1.6.0
+version: 1.7.0
 homepage: https://github.com/awaisdev5765/prism
 repository: https://github.com/awaisdev5765/prism
 issue_tracker: https://github.com/awaisdev5765/prism/issues

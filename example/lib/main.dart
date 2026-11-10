@@ -5,6 +5,8 @@
 
 import 'dart:async';
 
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import 'package:prism_kit/prism.dart';
@@ -249,6 +251,31 @@ class _GalleryHomeState extends State<GalleryHome> {
       'trend',
       'mini',
     ], _sparkline),
+    _Demo('Bar chart', Icons.bar_chart, [
+      'chart',
+      'graph',
+      'analytics',
+    ], _barChart),
+    _Demo('Line chart', Icons.show_chart_outlined, [
+      'chart',
+      'trend',
+      'analytics',
+    ], _lineChart),
+    _Demo('Donut chart', Icons.pie_chart_outline, [
+      'chart',
+      'pie',
+      'analytics',
+    ], _donutChart),
+    _Demo('File picker', Icons.attach_file, [
+      'attach',
+      'upload',
+      'file',
+    ], _filePicker),
+    _Demo('Image picker', Icons.add_a_photo_outlined, [
+      'photo',
+      'upload',
+      'camera',
+    ], _imagePicker),
   ];
 
   static Widget _scaffold() => const ScaffoldDemo();
@@ -282,6 +309,11 @@ class _GalleryHomeState extends State<GalleryHome> {
   static Widget _colorPicker() => const ColorPickerDemo();
   static Widget _overlayTour() => const OverlayTourDemo();
   static Widget _sparkline() => const SparklineDemo();
+  static Widget _barChart() => const BarChartDemo();
+  static Widget _lineChart() => const LineChartDemo();
+  static Widget _donutChart() => const DonutChartDemo();
+  static Widget _filePicker() => const FilePickerDemo();
+  static Widget _imagePicker() => const ImagePickerDemo();
 
   @override
   void dispose() {
@@ -2051,6 +2083,183 @@ class SparklineDemo extends StatelessWidget {
                 fill: false,
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Charts ─────────────────────────────────────────────────────────────────
+
+class BarChartDemo extends StatelessWidget {
+  const BarChartDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Bar chart')),
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          PrismCard(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: PrismBarChart(
+                bars: const [
+                  PrismBar(label: 'Mon', value: 12),
+                  PrismBar(label: 'Tue', value: 19),
+                  PrismBar(label: 'Wed', value: 7),
+                  PrismBar(label: 'Thu', value: 15),
+                  PrismBar(label: 'Fri', value: 22),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class LineChartDemo extends StatelessWidget {
+  const LineChartDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Line chart')),
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          PrismCard(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: PrismLineChart(
+                values: const [120, 132, 128, 141, 150, 148, 166],
+                labels: const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                semantic: PrismSemantic.success,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DonutChartDemo extends StatelessWidget {
+  const DonutChartDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Donut chart')),
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          PrismCard(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: PrismDonutChart(
+                slices: const [
+                  PrismDonutSlice(label: 'Direct', value: 45),
+                  PrismDonutSlice(label: 'Search', value: 30),
+                  PrismDonutSlice(label: 'Social', value: 25),
+                ],
+                centreLabel: 'Traffic',
+                centreValue: '12k',
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Pickers ────────────────────────────────────────────────────────────────
+
+class FilePickerDemo extends StatefulWidget {
+  const FilePickerDemo({super.key});
+
+  @override
+  State<FilePickerDemo> createState() => _FilePickerDemoState();
+}
+
+class _FilePickerDemoState extends State<FilePickerDemo> {
+  final _files = <PrismPickedFile>[
+    const PrismPickedFile(name: 'invoice.pdf', sizeBytes: 204800),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('File picker')),
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          PrismFilePickerTile(
+            files: _files,
+            constraints: const PrismPickerConstraints(
+              allowedExtensions: ['pdf', 'png', 'jpg'],
+              maxSizeBytes: 5 * 1024 * 1024,
+            ),
+            // Wire FilePicker.platform.pickFiles() here in a real app.
+            onPick: () async {
+              final next = PrismPickedFile(
+                name: 'receipt-0${_files.length + 1}.pdf',
+                sizeBytes: 1024 * (_files.length + 1),
+              );
+              return [next];
+            },
+            onFilesPicked: (next) => setState(
+              () => _files
+                ..clear()
+                ..addAll(next),
+            ),
+            onRemove: (file) => setState(() => _files.remove(file)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ImagePickerDemo extends StatefulWidget {
+  const ImagePickerDemo({super.key});
+
+  @override
+  State<ImagePickerDemo> createState() => _ImagePickerDemoState();
+}
+
+class _ImagePickerDemoState extends State<ImagePickerDemo> {
+  final _images = <PrismPickedFile>[];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Image picker')),
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          PrismImagePickerTile(
+            images: _images,
+            maxImages: 4,
+            maxSizeBytes: 2 * 1024 * 1024,
+            // Wire image_picker.pickMultiImage() here in a real app.
+            onPick: () async {
+              final bytes = Uint8List.fromList(List.filled(512, 120));
+              return [
+                PrismPickedFile(name: 'demo.png', sizeBytes: 512, bytes: bytes),
+              ];
+            },
+            onImagesPicked: (next) => setState(
+              () => _images
+                ..clear()
+                ..addAll(next),
+            ),
+            onRemove: (image) => setState(() => _images.remove(image)),
           ),
         ],
       ),

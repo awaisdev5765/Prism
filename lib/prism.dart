@@ -122,3 +122,9 @@ export 'src/color_picker/color_picker.dart' show PrismColorPicker, HSV;
 export 'src/overlay_stack/overlay_stack.dart'
     show PrismOverlayStack, PrismOverlayStep;
 export 'src/sparkline/sparkline.dart' show PrismSparkline;
+export 'src/charts/charts.dart'
+    show PrismBar, PrismBarChart, PrismDonutChart, PrismDonutSlice,
+        PrismLineChart;
+export 'src/pickers/pickers.dart'
+    show PrismFilePickerTile, PrismImagePickerTile, PrismPickedFile,
+        PrismPickerConstraints;

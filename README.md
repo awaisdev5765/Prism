@@ -1,15 +1,15 @@
 <p align="center">
-  <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-57%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
+  <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-62%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
 </p>
 
 <h1 align="center">🔷 Prism</h1>
-<h3 align="center">One dependency. 57 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
+<h3 align="center">One dependency. 62 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
 
 <p align="center">
   <img src="https://img.shields.io/badge/pub.dev-prism__kit-0175C2?logo=dart&logoColor=white" alt="pub.dev">
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT">
   <img src="https://img.shields.io/badge/Flutter-3.27%2B-02569B?logo=flutter&logoColor=white" alt="Flutter">
-  <img src="https://img.shields.io/badge/tests-861%20passing-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-878%20passing-brightgreen" alt="tests">
 </p>
 
 ---
@@ -26,7 +26,7 @@
 
 ```yaml
 dependencies:
-  prism_kit: ^1.6.0
+  prism_kit: ^1.7.0
 ```
 
 ```bash
@@ -100,6 +100,11 @@ import 'package:prism_kit/prism.dart';
 | 55 | **ColorPicker** | HSV saturation/value box + hue bar + hex input, zero dependencies |
 | 56 | **OverlayStack** | Onboarding spotlight tour: dimmed screen, anchored tooltip cards, step dots |
 | 57 | **Sparkline** | Tiny inline trend line with gradient fill and semantic colouring |
+| 58 | **BarChart** | Token-styled bar chart with highlight colour and semantics — no chart dependency |
+| 59 | **LineChart** | Line chart with gradient fill, points, grid and auto-thinned labels |
+| 60 | **DonutChart** | Donut with centre label and legend; slices normalised and gap-separated |
+| 61 | **FilePickerTile** | Attachment UI with extension/size validation — you bring the picker, Prism brings the UX |
+| 62 | **ImagePickerTile** | Photo thumbnails with remove buttons and count cap — you bring the picker, Prism brings the UX |
 
 ### Design system
 
@@ -626,7 +631,7 @@ Container(color: context.prismColors.surfaceRaised)
 Container(color: context.prismColors.forRole(PrismSemantic.success).background)
 ```
 
-**Every one of the 57 components reads these tokens** — toasts, banners, forms,
+**Every one of the 62 components reads these tokens** — toasts, banners, forms,
 data tables, the command palette, everything. Change `spaceMd` once and the whole
 app changes rhythm together; switch `brightness` and every semantic colour
 follows.
@@ -781,7 +786,7 @@ cycle. Disabled by default, so `enabled: kDebugMode` makes it release-safe.
 ## 🧪 Testing your own screens
 
 `package:prism_kit/testing.dart` gives your tests the same environment Prism's
-own 861 tests run in:
+own 878 tests run in:
 
 ```dart
 import 'package:prism_kit/testing.dart';
@@ -843,7 +848,7 @@ see `test/support/prism_test_helpers.dart` and copy them.
 
 ## 🧪 Quality
 
-- **861 tests** (unit + widget) across all components
+- **878 tests** (unit + widget) across all components
 - **Every component is covered by design-system tests** that install
   deliberately unusual `PrismTokens` and assert the component actually reads
   them — a hard-coded radius, duration or colour fails CI
@@ -869,7 +874,7 @@ If you previously used an individual `prism_*` package, swap the dependency and 
 
 ```diff
 - prism_toast: ^0.1.0
-+ prism_kit: ^1.6.0
++ prism_kit: ^1.7.0
 
 - import 'package:prism_toast/prism_toast.dart';
 + import 'package:prism_kit/prism.dart';
@@ -890,7 +895,7 @@ for every component:
 cd example && flutter run
 ```
 
-- **Searchable grid** of all 31 demos, indexed with keywords — `pin` finds the
+- **Searchable grid** of all 36 demos, indexed with keywords — `pin` finds the
   OTP field, `offline` finds the connection banner.
 - **Theme toggle** (system → light → dark) so you can check both palettes.
 - **Live token override** in the app bar: flip it and every component adopts a

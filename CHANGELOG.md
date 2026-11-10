@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.7.0
+
+### Added
+- **Five components** (57 -> 62), covering analytics and attachment UX:
+  - `PrismBarChart` — token-styled bars, max-bar highlight, value labels,
+    screen-reader sentence
+  - `PrismLineChart` — gradient fill, points, gridlines, auto-thinned x-axis
+    labels, semantic role colouring
+  - `PrismDonutChart` — gap-separated arcs, centre label, percentage legend
+  - `PrismFilePickerTile` — attachment chips with extension/size/count
+    validation and removal. Prism brings the UX, you bring the picker
+    (`file_picker`) — no new transitive dependencies
+  - `PrismImagePickerTile` — byte-backed thumbnails, remove buttons, count
+    cap; pairs with `image_picker`
+- Gallery demos for all five (31 -> 36)
+
 ## 1.6.0
 
 ### Added
