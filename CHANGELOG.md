@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.0.0
+
+### Breaking
+- `PaletteExtractor.fromImage(ui.Image)` is replaced by
+  `PaletteExtractor.fromRgbaBytes(Uint8List rgba, {required int width,
+  required int height})`. The palette subsystem now works on pure byte
+  inputs, which keeps it functional on web and lets callers decode images
+  however they like. Migration: decode your image to raw RGBA bytes once and
+  pass them with the dimensions.
+
+### Fixed
+- The three palette tests that were skipped pending on-device
+  rasterization now run against the byte path and pass (881 total).
+
+### Updated
+- The example gallery now covers every shipped component (42 demos).
+- README install version and docs refreshed.
+
 ## 1.7.0
 
 ### Added
