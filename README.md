@@ -2,6 +2,10 @@
   <img width="720" alt="Prism" src="https://img.shields.io/badge/Prism-62%20adaptive%20Flutter%20components-39A9DB?style=for-the-badge">
 </p>
 
+<p align="center">
+  <img width="860" alt="Prism component gallery — controls, AI chat, charts and states in light and dark" src="screenshots/hero.png">
+</p>
+
 <h1 align="center">🔷 Prism</h1>
 <h3 align="center">One dependency. 62 adaptive Flutter components. Native feel on phone, desktop & web.</h3>
 
